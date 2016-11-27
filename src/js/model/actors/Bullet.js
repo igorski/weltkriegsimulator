@@ -54,7 +54,7 @@ module.exports = class Bullet extends Actor {
 
         /* initialization */
 
-        this.width =
-        this.height = 5;
+        this.width  = this.orgWidth  =
+        this.height = this.orgHeight = 10;
     }
 };

@@ -165,10 +165,10 @@ function addRendererToAppropriateLayer( actor ) {
     // that aren't part of the Game, thus contain no Actors!)
 
     switch ( actor.layer ) {
-        case 0: // top actor layer
+        case 1: // top actor layer
             layers[ 3 ].push( renderer );
             break;
-        case 1: // bottom actor layer
+        case 0: // bottom actor layer
             layers[ 1 ].push( renderer );
             break;
         default: // middle actor layer
@@ -182,7 +182,7 @@ function addRendererToAppropriateLayer( actor ) {
         playerLayer = actor.layer;
     }
     else {
-        const index = ( playerLayer === 0 ) ? 3 : 1; // see switch above for indices
+        const index = ( playerLayer === 1 ) ? 3 : 1; // see switch above for indices
         layers[ index ].splice( layers[ index ].indexOf( player ), 1 );
         layers[ index ].push( player );
     }
@@ -193,6 +193,9 @@ function removeRendererFromDisplayList( actor ) {
 
     const renderer = actor.renderer;
     let found = false;
+
+    if ( !renderer )
+        return;
 
     layers.forEach(( layer ) => {
 

@@ -1,6 +1,9 @@
 TODO
 ====
 
-Multi layer action
 Slow down time
-Rumble screen
+
+BUGS
+====
+
+Cannot fly during layer switch

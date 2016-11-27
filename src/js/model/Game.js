@@ -235,7 +235,7 @@ function createBulletForActor( actor ) {
             // single Bullet fire
             bullet = getActorFromPool(
                 bulletPool,
-                actor.x + actor.width / 2,
+                actor.x + ( actor.width * .5 ) - 5, // -5 to subtract half Bullet width
                 actor.y - 10,
                 0,
                 ( actor instanceof Player ) ? -5 : 5, // Player shoots up, enemies shoot down

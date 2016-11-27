@@ -62,7 +62,5 @@ function handleBroadcast( msg, payload ) {
 function updateEnergy() {
 
     const player = gameModel.player;
-    console.warn(player.maxEnergy, player.energy,(( player.energy / player.maxEnergy ) * 100 ) + "px");
-
     energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
 }

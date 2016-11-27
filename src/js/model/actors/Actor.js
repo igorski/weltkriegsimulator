@@ -50,12 +50,12 @@ module.exports = class Actor {
 
         /**
          * the layer this Actor is operating on
-         * 0 = top, 1 = bottom
+         * 1 = top, 0 = bottom
          *
          * @public
          * @type {number}
          */
-        this.layer = ( typeof layer === "number" ) ? layer : 0;
+        this.layer = ( typeof layer === "number" ) ? layer : 1;
 
         /**
          * @public
@@ -107,6 +107,13 @@ module.exports = class Actor {
          * @type {boolean}
          */
         this.pooled = false;
+
+        /* initialization */
+
+        // the dimensions this Actor occupies at the highest layer (1)
+
+        this.orgWidth  = this.width;
+        this.orgHeight = this.height;
     }
     
     /* public methods */
@@ -136,15 +143,32 @@ module.exports = class Actor {
         if ( this.switching )
             return;
 
-        const self = this;
-        self.switching = true;
+        const self        = this;
+        self.switching    = true;
         const targetLayer = ( self.layer === 0 ) ? 1 : 0;
 
-        ActorUtil.setDelayed( self, "layer", targetLayer, 1, () => {
-            self.layer = targetLayer; // overcome JS rounding errors
-            self.switching = false;
-            self.game.updateActorLayer( self );
-        }, Cubic.easeOut );
+        // during animation layer is floating point
+        // we multiply by .5 as a lower layer Actor is displayed at half size
+
+        const multiplier = targetLayer * .5;
+
+        const width  = this.orgWidth  * .5 + ( this.orgWidth  * multiplier );
+        const height = this.orgHeight * .5 + ( this.orgHeight * multiplier );
+
+        ActorUtil.setDelayed( self,
+            [ "layer", "x", "y", "width", "height" ],
+            [
+                targetLayer, this.x + (( this.width * .5 ) - ( width * .5 )),
+                this.y + (( this.width * .5 ) - ( height * .5 )),
+                width, height
+            ],
+            1, () => {
+                self.layer = targetLayer; // overcome JS rounding errors
+                self.switching = false;
+                self.game.updateActorLayer( self );
+            },
+            Cubic.easeOut
+        );
     }
 
     /**

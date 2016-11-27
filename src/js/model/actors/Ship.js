@@ -63,6 +63,11 @@ module.exports = class Ship extends Actor {
          * @type {number}
          */
         this.weapon = weapon;
+
+        /* initialization */
+
+        this.width  = this.orgWidth  =
+        this.height = this.orgHeight = 64; // spritesheet tile
     }
 
     /* public methods */
@@ -78,6 +83,15 @@ module.exports = class Ship extends Actor {
         if ( actor instanceof Bullet ) {
             this.energy = Math.max( 0, this.energy - actor.damage );
             actor.dispose(); // Bullets disappear on impact
+        }
+        if ( this.energy === 0 ) {
+            this.die();
+        }
+    }
+
+    die() {
+        if ( this.renderer ) {
+            this.renderer.switchAnimation( 2 );
         }
     }
 };

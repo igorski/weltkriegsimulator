@@ -22,7 +22,7 @@
  */
 "use strict";
 
-const Bullet = require( "../model/actors/Bullet" );
+const Bullet       = require( "../model/actors/Bullet" );
 const ShipRenderer = require( "./ShipRenderer" );
 
 module.exports = BulletRenderer;
@@ -50,8 +50,13 @@ BulletRenderer.prototype.draw = function( aCanvasContext ) {
 
     this.sync(); // sync with model state
 
+    const actor      = this.actor,
+          bulletSize = ( actor.layer === 1 ) ? actor.orgWidth : actor.orgWidth * .5;
+
     aCanvasContext.fillStyle = "white";
     aCanvasContext.fillRect(
-        this._bounds.left, this._bounds.top, this._bounds.width, this._bounds.height
+        this._bounds.left,
+        this._bounds.top,
+        bulletSize, bulletSize
     );
 };
