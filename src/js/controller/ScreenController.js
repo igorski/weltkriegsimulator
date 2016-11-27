@@ -23,44 +23,46 @@
 "use strict";
 
 const Pubsub   = require( "pubsub-js" );
-const Messages = require( "./definitions/Messages" );
+const Messages = require( "../definitions/Messages" );
 
-/* initialize application */
+let gameModel, energyUI;
 
-if ( !"TweenMax" in window )
-    throw new Error( "GreenSock TweenMax required" );
+module.exports = {
 
-// grab reference to application container in template
+    init( game, container ) {
 
-const container = document.querySelector( "#application" );
+        gameModel = game.gameModel;
 
-const Game = window.game = {
-    inputController  : require( "./controller/InputController" ),
-    renderController : require( "./controller/RenderController" ),
-    screenController : require( "./controller/ScreenController" ),
-    gameModel        : require( "./model/Game" )
+        energyUI = document.createElement( "div" );
+        energyUI.setAttribute( "id", "energy" );
+
+        document.body.appendChild( energyUI );
+
+        // subscribe to messaging system
+
+        [
+            Messages.PLAYER_HIT
+
+        ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
+
+    }
 };
-
-// subscribe to pubsub system to receive and broadcast messages across the application
-
-[
-    Messages.FIRE_BULLET
-
-].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
-
-/* initialize */
-
-Game.inputController.init( Game );
-Game.renderController.init( Game, container );
-Game.screenController.init( Game, container );
 
 /* private methods */
 
-function handleBroadcast( type, payload ) {
+function handleBroadcast( msg, payload ) {
 
-    switch ( type ) {
-        case Messages.FIRE_BULLET:
-            Game.gameModel.fireBullet( payload );
+    switch ( msg ) {
+        case Messages.PLAYER_HIT:
+            updateEnergy();
             break;
     }
+}
+
+function updateEnergy() {
+
+    const player = gameModel.player;
+    console.warn(player.maxEnergy, player.energy,(( player.energy / player.maxEnergy ) * 100 ) + "px");
+
+    energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
 }

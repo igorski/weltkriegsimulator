@@ -56,6 +56,12 @@ module.exports = class Ship extends Actor {
          * @public
          * @type {number}
          */
+        this.maxEnergy = this.energy;
+
+        /**
+         * @public
+         * @type {number}
+         */
         this.weapon = weapon;
     }
 
@@ -69,7 +75,9 @@ module.exports = class Ship extends Actor {
      */
     hit( actor ) {
 
-        const targetEnergy = ( actor instanceof Bullet ) ? this.energy - actor.damage : 0;
-        this.energy = Math.max( 0, targetEnergy );
+        if ( actor instanceof Bullet ) {
+            this.energy = Math.max( 0, this.energy - actor.damage );
+            actor.dispose(); // Bullets disappear on impact
+        }
     }
 };
