@@ -22,9 +22,10 @@
  */
 "use strict";
 
-const Actor = require( "./Actor" );
+const Actor  = require( "./Actor" );
+const Bullet = require( "./Bullet" );
 
-module.exports = class Powerup extends Actor {
+module.exports = class Ship extends Actor {
 
     /**
      * @constructor
@@ -34,10 +35,10 @@ module.exports = class Powerup extends Actor {
      * @param {number} y
      * @param {number} xSpeed
      * @param {number} ySpeed
-     * @param {number=} type powerup type (see enumeration)
-     * @param {number=} value powerup value (see enumeration)
+     * @param {number} energy
+     * @param {number} weapon
      */
-    constructor( game, x, y, xSpeed, ySpeed, type, value ) {
+    constructor( game, x, y, xSpeed, ySpeed, energy, weapon ) {
 
         /* inherit prototype properties of Actor */
 
@@ -49,12 +50,26 @@ module.exports = class Powerup extends Actor {
          * @public
          * @type {number}
          */
-        this.type = ( typeof type === "number" )  ? type : 0;
+        this.energy = energy;
 
         /**
          * @public
          * @type {number}
          */
-        this.value = ( typeof value === "number" )  ? value : 0;
+        this.weapon = weapon;
+    }
+
+    /* public methods */
+
+    /**
+     * @override
+     * @public
+     * @param {Object=} actor optional Actor to collide with, if null
+     *        hit is presumed to be fatal, Actor energy depletes
+     */
+    hit( actor ) {
+
+        const targetEnergy = ( actor instanceof Bullet ) ? this.energy - actor.damage : 0;
+        this.energy = Math.max( 0, targetEnergy );
     }
 };

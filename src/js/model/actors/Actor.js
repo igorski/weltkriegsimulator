@@ -61,12 +61,6 @@ module.exports = class Actor {
          * @public
          * @type {number}
          */
-        this.energy = 1;
-
-        /**
-         * @public
-         * @type {number}
-         */
         this.xSpeed = ( typeof xSpeed === "number" ) ? xSpeed : 0;
 
         /**
@@ -86,12 +80,6 @@ module.exports = class Actor {
          * @type {number}
          */
         this.y = ( typeof y === "number" ) ? y : 0;
-
-        /**
-         * @public
-         * @type {number}
-         */
-        this.weapon = 0;
 
         /**
          * @public
@@ -133,13 +121,11 @@ module.exports = class Actor {
     
     /**
      * @public
-     * @param {Object=} actor optional Actor to collide with, if null
-     *        hit is presumed to be fatal, Actor energy depletes
+     * @param {Object=} actor optional Actor to collide with
      */
     hit( actor ) {
     
-        const targetEnergy = ( actor && actor.damage ) ? this.energy - actor.damage : 0;
-        this.energy = Math.max( 0, targetEnergy );
+        // extend in inheriting classes
     }
     
     /**

@@ -23,7 +23,7 @@
 "use strict";
 
 const zCanvas = require( "zcanvas" );
-const Actor = require( "../model/actors/Actor" );
+const Ship    = require( "../model/actors/Ship" );
 
 module.exports = ShipRenderer;
 
@@ -31,17 +31,17 @@ module.exports = ShipRenderer;
  * a renderer that represents the Ship actor on screen
  *
  * @constructor
- * @param {Actor} actor
+ * @param {Ship} ship
  * @param {RenderController} renderController
  */
-function ShipRenderer( actor, renderController ) {
+function ShipRenderer( ship, renderController ) {
 
     ShipRenderer.super(
         this, "constructor", {
-            x: actor.x,
-            y: actor.y,
-            width: actor.width,
-            height: actor.height,
+            x: ship.x,
+            y: ship.y,
+            width: ship.width,
+            height: ship.height,
             bitmap: "./assets/images/sprites/ship.png"
         }
     );
@@ -52,7 +52,7 @@ function ShipRenderer( actor, renderController ) {
      * @protected
      * @type {Actor}
      */
-    this.actor = actor;
+    this.actor = ship;
 
     /**
      * @protected
@@ -70,7 +70,7 @@ function ShipRenderer( actor, renderController ) {
 
     /* initialization */
 
-    actor.renderer = this;
+    ship.renderer = this;
 
     this.sync();
 }

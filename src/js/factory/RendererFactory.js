@@ -27,6 +27,7 @@
 const Actor   = require( "../model/actors/Actor" );
 const Bullet  = require( "../model/actors/Bullet" );
 const Powerup = require( "../model/actors/Powerup" );
+const Ship    = require( "../model/actors/Ship" );
 
 /* renderers */
 
@@ -57,8 +58,9 @@ module.exports = {
         else if ( actor instanceof Powerup ) {
             return new PowerupRenderer( /** @type {Powerup} */ ( actor ), renderController );
         }
-        else if ( actor instanceof Actor ) {
-            return new ShipRenderer( /** @type {Actor} */ ( actor ), renderController );
+        else if ( actor instanceof Ship ) {
+            return new ShipRenderer( /** @type {Ship} */ ( actor ), renderController );
         }
+        throw new Error( "could not create renderer for " + actor );
     }
 };

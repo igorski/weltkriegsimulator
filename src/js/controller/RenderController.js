@@ -22,12 +22,12 @@
  */
 "use strict";
 
-const Pubsub = require( "pubsub-js" );
-const Messages = require( "../definitions/Messages" );
-const zCanvas = require( "zcanvas" );
+const Pubsub          = require( "pubsub-js" );
+const Messages        = require( "../definitions/Messages" );
+const zCanvas         = require( "zcanvas" );
 const RendererFactory = require( "../factory/RendererFactory" );
-const SkyRenderer = require( "../view/SkyRenderer" );
-const TileRenderer = require( "../view/TileRenderer" );
+const SkyRenderer     = require( "../view/SkyRenderer" );
+const TileRenderer    = require( "../view/TileRenderer" );
 
 let gameModel, canvas, player, playerLayer, background;
 const actors = []; // all Actors apart from the Player

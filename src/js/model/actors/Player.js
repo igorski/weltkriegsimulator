@@ -22,20 +22,25 @@
  */
 "use strict";
 
-const Actor   = require( "./Actor" );
+const Ship    = require( "./Ship" );
 const Powerup = require( "./Powerup" );
 
-module.exports = class Player extends Actor {
+module.exports = class Player extends Ship {
 
     /**
      * @constructor
      * @param {Game} game
+     * @param {number=} energy
+     * @param {number=} weapon
      */
-    constructor( game ) {
+    constructor( game, energy, weapon ) {
 
-        /* inherit prototype properties of Actor */
+        /* inherit prototype properties of Ship */
 
-        super( game, 0, 0, 0, 0 );
+        energy = ( typeof energy === "number" ) ? energy : 10;
+        weapon = ( typeof weapon === "number" ) ? weapon : 0;
+
+        super( game, 0, 0, 0, 0, energy, weapon );
     }
 
     /**
