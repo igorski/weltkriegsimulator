@@ -22,21 +22,21 @@
  */
 "use strict";
 
-const Powerup = require( "../model/actors/Powerup" );
-const ShipRenderer = require( "./ShipRenderer" );
+const Powerup       = require( "../model/actors/Powerup" );
+const ActorRenderer = require( "./ActorRenderer" );
 
 module.exports = PowerupRenderer;
 
 /**
- * a renderer that represents the Ship actor on screen
+ * a renderer that represents the Powerup actor on screen
  *
  * @constructor
- * @param {Ship} bullet
+ * @param {Powerup} powerup
  * @param {RenderController} renderController
  */
-function PowerupRenderer( bullet, renderController ) {
-    PowerupRenderer.super( this, "constructor", bullet, renderController );
+function PowerupRenderer( powerup, renderController ) {
+    PowerupRenderer.super( this, "constructor", powerup, renderController );
 
-    this.setBitmap( "./assets/images/sprites/powerup.png", 30, 30 );
+    this.setBitmap( "./assets/images/sprites/powerup.png" );
 }
-ShipRenderer.extend( PowerupRenderer );
+ActorRenderer.extend( PowerupRenderer );

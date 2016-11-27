@@ -22,8 +22,8 @@
  */
 "use strict";
 
-const Bullet       = require( "../model/actors/Bullet" );
-const ShipRenderer = require( "./ShipRenderer" );
+const Bullet        = require( "../model/actors/Bullet" );
+const ActorRenderer = require( "./ActorRenderer" );
 
 module.exports = BulletRenderer;
 
@@ -37,7 +37,7 @@ module.exports = BulletRenderer;
 function BulletRenderer( bullet, renderController ) {
     BulletRenderer.super( this, "constructor", bullet, renderController );
 }
-ShipRenderer.extend( BulletRenderer );
+ActorRenderer.extend( BulletRenderer );
 
 /* public methods */
 

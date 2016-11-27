@@ -56,5 +56,10 @@ module.exports = class Powerup extends Actor {
          * @type {number}
          */
         this.value = ( typeof value === "number" )  ? value : 0;
+
+        /* initialization */
+
+        this.width  = this.orgWidth  =
+        this.height = this.orgHeight = 30;
     }
 };

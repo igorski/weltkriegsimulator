@@ -22,8 +22,8 @@
  */
 "use strict";
 
-const Pubsub = require( "pubsub-js" );
-const Messages = require( "../../definitions/Messages" );
+const Pubsub    = require( "pubsub-js" );
+const Messages  = require( "../../definitions/Messages" );
 const ActorUtil = require( "../../util/ActorUtil" );
 
 module.exports = class Actor {
@@ -95,7 +95,7 @@ module.exports = class Actor {
 
         /**
          * @public
-         * @type {ShipRenderer}
+         * @type {ActorRenderer}
          */
         this.renderer = null;
 
