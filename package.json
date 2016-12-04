@@ -22,7 +22,7 @@
     "babelify": "^6.1.0",
     "pubsub-js": "^1.5.0",
     "atomify-css": "^3.2.2",
-    "zcanvas": "^3.0.2",
+    "zcanvas": "^3.0.4",
     "gsap": "^1.17.0"
   }
 }

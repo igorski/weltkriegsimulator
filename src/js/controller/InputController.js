@@ -31,7 +31,7 @@ const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let hasListeners = false,
     shiftDown = false,
     optionDown = false,
-    blockDefaults = false,
+    blockDefaults = true,
     suspended = false;
 
 const activeMovement = {

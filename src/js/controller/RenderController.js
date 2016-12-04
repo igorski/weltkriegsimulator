@@ -29,6 +29,7 @@ const RendererFactory = require( "../factory/RendererFactory" );
 const SkyRenderer     = require( "../view/SkyRenderer" );
 const TileRenderer    = require( "../view/TileRenderer" );
 
+const IDEAL_WIDTH = 400;
 let gameModel, canvas, player, playerLayer, background;
 const actors = []; // all Actors apart from the Player
 const layers = [
@@ -40,9 +41,11 @@ const RenderController = module.exports = {
     init( game, container ) {
 
         canvas = new zCanvas.canvas({
-            width: 400,
-            height: 400,
+            width: IDEAL_WIDTH,
+            height: IDEAL_WIDTH,
             animate: true,
+            smoothing: false,
+            stretchToFit: true,
             fps: 60,
             onUpdate: game.gameModel.update
         });
@@ -90,6 +93,9 @@ function setupGame( aGameModel ) {
 
     // will trigger organization of Display List
     addRendererToAppropriateLayer( gameModel.player );
+
+    // ensures optimal size
+    resize();
 }
 
 function handleBroadcast( type, payload ) {
@@ -241,4 +247,25 @@ function rumble() {
             "x": 0, "y": 0, "ease": Power1.easeInOut
         })
     );
+}
+
+function resize() {
+  return;
+    const windowWidth  = document.documentElement.clientWidth;
+    const windowHeight = document.documentElement.clientHeight;
+
+    const tilesInWidth  = IDEAL_WIDTH;
+    const tilesInHeight = Math.round(( windowHeight / windowWidth ) * tilesInWidth );
+
+    canvas.setDimensions( tilesInWidth, tilesInHeight );
+
+    // scale canvas element up using CSS
+
+    const xScale = windowWidth  / tilesInWidth;
+    const yScale = windowHeight / tilesInHeight;
+    const canvasElement = canvas.getElement();
+
+    canvasElement.style[ "-webkit-transform" ] = "scale(" + xScale + ", " + yScale + ")";
+    canvasElement.style[ "transform" ]         = "scale(" + xScale + ", " + yScale + ")";
+    canvasElement.style[ "transform-origin" ]  = "0 0";
 }
