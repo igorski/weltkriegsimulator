@@ -39,6 +39,6 @@ module.exports = {
      * @return {string}
      */
     getBaseURL() {
-        return window.location.origin + window.location.pathname;
+        return ( typeof window.assetPath === "string" ) ? window.assetPath : window.location.origin + window.location.pathname;
     }
 };

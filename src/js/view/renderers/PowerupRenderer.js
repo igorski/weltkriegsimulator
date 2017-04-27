@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,6 +22,7 @@
  */
 "use strict";
 
+const Config        = require( "../../config/Config" );
 const Powerup       = require( "../../model/actors/Powerup" );
 const ActorRenderer = require( "./ActorRenderer" );
 
@@ -37,6 +38,6 @@ module.exports = PowerupRenderer;
 function PowerupRenderer( powerup, renderController ) {
     PowerupRenderer.super( this, "constructor", powerup, renderController );
 
-    this.setBitmap( "./assets/images/sprites/powerup.png" );
+    this.setBitmap( Config.getBaseURL() + "/assets/images/sprites/powerup.png" );
 }
 ActorRenderer.extend( PowerupRenderer );

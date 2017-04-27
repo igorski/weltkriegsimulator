@@ -23,7 +23,6 @@
 "use strict";
 
 const zCanvas = require( "zcanvas" );
-const Actor   = require( "../../model/actors/Actor" );
 
 module.exports = ActorRenderer;
 

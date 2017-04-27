@@ -22,6 +22,7 @@
  */
 "use strict";
 
+const Config   = require( "../../config/Config" );
 const zCanvas  = require( "zcanvas" );
 const TileUtil = require( "../../util/TileUtil" );
 
@@ -48,9 +49,10 @@ function TileRenderer( x, y, speed, scale ) {
 
     const self = this;
 
-    TileUtil.createTileMap( "./assets/images/sprites/tile.png", scale ).then(( cvs ) => {
-        self.setBitmap( cvs, cvs.width, cvs.height );
-    });
+    TileUtil.createTileMap( Config.getBaseURL() + "/assets/images/sprites/tile.png", scale ).
+        then(( cvs ) => {
+            self.setBitmap( cvs, cvs.width, cvs.height );
+        });
 }
 
 zCanvas.sprite.extend( TileRenderer );
