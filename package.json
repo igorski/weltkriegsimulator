@@ -1,7 +1,7 @@
 {
-  "name": "shooter",
+  "name": "weltkriegsimulator",
   "version": "1.0.0",
-  "description": "shooter source code",
+  "description": "Weltkriegsimulator source code",
   "private": true,
   "author": "Igor Zinken",
   "license": "MIT",

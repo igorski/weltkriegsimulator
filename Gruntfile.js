@@ -59,7 +59,7 @@ module.exports = function( grunt )
                 grunt.task.run( "css:prod" );
                 grunt.task.run( "replace:prod" );
                 grunt.task.run( "browserify:prod" );
-                grunt.task.run( "uglify:prod" );
+                //grunt.task.run( "uglify:prod" );
                 break;
         }
     });
