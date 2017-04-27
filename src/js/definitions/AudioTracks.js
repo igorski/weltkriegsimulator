@@ -22,23 +22,8 @@
  */
 "use strict";
 
-module.exports = {
-    /**
-     * @type {boolean}
-     */
-    HAS_TOUCH_CONTROLS: false,
-
-    /**
-     * API clientId for SoundCloud
-     *
-     * @type {string}
-     */
-    SOUNDCLOUD_CLIENT_ID: "0028757d978a9473e5310125967e7e47",
-
-    /**
-     * @return {string}
-     */
-    getBaseURL() {
-        return window.location.origin + window.location.pathname;
-    }
+module.exports =
+{
+    OVERGROUND_THEME    : "98712665",
+    BATTLE_THEME        : "174846797"
 };

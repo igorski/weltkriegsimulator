@@ -22,8 +22,9 @@
  */
 "use strict";
 
-const Pubsub   = require( "pubsub-js" );
-const Messages = require( "./definitions/Messages" );
+const Pubsub     = require( "pubsub-js" );
+const Messages   = require( "./definitions/Messages" );
+const AudioTrack = require( "./definitions/AudioTracks" );
 
 /* initialize application */
 
@@ -38,12 +39,14 @@ const Game = window.game = {
     inputController  : require( "./controller/InputController" ),
     renderController : require( "./controller/RenderController" ),
     screenController : require( "./controller/ScreenController" ),
-    gameModel        : require( "./model/Game" )
+    gameModel        : require( "./model/Game" ),
+    audioModel       : require( "./model/Audio" )
 };
 
 // subscribe to pubsub system to receive and broadcast messages across the application
 
 [
+    Messages.GAME_STARTED,
     Messages.FIRE_BULLET
 
 ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
@@ -56,9 +59,15 @@ Game.screenController.init( container );
 
 /* private methods */
 
+// TODO: create dedicated controller for this?
+
 function handleBroadcast( type, payload ) {
 
     switch ( type ) {
+        case Messages.GAME_STARTED:
+            Game.audioModel.playTrack( AudioTrack.BATTLE_THEME );
+            break;
+
         case Messages.FIRE_BULLET:
             Game.gameModel.fireBullet( payload );
             break;
