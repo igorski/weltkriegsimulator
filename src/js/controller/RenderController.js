@@ -31,10 +31,15 @@ const TileRenderer    = require( "../view/renderers/TileRenderer" );
 
 const IDEAL_WIDTH = 400;
 let gameModel, canvas, player, playerLayer, background;
-const actors = []; // all Actors apart from the Player
-const layers = [
-    [], [], [], [], [] // ground, bottom actors, middle actors, top actors, sky
-];
+
+// all Actors apart from the Player
+const actors = [];
+
+// create Sprites for each layer, they will not have any visual content
+// of their own, but will act as containers (renderers for each of the
+// Game's Actors will be added to their internal display lists)
+// layers in order: ground, bottom actors, middle actors, top actors, sky
+const layers = new Array( 5 );
 
 const RenderController = module.exports = {
 
@@ -83,10 +88,16 @@ function setupGame( aGameModel ) {
     );
     playerLayer = gameModel.player.layer;
 
-    layers[0].push( new TileRenderer( 0, 0, 1, .5 ) ); // ground
-    layers[2].push( new SkyRenderer( 0, 0, 1 ) ); // middle actor layer
-    layers[3].push( new TileRenderer( 0, -200, 1.5 ) ); // top actor layer
-    layers[4].push( new SkyRenderer( canvas.getWidth() - 100, -100, 2 ) ); // sky layer
+    for ( let i = 0; i < layers.length; ++i ) {
+        const layer = new zCanvas.sprite({ width: 0, height: 0 });
+        canvas.addChild( layer );
+        layers[ i ] = layer;
+    }
+
+    layers[ 0 ].addChild( new TileRenderer( 0, 0, 1, .5 ) ); // ground
+    layers[ 2 ].addChild( new SkyRenderer( 0, 0, 1 ) ); // middle actor layer
+    layers[ 3 ].addChild( new TileRenderer( 0, -200, 1.5 ) ); // top actor layer
+    layers[ 4 ].addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 2 ) ); // sky layer
 
     player.x = canvas.getWidth() / 2 - player.width / 2;
     player.y = canvas.getHeight() - player.height;
@@ -147,19 +158,7 @@ function clearGame() {
         actors[ amountOfActors ].dispose();
         actors.splice( i, 1 );
     }
-    for ( let i = 0; i < layers.length; ++i )
-        layers[ i ] = [];
-}
-
-function organiseDisplayListByLayers() {
-
-    let i = canvas.getChildren().length;
-    while ( i-- > 0 )
-        canvas.removeChildAt( 0 );
-
-    layers.forEach(( layer ) => {
-        layer.forEach(( renderer ) => canvas.addChild( renderer ));
-    });
+    layers.forEach(( layer ) => layer.dispose());
 }
 
 function addRendererToAppropriateLayer( actor ) {
@@ -172,13 +171,13 @@ function addRendererToAppropriateLayer( actor ) {
 
     switch ( actor.layer ) {
         case 1: // top actor layer
-            layers[ 3 ].push( renderer );
+            layers[ 3 ].addChild( renderer );
             break;
         case 0: // bottom actor layer
-            layers[ 1 ].push( renderer );
+            layers[ 1 ].addChild( renderer );
             break;
         default: // middle actor layer
-            layers[ 2 ].push( renderer );
+            layers[ 2 ].addChild( renderer );
             break;
     }
 
@@ -189,38 +188,21 @@ function addRendererToAppropriateLayer( actor ) {
     }
     else {
         const index = ( playerLayer === 1 ) ? 3 : 1; // see switch above for indices
-        layers[ index ].splice( layers[ index ].indexOf( player ), 1 );
-        layers[ index ].push( player );
+        layers[ index ].removeChild( player );
+        layers[ index ].addChild( player );
     }
-    organiseDisplayListByLayers();
 }
 
 function removeRendererFromDisplayList( actor ) {
 
     const renderer = actor.renderer;
-    let found = false;
 
     if ( !renderer )
         return;
 
-    layers.forEach(( layer ) => {
-
-        if ( found )
-            return;
-
-        let i = layer.length;
-        while ( i-- ) {
-            if ( layer[ i ] === renderer ) {
-                layer.splice( i, 1 );
-                found = true;
-                break;
-            }
-        }
-    });
-    canvas.removeChild( renderer );
-
-    if ( !found )
-        debugger;
+    const parent = renderer.getParent();
+    if ( parent )
+        parent.removeChild( renderer );
 }
 
 /**
