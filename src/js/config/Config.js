@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,31 +22,16 @@
  */
 "use strict";
 
-const zCanvas       = require( "zcanvas" );
-const Ship          = require( "../model/actors/Ship" );
-const ActorRenderer = require( "./ActorRenderer" );
+module.exports = {
+    /**
+     * @type {boolean}
+     */
+    HAS_TOUCH_CONTROLS: false,
 
-module.exports = ShipRenderer;
-
-/**
- * a renderer that represents the Ship actor on screen
- *
- * @constructor
- * @param {Ship} ship
- * @param {RenderController} renderController
- */
-function ShipRenderer( ship, renderController ) {
-
-    ShipRenderer.super( this, "constructor", ship, renderController );
-
-    this.setBitmap( "./assets/images/sprites/ship_spritesheet.png" );
-    this.setSheet([
-            { row: 0, col: 0, fpt: 3, amount: 1 },  // Player ship, facing up
-            { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
-            { row: 2, col: 0, fpt: 3, amount: 16, onComplete: ship.dispose.bind( ship ) } // Explosion
-        ],
-        ship.width,
-        ship.height
-    );
-}
-ActorRenderer.extend( ShipRenderer );
+    /**
+     * @return {string}
+     */
+    getBaseURL() {
+        return window.location.origin + window.location.pathname;
+    }
+};

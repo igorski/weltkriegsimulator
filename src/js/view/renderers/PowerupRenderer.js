@@ -22,15 +22,21 @@
  */
 "use strict";
 
-module.exports = {
+const Powerup       = require( "../../model/actors/Powerup" );
+const ActorRenderer = require( "./ActorRenderer" );
 
-    /* Game state changes */
+module.exports = PowerupRenderer;
 
-    "GAME_STARTED"          : "G01",
-    "GAME_OVER"             : "G02" ,
-    "ACTOR_ADDED"           : "G03",    // payload is newly added Actor,
-    "ACTOR_REMOVED"         : "G04",    // payload is Actor to remove
-    "ACTOR_LAYER_SWITCH"    : "G05",    // payload is Actor that has switched layers
-    "FIRE_BULLET"           : "G06",    // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
-    "PLAYER_HIT"            : "G07"     // payload is player Object
-};
+/**
+ * a renderer that represents the Powerup actor on screen
+ *
+ * @constructor
+ * @param {Powerup} powerup
+ * @param {RenderController} renderController
+ */
+function PowerupRenderer( powerup, renderController ) {
+    PowerupRenderer.super( this, "constructor", powerup, renderController );
+
+    this.setBitmap( "./assets/images/sprites/powerup.png" );
+}
+ActorRenderer.extend( PowerupRenderer );

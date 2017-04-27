@@ -22,8 +22,8 @@
  */
 "use strict";
 
-const zCanvas = require( "zcanvas" );
-const TileUtil = require( "../util/TileUtil" );
+const zCanvas  = require( "zcanvas" );
+const TileUtil = require( "../../util/TileUtil" );
 
 module.exports = TileRenderer;
 

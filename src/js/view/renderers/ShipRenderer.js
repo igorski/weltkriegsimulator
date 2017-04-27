@@ -22,41 +22,31 @@
  */
 "use strict";
 
-const Bullet        = require( "../model/actors/Bullet" );
+const zCanvas       = require( "zcanvas" );
+const Ship          = require( "../../model/actors/Ship" );
 const ActorRenderer = require( "./ActorRenderer" );
 
-module.exports = BulletRenderer;
+module.exports = ShipRenderer;
 
 /**
  * a renderer that represents the Ship actor on screen
  *
  * @constructor
- * @param {Ship} bullet
+ * @param {Ship} ship
  * @param {RenderController} renderController
  */
-function BulletRenderer( bullet, renderController ) {
-    BulletRenderer.super( this, "constructor", bullet, renderController );
-}
-ActorRenderer.extend( BulletRenderer );
+function ShipRenderer( ship, renderController ) {
 
-/* public methods */
+    ShipRenderer.super( this, "constructor", ship, renderController );
 
-/**
- * @override
- * @public
- * @param {CanvasRenderingContext2D} aCanvasContext
- */
-BulletRenderer.prototype.draw = function( aCanvasContext ) {
-
-    this.sync(); // sync with model state
-
-    const actor      = this.actor,
-          bulletSize = ( actor.layer === 1 ) ? actor.orgWidth : actor.orgWidth * .5;
-
-    aCanvasContext.fillStyle = "white";
-    aCanvasContext.fillRect(
-        this._bounds.left,
-        this._bounds.top,
-        bulletSize, bulletSize
+    this.setBitmap( "./assets/images/sprites/ship_spritesheet.png" );
+    this.setSheet([
+            { row: 0, col: 0, fpt: 3, amount: 1 },  // Player ship, facing up
+            { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
+            { row: 2, col: 0, fpt: 3, amount: 16, onComplete: ship.dispose.bind( ship ) } // Explosion
+        ],
+        ship.width,
+        ship.height
     );
-};
+}
+ActorRenderer.extend( ShipRenderer );

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,15 +22,14 @@
  */
 "use strict";
 
-const Pubsub    = require( "pubsub-js" );
 const Messages  = require( "../definitions/Messages" );
+const Pubsub    = require( "pubsub-js" );
 const ActorUtil = require( "../util/ActorUtil" );
 const Bullet    = require( "../model/actors/Bullet" );
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let hasListeners = false,
-    shiftDown = false,
-    optionDown = false,
+    isFiring = false,
     blockDefaults = true,
     suspended = false;
 
@@ -58,24 +57,34 @@ const InputController = module.exports = {
         }
     },
 
-    /**
-     * whether the Apple option or a control key is
-     * currently held down for the given event
-     *
-     * @param {Event} aEvent
-     * @returns {boolean}
-     */
-    hasOption( aEvent ){
-        return ( optionDown === true ) || aEvent.ctrlKey;
+    // player controls
+
+    fire() {
+        // as firing bullets triggers an expensive calculation, we proxy this onto
+        // the next animationFrame so we calculate this only once per screen render
+        if ( !isFiring ) {
+            isFiring = true;
+            Pubsub.publish( Messages.FIRE_BULLET, player );
+            requestAnimationFrame( unsetFire );
+        }
     },
 
-    /**
-     * whether the shift key is currently held down
-     *
-     * @returns {boolean}
-     */
-    hasShift(){
-        return ( shiftDown === true );
+    switchLayer() {
+        player.switchLayer();
+    },
+
+    left( targetValue = -5 ) {
+        if ( !activeMovement.left ) {
+            activeMovement.left = true;
+            ActorUtil.setDelayed( player, "xSpeed", targetValue, .5 );
+        }
+    },
+
+    right( targetValue = 5 ) {
+        if ( !activeMovement.right ) {
+            activeMovement.right = true;
+            ActorUtil.setDelayed( player, "xSpeed", targetValue, .5 );
+        }
     }
 };
 
@@ -84,9 +93,8 @@ const InputController = module.exports = {
 function handleKeyDown( aEvent ) {
 
     if ( !suspended ) {
-        const keyCode = aEvent.keyCode;
 
-        shiftDown = !!aEvent.shiftKey;
+        const keyCode = aEvent.keyCode;
 
         // prevent defaults when using the arrows, space (prevents page jumps) and backspace (navigate back in history)
 
@@ -100,7 +108,7 @@ function handleKeyDown( aEvent ) {
             switch ( keyCode ) {
 
                 case 27: // escape
-                    // TODO / QQQ:
+                    // TODO / QQQ:   temporary
                     const Enemy = require( "../model/actors/Actor" );
                     Pubsub.publish(
                         Messages.FIRE_BULLET, new Enemy( null, player.x, 0, 0, 0, player.layer )
@@ -108,18 +116,7 @@ function handleKeyDown( aEvent ) {
                     break;
 
                 case 32: // spacebar
-                    Pubsub.publish(
-                        Messages.FIRE_BULLET, player
-                    );
-                    break;
-
-                // capture the apple key here as it is not recognized as a modifier
-
-                case 224:   // Firefox
-                case 17:    // Opera
-                case 91:    // WebKit left key
-                case 93:    // Webkit right key
-                    optionDown = true;
+                    InputController.fire();
                     break;
 
                 case 38: // up
@@ -139,23 +136,15 @@ function handleKeyDown( aEvent ) {
                     break;
 
                 case 39: // right
-
-                    if ( !activeMovement.right ) {
-                        activeMovement.right = true;
-                        ActorUtil.setDelayed( player, "xSpeed", 5, .5 );
-                    }
+                    InputController.right();
                     break;
 
                 case 37: // left
-
-                    if ( !activeMovement.left ) {
-                        activeMovement.left = true;
-                        ActorUtil.setDelayed( player, "xSpeed", -5, .5 );
-                    }
+                    InputController.left();
                     break;
 
                 case 13: // enter
-                    player.switchLayer();
+                    InputController.switchLayer();
                     break;
             }
         }
@@ -164,40 +153,27 @@ function handleKeyDown( aEvent ) {
 
 function handleKeyUp( aEvent ) {
 
-    shiftDown = false;
+    switch ( aEvent.keyCode ) {
+        case 38: // up
+        case 40: // down
+            if ( activeMovement.up || activeMovement.down ) {
+                activeMovement.up =
+                activeMovement.down = false;
+                ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
+            }
+            break;
 
-    if ( optionDown ) {
-
-        switch ( aEvent.keyCode ) {
-
-            // Apple key
-            case 224:   // Firefox
-            case 17:    // Opera
-            case 91:    // WebKit left key
-            case 93:    // Webkit right key
-                optionDown = false;
-                break;
-        }
+        case 39: // right
+        case 37: // left
+            if ( activeMovement.left || activeMovement.right ) {
+                activeMovement.left =
+                activeMovement.right = false;
+                ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
+            }
+            break;
     }
-    else {
-        switch ( aEvent.keyCode ) {
-            case 38: // up
-            case 40: // down
-                if ( activeMovement.up || activeMovement.down ) {
-                    activeMovement.up =
-                    activeMovement.down = false;
-                    ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
-                }
-                break;
+}
 
-            case 39: // right
-            case 37: // left
-                if ( activeMovement.left || activeMovement.right ) {
-                    activeMovement.left =
-                    activeMovement.right = false;
-                    ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
-                }
-                break;
-        }
-    }
+function unsetFire() {
+    isFiring = false;
 }

@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,45 +22,55 @@
  */
 "use strict";
 
-const Pubsub   = require( "pubsub-js" );
-const Messages = require( "../definitions/Messages" );
+const Messages        = require( "../definitions/Messages" );
+const Pubsub          = require( "pubsub-js" );
+const TemplateService = new ( require( "../services/TemplateService" ))();
+const TitleScreen     = require( "../view/TitleScreen" );
+const GameScreen      = require( "../view/GameScreen" );
 
-let gameModel, energyUI;
+let wrapper, currentScreen;
 
 module.exports = {
 
-    init( game, container ) {
+    init( container ) {
 
-        gameModel = game.gameModel;
-
-        energyUI = document.createElement( "div" );
-        energyUI.setAttribute( "id", "energy" );
-
-        document.body.appendChild( energyUI );
+        wrapper = document.createElement( "div" );
+        wrapper.setAttribute( "id", "screenOverlay" );
+        container.appendChild( wrapper );
 
         // subscribe to messaging system
 
         [
-            Messages.PLAYER_HIT
+            Messages.GAME_STARTED,
+            Messages.GAME_OVER
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
 
+        // render the first screen
+
+        renderScreen( TitleScreen );
     }
 };
 
 /* private methods */
 
 function handleBroadcast( msg, payload ) {
-
     switch ( msg ) {
-        case Messages.PLAYER_HIT:
-            updateEnergy();
+        case Messages.GAME_STARTED:
+            renderScreen( GameScreen );
+            break;
+
+        case Messages.GAME_OVER:
+            renderScreen( TitleScreen );
             break;
     }
 }
 
-function updateEnergy() {
-
-    const player = gameModel.player;
-    energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
+function renderScreen( screen ) {
+    if ( currentScreen ) {
+        currentScreen.dispose();
+        wrapper.innerHTML = "";
+    }
+    screen.render( wrapper, TemplateService );
+    currentScreen = screen;
 }

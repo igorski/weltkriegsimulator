@@ -52,7 +52,7 @@ const Game = window.game = {
 
 Game.inputController.init( Game );
 Game.renderController.init( Game, container );
-Game.screenController.init( Game, container );
+Game.screenController.init( container );
 
 /* private methods */
 

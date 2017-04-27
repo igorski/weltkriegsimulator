@@ -2,7 +2,7 @@ module.exports =
 {
   compile: {
     options: {
-      namespace: "effluxTemplates",
+      namespace: "hbTemplates",
       commonjs: false,
       processName: function(filePath) {
         // template name is the filename without the suffix

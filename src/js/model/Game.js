@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -173,7 +173,12 @@ const Game = module.exports = {
                  playerY < myY + myHeight && playerY + playerHeight > myY ) {
 
                 player.hit( actor );
-                Pubsub.publish( Messages.PLAYER_HIT );
+                Pubsub.publish( Messages.PLAYER_HIT, player );
+
+                // TODO: halt game, prevent resending this message
+                if ( player.energy === 0 ) {
+                    Pubsub.publish( Messages.GAME_OVER );
+                }
             }
         }
     }

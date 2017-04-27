@@ -31,9 +31,9 @@ const Ship    = require( "../model/actors/Ship" );
 
 /* renderers */
 
-const BulletRenderer  = require( "../view/BulletRenderer" );
-const PowerupRenderer = require( "../view/PowerupRenderer" );
-const ShipRenderer    = require( "../view/ShipRenderer" );
+const BulletRenderer  = require( "../view/renderers/BulletRenderer" );
+const PowerupRenderer = require( "../view/renderers/PowerupRenderer" );
+const ShipRenderer    = require( "../view/renderers/ShipRenderer" );
 
 module.exports = {
 

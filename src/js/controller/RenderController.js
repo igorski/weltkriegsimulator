@@ -26,8 +26,8 @@ const Pubsub          = require( "pubsub-js" );
 const Messages        = require( "../definitions/Messages" );
 const zCanvas         = require( "zcanvas" );
 const RendererFactory = require( "../factory/RendererFactory" );
-const SkyRenderer     = require( "../view/SkyRenderer" );
-const TileRenderer    = require( "../view/TileRenderer" );
+const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
+const TileRenderer    = require( "../view/renderers/TileRenderer" );
 
 const IDEAL_WIDTH = 400;
 let gameModel, canvas, player, playerLayer, background;

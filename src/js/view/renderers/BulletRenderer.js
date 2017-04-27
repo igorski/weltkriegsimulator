@@ -22,21 +22,41 @@
  */
 "use strict";
 
-const Powerup       = require( "../model/actors/Powerup" );
+const Bullet        = require( "../../model/actors/Bullet" );
 const ActorRenderer = require( "./ActorRenderer" );
 
-module.exports = PowerupRenderer;
+module.exports = BulletRenderer;
 
 /**
- * a renderer that represents the Powerup actor on screen
+ * a renderer that represents the Ship actor on screen
  *
  * @constructor
- * @param {Powerup} powerup
+ * @param {Ship} bullet
  * @param {RenderController} renderController
  */
-function PowerupRenderer( powerup, renderController ) {
-    PowerupRenderer.super( this, "constructor", powerup, renderController );
-
-    this.setBitmap( "./assets/images/sprites/powerup.png" );
+function BulletRenderer( bullet, renderController ) {
+    BulletRenderer.super( this, "constructor", bullet, renderController );
 }
-ActorRenderer.extend( PowerupRenderer );
+ActorRenderer.extend( BulletRenderer );
+
+/* public methods */
+
+/**
+ * @override
+ * @public
+ * @param {CanvasRenderingContext2D} aCanvasContext
+ */
+BulletRenderer.prototype.draw = function( aCanvasContext ) {
+
+    this.sync(); // sync with model state
+
+    const actor      = this.actor,
+          bulletSize = ( actor.layer === 1 ) ? actor.orgWidth : actor.orgWidth * .5;
+
+    aCanvasContext.fillStyle = "white";
+    aCanvasContext.fillRect(
+        this._bounds.left,
+        this._bounds.top,
+        bulletSize, bulletSize
+    );
+};
