@@ -84,6 +84,44 @@ const InputController = module.exports = {
             activeMovement.right = true;
             ActorUtil.setDelayed( player, "xSpeed", targetValue, .5 );
         }
+    },
+
+    up( targetValue = -5 ) {
+        if ( !activeMovement.up ) {
+            activeMovement.up = true;
+            ActorUtil.setDelayed( player, "ySpeed", targetValue, .5 );
+        }
+    },
+
+    down( targetValue = 5 ) {
+        if ( !activeMovement.down ) {
+            activeMovement.down = true;
+            ActorUtil.setDelayed( player, "ySpeed", targetValue, .5 );
+        }
+    },
+
+    /**
+     * cancels all horizontal movement
+     * (reduces speed gradually to a stand still)
+     */
+    cancelHorizontal() {
+        if ( activeMovement.left || activeMovement.right ) {
+            activeMovement.left  =
+            activeMovement.right = false;
+            ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
+        }
+    },
+
+    /**
+     * cancels all vertical movement
+     * (reduces speed gradually to a stand still)
+     */
+    cancelVertical() {
+        if ( activeMovement.up || activeMovement.down ) {
+            activeMovement.up   =
+            activeMovement.down = false;
+            ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
+        }
     }
 };
 
@@ -115,19 +153,11 @@ function handleKeyDown( aEvent ) {
                 break;
 
             case 38: // up
-
-                if ( !activeMovement.up ) {
-                    activeMovement.up = true;
-                    ActorUtil.setDelayed( player, "ySpeed", -5, .5 );
-                }
+                InputController.up();
                 break;
 
             case 40: // down
-
-                if ( !activeMovement.down ) {
-                    activeMovement.down = true;
-                    ActorUtil.setDelayed( player, "ySpeed", 5, .5 );
-                }
+                InputController.down();
                 break;
 
             case 39: // right
@@ -150,20 +180,12 @@ function handleKeyUp( aEvent ) {
     switch ( aEvent.keyCode ) {
         case 38: // up
         case 40: // down
-            if ( activeMovement.up || activeMovement.down ) {
-                activeMovement.up =
-                activeMovement.down = false;
-                ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
-            }
+            InputController.cancelVertical();
             break;
 
         case 39: // right
         case 37: // left
-            if ( activeMovement.left || activeMovement.right ) {
-                activeMovement.left =
-                activeMovement.right = false;
-                ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
-            }
+            InputController.cancelHorizontal();
             break;
     }
 }

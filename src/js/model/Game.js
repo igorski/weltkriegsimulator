@@ -264,8 +264,8 @@ function createBulletForActor( actor ) {
             // single Bullet fire
             bullet = getActorFromPool(
                 bulletPool,
-                actor.x + ( actor.width * .5 ) - 5, // -5 to subtract half Bullet width
-                actor.y - 10,
+                actor.x + actor.offsetX + ( actor.width * .5 ) - 5, // -5 to subtract half Bullet width
+                actor.y + actor.offsetY - 10,
                 0,
                 ( actor instanceof Player ) ? -5 : 5, // Player shoots up, enemies shoot down
                 actor.layer
@@ -277,13 +277,17 @@ function createBulletForActor( actor ) {
         case 1:
             // spray Bullets
             const isTopLayer = ( actor.layer === 0 );
-            const w = ( !isTopLayer ) ? actor.width / 2 : actor.width / 2;
-            const h = ( !isTopLayer ) ? actor.height / 2 : actor.height / 2;
+            const w = ( !isTopLayer ) ? actor.width  * .5 : actor.width  * .5;
+            const h = ( !isTopLayer ) ? actor.height * .5 : actor.height * .5;
             let angle, pos, targetPos;
 
             for ( let i = 0, total = 16; i < total; ++i ) {
+
+                const orgX = actor.x + actor.offsetX + w;
+                const orgY = actor.y + actor.offsetY + h;
+
                 angle = ( 360 / total ) * i;
-                pos = calcPosition( actor.x + w, actor.y + h, ( isTopLayer ) ? actor.width * 2 : actor.width, angle );
+                pos = calcPosition( orgX, orgY, ( isTopLayer ) ? actor.width * 2 : actor.width, angle );
                 bullet = getActorFromPool( bulletPool, pos.x, pos.y, 0, 0, actor.layer );
 
                 if ( !bullet )
@@ -291,13 +295,9 @@ function createBulletForActor( actor ) {
 
                 bullets.push( bullet );
 
-                targetPos = calcPosition(
-                    actor.x + w,
-                    actor.y + h,
-                    Game.world.width + ( w * 2 ), angle
-                );
+                targetPos = calcPosition( orgX, orgY, Game.world.width + ( w * 2 ), angle );
 
-                // we don't supply an x and y speed to the Bullet but use the
+                // we don't supply an xSpeed and ySpeed to the Bullet but use the
                 // Tweening engine to update the Bullet position
                 TweenMax.to( bullet, 1, { x: targetPos.x, y: targetPos.y, ease: Cubic.easeOut });
             }

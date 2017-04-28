@@ -29,6 +29,7 @@ const EventHandler    = require( "../util/EventHandler" );
 const InputController = require( "../controller/InputController" );
 
 let energyUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
+let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
 let handler, tokens = [];
 
 module.exports = {
@@ -56,11 +57,16 @@ module.exports = {
 
                 handler = new EventHandler();
 
-                handler.listen( btnFire,  "touchstart",  handleFire );
-                handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
-                handler.listen( dPad,     "touchmove",   handleDPad );
-                handler.listen( dPad,     "touchend",    handleDPad );
-                handler.listen( dPad,     "touchcancel", handleDPad );
+                handler.listen( window,   "resize",            handleResize );
+                handler.listen( window,   "orientationchange", handleResize );
+                handler.listen( btnFire,  "touchstart",        handleFire );
+                handler.listen( btnLayer, "touchstart",        handleLayerSwitch );
+                handler.listen( dPad,     "touchmove",         handleDPad );
+                handler.listen( dPad,     "touchend",          handleDPad );
+                handler.listen( dPad,     "touchcancel",       handleDPad );
+
+                // calculates and caches dPad offsets
+                handleResize();
             }
 
             // subscribe to messaging system
@@ -119,40 +125,39 @@ function handleDPad( event ) {
     event.preventDefault();
 
     switch ( event.type ) {
+
         case "touchmove":
 
             const touches = ( event.touches.length > 0 ) ? event.touches : event.changedTouches;
 
             if ( touches.length > 0 ) {
-                // TODO: cache this
 
-                const offset = dPad.getBoundingClientRect();
-                const width = offset.width;
-                const hCenter = width / 2;
-                const height = offset.height;
-                const vCenter = height / 2;
+                // calculate in which direction(s) the Player should move
+                // by determining where in the D pad the pointer is
 
-                // calculate offset
+                const eventOffsetX = touches[ 0 ].pageX - DPAD_OFFSET.left;
+                const eventOffsetY = touches[ 0 ].pageY - DPAD_OFFSET.top;
 
-                const eventOffsetX = touches[ 0 ].pageX - offset.left;
-                const eventOffsetY = touches[ 0 ].pageY - offset.top;
-                let hSpeed;
+                if ( eventOffsetX < DPAD_LEFT )
+                    InputController.left();
+                else if ( eventOffsetX > DPAD_RIGHT )
+                    InputController.right();
+                else
+                    InputController.cancelHorizontal();
 
-                if ( eventOffsetX < hCenter ) {
-                    hSpeed = -(( hCenter - eventOffsetX ) / hCenter );
-                    InputController.left( hSpeed );
-                }
-                else if ( eventOffsetX > hCenter ) {
-                    hSpeed = ( eventOffsetX - hCenter ) / hCenter;
-                    InputController.right( hSpeed );
-                }
-                console.warn("horizontal speed:" + hSpeed );
+                if ( eventOffsetY < DPAD_TOP )
+                    InputController.up();
+                else if ( eventOffsetY > DPAD_BOTTOM )
+                    InputController.down();
+                else
+                    InputController.cancelVertical();
             }
             break;
 
         case "touchcancel":
         case "touchend":
-
+            InputController.cancelHorizontal();
+            InputController.cancelVertical();
             break;
     }
 }
@@ -163,4 +168,24 @@ function handleFire( event ) {
 
 function handleLayerSwitch( event ) {
     InputController.switchLayer();
+}
+
+function handleResize( event ) {
+    // get bounding box of dPad element
+    DPAD_OFFSET = dPad.getBoundingClientRect();
+
+    // calculate center points of element
+    const hCenter = DPAD_OFFSET.width / 2;
+    const vCenter = DPAD_OFFSET.height / 2;
+
+    // these represent the size of the outer ranges that distinguish
+    // whether we're dealing with either extreme of the axis, or in its center
+    const horizontalDelta = DPAD_OFFSET.width  / 3;
+    const verticalDelta   = DPAD_OFFSET.height / 3;
+
+    // cache coordinates for handleDPad
+    DPAD_LEFT   = hCenter - horizontalDelta ;
+    DPAD_RIGHT  = hCenter + horizontalDelta;
+    DPAD_TOP    = vCenter - verticalDelta;
+    DPAD_BOTTOM = vCenter + verticalDelta;
 }
