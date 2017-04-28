@@ -22,16 +22,19 @@
  */
 "use strict";
 
-const Config = require( "../config/Config" );
+const Config      = require( "../config/Config" );
+const AudioTracks = require( "../definitions/AudioTracks" );
+const Messages    = require( "../definitions/Messages" );
+const Pubsub      = require( "pubsub-js" );
 
-let _inited      = false;
-let _sound       = null;      // currently playing sound
-let _lastTrackId = null;  // last played track Id
+let _inited        = false;
+let _sound         = null;
+let _queuedTrackId = null;
 
 const Audio = module.exports = {
 
     playing  : false,
-    muted    : false, // window.location.href.indexOf( "localhost" ) !== -1,
+    muted    : false, // window.location.href.indexOf( "localhost" ) === -1,
     sdkReady : false,
 
     /**
@@ -45,7 +48,6 @@ const Audio = module.exports = {
             client_id: Config.SOUNDCLOUD_CLIENT_ID
             //    ,redirect_uri: "https://developers.soundcloud.com/callback.html"
         });
-
         _inited = true;
     },
     
@@ -64,31 +66,43 @@ const Audio = module.exports = {
         if ( !self.sdkReady || self.muted )
             return;
     
-        self.init();
-
-        if ( _lastTrackId === aTrackId && self.playing )
+        if ( _queuedTrackId === aTrackId && self.playing )
             return; // already playing this tune!
     
+        self.init();
         self.stop(); // stop playing the current track (TODO : fade out?)
     
-        _lastTrackId = aTrackId;
+        _queuedTrackId = aTrackId;
     
         SC.stream( "/tracks/" + aTrackId, ( sound ) => {
             _sound = sound;
             sound.play();
             self.playing = true;
+
+            // get track META
+            SC.get( "/tracks/" + aTrackId, ( track ) => {
+                if ( track && track.user ) {
+                    Pubsub.publish( Messages.SHOW_MUSIC, {
+                        title: track.title,
+                        author: track.user.username
+                    });
+                }
+            });
         });
     },
     
     /**
-     * continue playing the last track id
+     * play the music!
      *
      * @public
      */
     play() {
         const self = Audio;
-        if ( !self.muted && !self.playing ) {
-            self.playTrack( _lastTrackId );
+        if ( !self.muted ) {
+            const trackId = enqueueTrack();
+
+            if ( trackId )
+                self.playTrack( trackId );
         }
     },
     
@@ -105,3 +119,26 @@ const Audio = module.exports = {
         Audio.playing = false;
     }
 };
+
+function enqueueTrack() {
+    const tracks = AudioTracks.getAll();
+    const amount = tracks.length;
+
+    if ( amount === 0 )
+        return null;
+
+    let trackId;
+
+    if ( amount > 1 ) {
+        // get random song from list, as long as it isn't the
+        // last played song so we can have a little more variation!
+        do {
+            trackId = tracks[ Math.floor( Math.random() * amount )];
+        }
+        while ( _queuedTrackId === trackId );
+    }
+    else {
+        trackId = tracks[ 0 ];
+    }
+    return trackId;
+}

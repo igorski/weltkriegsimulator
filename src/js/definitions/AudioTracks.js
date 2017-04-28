@@ -22,8 +22,22 @@
  */
 "use strict";
 
-module.exports =
+const AudioTracks = module.exports =
 {
     OVERGROUND_THEME    : "98712665",
-    BATTLE_THEME        : "174846797"
+    BATTLE_THEME        : "174846797",
+
+    /**
+     * @public
+     * @return {Array.<string>}
+     */
+    getAll() {
+        const out = [];
+
+        Object.keys( AudioTracks ).forEach(( key ) => {
+            if ( typeof AudioTracks[ key ] !== "function" )
+                out.push( AudioTracks[ key ] );
+        });
+        return out;
+    }
 };

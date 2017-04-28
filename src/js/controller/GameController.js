@@ -22,10 +22,9 @@
  */
 "use strict";
 
-const Messages   = require( "../definitions/Messages" );
-const Pubsub     = require( "pubsub-js" );
-const AudioTrack = require( "../definitions/AudioTracks" );
-const Player     = require( "../model/actors/Player" );
+const Messages = require( "../definitions/Messages" );
+const Pubsub   = require( "pubsub-js" );
+const Player   = require( "../model/actors/Player" );
 
 let audioModel, gameModel;
 
@@ -55,7 +54,8 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_STARTED:
             gameModel.player.reset();
             gameModel.active = true;
-            audioModel.playTrack( AudioTrack.BATTLE_THEME );
+            // start the music
+            audioModel.play();
             break;
 
         case Messages.GAME_OVER:

@@ -28,7 +28,7 @@ const Pubsub          = require( "pubsub-js" );
 const EventHandler    = require( "../util/EventHandler" );
 const InputController = require( "../controller/InputController" );
 
-let energyUI, dPad, btnFire, btnLayer;
+let energyUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let handler, tokens = [];
 
 module.exports = {
@@ -44,7 +44,10 @@ module.exports = {
         }).then(() => {
 
             // grab references to HTML Elements
-            energyUI = wrapper.querySelector( "#energy" );
+            energyUI       = wrapper.querySelector( "#energy" );
+            messagePanel   = wrapper.querySelector( "#messages" );
+            messageTitleUI = messagePanel.querySelector( ".title" );
+            messageBodyUI  = messagePanel.querySelector( ".body" );
 
             if ( addControls ) {
                 dPad     = wrapper.querySelector( "#dPad" );
@@ -63,6 +66,7 @@ module.exports = {
             // subscribe to messaging system
 
             [
+                Messages.SHOW_MUSIC,
                 Messages.PLAYER_HIT
 
             ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
@@ -85,6 +89,13 @@ module.exports = {
 function handleBroadcast( msg, payload ) {
 
     switch ( msg ) {
+        case Messages.SHOW_MUSIC:
+            messageTitleUI.innerHTML = "Now playing:";
+            messageBodyUI.innerHTML  = `"${payload.title}" by ${payload.author}`;
+
+            animateMessage();
+            break;
+
         case Messages.PLAYER_HIT:
             updateEnergy( payload );
             break;
@@ -93,6 +104,14 @@ function handleBroadcast( msg, payload ) {
 
 function updateEnergy( player ) {
     energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
+}
+
+function animateMessage() {
+    TweenMax.killTweensOf( messagePanel );
+    // fade message in
+    TweenMax.fromTo( messagePanel, .5, { css: { autoAlpha: 0 }}, { css: { autoAlpha: 1 }});
+    // and remove it after a short period
+    TweenMax.to( messagePanel, .5, { css: { autoAlpha: 0 }, delay: 5 });
 }
 
 function handleDPad( event ) {
