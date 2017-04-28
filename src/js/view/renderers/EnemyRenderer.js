@@ -22,34 +22,24 @@
  */
 "use strict";
 
-const Config        = require( "../../config/Config" );
-const Ship          = require( "../../model/actors/Ship" );
-const ActorRenderer = require( "./ActorRenderer" );
-const Assets        = require( "../../definitions/Assets" );
+const Config       = require( "../../config/Config" );
+const Enemy        = require( "../../model/actors/Enemy" );
+const ShipRenderer = require( "./ShipRenderer" );
+const Assets       = require( "../../definitions/Assets" );
 
-module.exports = ShipRenderer;
+module.exports = EnemyRenderer;
 
 /**
  * a renderer that represents the Ship actor on screen
  *
  * @constructor
- * @param {Ship} ship
+ * @param {Enemy} enemy
  * @param {RenderController} renderController
  */
-function ShipRenderer( ship, renderController ) {
+function EnemyRenderer( enemy, renderController ) {
 
-    ShipRenderer.super( this, "constructor", ship, renderController );
-
-    this.setBitmap( Assets.SHIP );
-    this.setSheet([
-            { row: 0, col: 0, fpt: 3, amount: 1 },  // Player ship, facing up
-            { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
-            { row: 2, col: 0, fpt: 3, amount: 16, onComplete: ship.dispose.bind( ship ) } // Explosion
-        ],
-        ship.width,
-        ship.height
-    );
-
-    this.canRumble = true;
+    EnemyRenderer.super( this, "constructor", enemy, renderController );
+    this.switchAnimation( 1 );
+    this.canRumble = false;
 }
-ActorRenderer.extend( ShipRenderer );
+ShipRenderer.extend( EnemyRenderer );

@@ -66,7 +66,17 @@ module.exports = {
 /* private methods */
 
 function generateWave1( gameModel ) {
-    console.warn("TODO: generate enemies");
+    // always generate enemy on same layer as the players current layer
+    const targetLayer = gameModel.player.layer;
+    for ( let i = 0; i < 5; ++i ) {
+        gameModel.createEnemy(
+            Math.round( Math.random() * gameModel.world.width ), 0,
+            0,
+            Math.random() * 5,
+            Math.random() * 5,
+            targetLayer
+        );
+    }
 }
 
 function createPowerup( gameModel ) {

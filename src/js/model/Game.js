@@ -25,7 +25,9 @@
 const Pubsub   = require( "pubsub-js" );
 const Messages = require( "../definitions/Messages" );
 const Actor    = require( "./actors/Actor" );
+const Ship     = require( "./actors/Ship" );
 const Player   = require( "./actors/Player" );
+const Enemy    = require( "./actors/Enemy" );
 const Bullet   = require( "./actors/Bullet" );
 const Powerup  = require( "./actors/Powerup" );
 
@@ -94,6 +96,24 @@ const Game = module.exports = {
     },
 
     /**
+     * create an enemy
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} xSpeed
+     * @param {number} ySpeed
+     * @param {number} layer
+     */
+    createEnemy( x, y, xSpeed, ySpeed, layer ) {
+        const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
+        if ( enemy ) {
+            Game.addActor( enemy );
+            enemy.reset();
+            enemy.energy = 1;
+        }
+    },
+
+    /**
      * add Actor to the Game
      *
      * @param {Actor} actor
@@ -127,6 +147,9 @@ const Game = module.exports = {
         else if ( actor instanceof Powerup )
             powerupPool.push( actor );
 
+        else if ( actor instanceof Enemy )
+            enemyPool.push( actor );
+
         Pubsub.publish(
             Messages.ACTOR_REMOVED, actor
         );
@@ -157,7 +180,7 @@ const Game = module.exports = {
               active = Game.active,
               world  = Game.world;
         
-        player.update();
+        player.update( aTimestamp );
 
         const playerX      = player.x,
               playerY      = player.y,
@@ -168,7 +191,7 @@ const Game = module.exports = {
 
         while ( i-- ) {
             actor = actors[ i ];
-            actor.update();
+            actor.update( aTimestamp );
 
             // no collision detection if game is inactive
 
@@ -184,26 +207,27 @@ const Game = module.exports = {
 
             if ( myY + myHeight < 0 || myY > world.height ||
                  myX + myWidth  < 0 || myX > world.width ) {
-
                 actor.dispose();
                 continue;
             }
 
-            // resolve collisions with the Player
+            // resolve collisions with other Actors in its vicinity
+            // TODO: is it cheaper to check with all other actors
+            // rather than create a new unique Array per Actor in this loop ??
+            const others = getActorsUnderPoint( myX, myY, myWidth, myHeight );
 
-            if ( actor.layer !== player.layer )
-                continue;
-
-            if ( playerX < myX + myWidth  && playerX + playerWidth  > myX &&
-                 playerY < myY + myHeight && playerY + playerHeight > myY ) {
-
-                player.hit( actor );
-                Pubsub.publish( Messages.PLAYER_HIT, { player: player, object: actor });
-
-                if ( player.energy === 0 ) {
-                    Pubsub.publish( Messages.GAME_OVER );
+            others.forEach(( other ) => {
+                if ( actor.collides( other )) {
+                    actor.hit( other );
+                    if ( actor instanceof Player || other instanceof Player ) {
+                        Pubsub.publish( Messages.PLAYER_HIT, {
+                            player: player, object: ( actor instanceof Player ) ? other : actor
+                        });
+                        if ( player.energy === 0 )
+                            Pubsub.publish( Messages.GAME_OVER );
+                    }
                 }
-            }
+            });
         }
     }
 };
@@ -211,12 +235,13 @@ const Game = module.exports = {
 /* initialize Pools for commonly (re)used Actors */
 
 Game.player = new Player( Game );
+Game.addActor( Game.player ); // always in the list
 
 const bulletPool  = new Array( 100 );
-const powerupPool = new Array( 10 );
-const enemyPool   = new Array( 1 );
+const enemyPool   = new Array( 20 );
+const powerupPool = new Array( 5 );
 
-[[ bulletPool, Bullet ], [ powerupPool, Powerup ], [ enemyPool, Actor ]].forEach(( poolObject ) => {
+[[ bulletPool, Bullet ], [ powerupPool, Powerup ], [ enemyPool, Enemy ]].forEach(( poolObject ) => {
 
     const pool = poolObject[ 0 ], ActorType = poolObject[ 1 ];
     for ( let i = 0; i < pool.length; ++i ) {
@@ -262,10 +287,11 @@ function createBulletForActor( actor ) {
         default:
         case 0:
             // single Bullet fire
+            const y = ( actor instanceof Player ) ? actor.y + actor.offsetY - 10 : actor.y + actor.offsetY + actor.height;
             bullet = getActorFromPool(
                 bulletPool,
                 actor.x + actor.offsetX + ( actor.width * .5 ) - 5, // -5 to subtract half Bullet width
-                actor.y + actor.offsetY - 10,
+                y,
                 0,
                 ( actor instanceof Player ) ? -5 : 5, // Player shoots up, enemies shoot down
                 actor.layer
@@ -314,4 +340,26 @@ function calcPosition( originX, originY, radius, angle ) {
         x: originX + radius * Math.cos( angle * Math.PI / 180 ),
         y: originY + radius * Math.sin( angle * Math.PI / 180 )
     }
+}
+
+function getActorsUnderPoint( x, y, width, height ) {
+
+    const out = [];
+    let i = Game.actors.length, theActor, actorX, actorY, actorWidth, actorHeight;
+
+    while ( i-- ) {
+
+        theActor = Game.actors[ i ];
+
+        actorX      = theActor.x;
+        actorY      = theActor.y;
+        actorWidth  = theActor.width;
+        actorHeight = theActor.height;
+
+        if ( actorX < x + width  && actorX + actorWidth  > x &&
+             actorY < y + height && actorY + actorHeight > y ) {
+            out.push( theActor );
+        }
+    }
+    return out;
 }

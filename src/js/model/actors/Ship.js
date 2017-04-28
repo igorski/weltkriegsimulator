@@ -80,9 +80,19 @@ module.exports = class Ship extends Actor {
      */
     hit( actor ) {
 
+        if ( !this.collidable )
+            return;
+
         if ( actor instanceof Bullet ) {
+            // colliding with Bullets
             this.energy = Math.max( 0, this.energy - actor.damage );
             actor.dispose(); // Bullets disappear on impact
+        }
+        else if ( actor && actor.collidable ) {
+            // colliding with another Object, ouch!
+            this.energy = 0;
+            if ( actor instanceof Ship )
+                actor.die();
         }
         if ( this.energy === 0 ) {
             this.die();
@@ -90,6 +100,8 @@ module.exports = class Ship extends Actor {
     }
 
     die() {
+        this.collidable = false;
+
         if ( this.renderer ) {
             this.renderer.switchAnimation( 2 );
         }

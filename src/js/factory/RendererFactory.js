@@ -24,16 +24,17 @@
 
 /* actors */
 
-const Actor   = require( "../model/actors/Actor" );
 const Bullet  = require( "../model/actors/Bullet" );
 const Powerup = require( "../model/actors/Powerup" );
 const Ship    = require( "../model/actors/Ship" );
+const Enemy   = require( "../model/actors/Enemy" );
 
 /* renderers */
 
 const BulletRenderer  = require( "../view/renderers/BulletRenderer" );
 const PowerupRenderer = require( "../view/renderers/PowerupRenderer" );
 const ShipRenderer    = require( "../view/renderers/ShipRenderer" );
+const EnemyRenderer   = require( "../view/renderers/EnemyRenderer" );
 
 module.exports = {
 
@@ -57,6 +58,9 @@ module.exports = {
         }
         else if ( actor instanceof Powerup ) {
             return new PowerupRenderer( /** @type {Powerup} */ ( actor ), renderController );
+        }
+        else if ( actor instanceof Enemy ) {
+            return new EnemyRenderer( /** @type {Enemy} */ ( actor ), renderController );
         }
         else if ( actor instanceof Ship ) {
             return new ShipRenderer( /** @type {Ship} */ ( actor ), renderController );

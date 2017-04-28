@@ -127,6 +127,13 @@ module.exports = class Actor {
          */
         this.pooled = false;
 
+        /**
+         * whether other Actors can collide with this Actor
+         *
+         * @type {boolean}
+         */
+        this.collidable = true;
+
         /* initialization */
 
         // the dimensions this Actor occupies at the highest layer (1)
@@ -139,10 +146,29 @@ module.exports = class Actor {
     
     /**
      * @public
+     * @param {number} aTimestamp
      */
-    update() {
+    update( aTimestamp ) {
         this.x += this.xSpeed;
         this.y += this.ySpeed;
+    }
+
+    /**
+     * whether this Actor collides with given Actor
+     *
+     * @param {Actor} actor
+     */
+    collides( actor ) {
+
+        if ( !actor.collidable || actor.layer !== this.layer || actor === this )
+            return false;
+        
+        return !(
+            (( this.y + this.height ) < ( actor.y )) ||
+            ( this.y > ( actor.y + actor.height )) ||
+            (( this.x + this.width ) < actor.x ) ||
+            ( this.x > ( actor.x + actor.width ))
+        );
     }
     
     /**

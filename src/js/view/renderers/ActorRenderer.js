@@ -59,6 +59,12 @@ function ActorRenderer( actor, renderController ) {
     this.renderController = renderController;
 
     /**
+     * whether this renderer can show rumble
+     * @type {boolean}
+     */
+    this.canRumble = false;
+
+    /**
      * @public
      * @type {{ lastLayer: number }}
      */
@@ -111,10 +117,12 @@ ActorRenderer.prototype.draw = function( aCanvasContext ) {
 
     // apply rumble when applicable
 
-    const rumbleObject = this.renderController.rumbling;
-    if ( rumbleObject.active === true ) {
-        this._bounds.left -= rumbleObject.x;
-        this._bounds.top  -= rumbleObject.y;
+    if ( this.canRumble ) {
+        const rumbleObject = this.renderController.rumbling;
+        if ( rumbleObject.active === true ) {
+            this._bounds.left -= rumbleObject.x;
+            this._bounds.top  -= rumbleObject.y;
+        }
     }
     ActorRenderer.super( this, "draw", aCanvasContext );
 };

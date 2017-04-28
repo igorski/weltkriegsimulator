@@ -145,14 +145,6 @@ function handleKeyDown( aEvent ) {
 
         switch ( keyCode ) {
 
-            case 27: // escape
-                // TODO / QQQ:   temporary
-                const Enemy = require( "../model/actors/Actor" );
-                Pubsub.publish(
-                    Messages.FIRE_BULLET, new Enemy( null, player.x, 0, 0, 0, player.layer )
-                );
-                break;
-
             case 32: // spacebar
                 InputController.fire();
                 break;

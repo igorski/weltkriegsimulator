@@ -135,6 +135,6 @@ EventHandler.prototype.dispose = function() {
     while ( i-- ) {
         const mapping = this._mappedEvents[ i ];
         this.unlisten( mapping.element, mapping.type );
+        this._mappedEvents.splice( i, 1 );
     }
-    this._mappedEvents = null;
 };

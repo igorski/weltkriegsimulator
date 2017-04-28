@@ -22,16 +22,14 @@
  */
 "use strict";
 
-const Ship    = require( "./Ship" );
-const Powerup = require( "./Powerup" );
+const Ship = require( "./Ship" );
 
-const DEFAULT_ENERGY = 10;
+const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = 0;
 
-const MIN_X = 0, MIN_Y = 0;
-let MAX_X, MAX_Y;
+const SHOOT_INTERVAL = 1500;
 
-module.exports = class Player extends Ship {
+module.exports = class Enemy extends Ship {
 
     /**
      * @constructor
@@ -48,9 +46,13 @@ module.exports = class Player extends Ship {
 
         super( game, 0, 0, 0, 0, energy, weapon );
 
-        // Player is re-used through appication lifetime
+        /* instance properties */
 
-        this.pooled = true;
+        /**
+         * @public
+         * @type {number}
+         */
+        this.lastShot = 0;
     }
 
     /* public methods */
@@ -63,50 +65,9 @@ module.exports = class Player extends Ship {
     update( aTimestamp ) {
         super.update( aTimestamp );
 
-        // keep Player within world bounds
-
-        if ( this.x > MAX_X )
-            this.x = MAX_X;
-        else if ( this.x < MIN_X )
-            this.x = MIN_X;
-
-        if ( this.y > MAX_Y )
-            this.y = MAX_Y;
-        else if ( this.y < MIN_Y )
-            this.y = MIN_Y;
-    }
-
-    /**
-     * @public
-     */
-    cacheBounds() {
-        MAX_X = this.game.world.width  - this.width;
-        MAX_Y = this.game.world.height - this.height;
-    }
-
-    /**
-     * @override
-     * @protected
-     */
-    _onLayerSwitch() {
-        super._onLayerSwitch();
-        this.cacheBounds();
-    }
-
-    /**
-     * @override
-     * @public
-     * @param {Object=} actor
-     */
-    hit( actor ) {
-
-        if ( actor instanceof Powerup ) {
-            if ( actor.type === 1 ) // powerup is of weapon type
-                this.weapon = actor.value;
-            actor.dispose();
-        }
-        else {
-            super.hit( actor );
+        if ( this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
+            this.lastShot = Date.now();
+            this.game.fireBullet( this );
         }
     }
 
@@ -119,6 +80,6 @@ module.exports = class Player extends Ship {
         this.collidable = true;
 
         if ( this.renderer )
-            this.renderer.switchAnimation( 0 );
+            this.renderer.switchAnimation( 1 );
     }
 };
