@@ -21,9 +21,10 @@ You can start the dev mode by running:
 
     grunt dev
     
-This mode will launch a local server allowing you to debug the application on _http://localhost:3000.
-When you make changes / additions to the source files, a watcher will register the changes, rebuild the
-application and refresh the browser.
+This mode will launch a local server allowing you to debug the application from your browser through the
+local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
+register the changes, rebuild the application and refresh the browser so you can see the effect of your
+changes directly.
 
 You can create a production ready package by running:
 
@@ -33,7 +34,7 @@ Project outline
 ---------------
 
 WKS uses no framework but was written in vanilla JS. The only used libraries besides the aforementioned _zCanvas_
-are _TweenMax_ by Greensock and _Handlebars_.
+are Greenscoks _TweenMax_, _Handlebars_ (for HTML templating) and _pubsub-js_ (for messaging).
 
 All source code resides in the _./src/js_-directory. The main application logic is split
 up into:
@@ -49,6 +50,20 @@ controllers are:
  * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
  * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen
  * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
+ 
+The _views_ represent each of the screens used in the game. They are managed by their appropriate controllers.
+Note: for the game elements (the Actors) these are represented by _renderers_ (see _zCanvas in WKS_ below).
+
+Finally, the _models_ contain all data and properties. For the game's model (_Game.js_) this is where the
+state and contents of the game's "world" are held. Apart from generic world properties determining the
+game's behaviour and progress, this model also references the _Actors_. The Actors are instances of all
+Objects in the game (for instance: the player, bullets, powerups, enemy ships). These share common properties
+such as coordinates, speed, but have their own custom properties (e.g. energy, weapon damage, etc.). These
+Actors are defined as ES6 classes as the Object Oriented Pattern works well for inheritance purposes. The
+remainder of the applications business logic follows the Functional Programming pattern.
+
+Communication between these models, views and controllers is done using the publish-subscribe pattern where
+messages are broadcast to subscribed listeners to act upon.
  
 zCanvas in WKS
 --------------
