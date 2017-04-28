@@ -22,14 +22,16 @@
  */
 "use strict";
 
-const Config      = require( "../config/Config" );
-const AudioTracks = require( "../definitions/AudioTracks" );
-const Messages    = require( "../definitions/Messages" );
-const Pubsub      = require( "pubsub-js" );
+const Config       = require( "../config/Config" );
+const AudioTracks  = require( "../definitions/AudioTracks" );
+const Messages     = require( "../definitions/Messages" );
+const Pubsub       = require( "pubsub-js" );
+const EventHandler = require( "../util/EventHandler" );
 
-let _inited        = false;
-let _sound         = null;
-let _queuedTrackId = null;
+let inited        = false;
+let sound         = null;
+let queuedTrackId = null;
+let handler;
 
 const Audio = module.exports = {
 
@@ -40,14 +42,14 @@ const Audio = module.exports = {
      * @public
      */
     init() {
-        if ( _inited || !( "SC" in window ))
+        if ( inited || !( "SC" in window ))
             return;
 
         SC.initialize({
             client_id: Config.SOUNDCLOUD_CLIENT_ID
             //    ,redirect_uri: "https://developers.soundcloud.com/callback.html"
         });
-        _inited = true;
+        inited = true;
     },
     
     /**
@@ -62,30 +64,32 @@ const Audio = module.exports = {
     playTrack( aTrackId ) {
         const self = Audio;
 
-        if ( !_inited || self.muted )
+        if ( !inited || self.muted )
             return;
     
-        if ( _queuedTrackId === aTrackId && self.playing )
+        if ( queuedTrackId === aTrackId && self.playing )
             return; // already playing this tune!
     
         self.stop(); // stop playing the current track (TODO : fade out?)
     
-        _queuedTrackId = aTrackId;
+        queuedTrackId = aTrackId;
     
-        SC.stream( "/tracks/" + aTrackId, ( sound ) => {
-            _sound = sound;
-            sound.play();
-            self.playing = true;
+        SC.stream( "/tracks/" + aTrackId, ( track ) => {
+            sound = track;
 
-            // get track META
-            SC.get( "/tracks/" + aTrackId, ( track ) => {
-                if ( track && track.user ) {
-                    Pubsub.publish( Messages.SHOW_MUSIC, {
-                        title: track.title,
-                        author: track.user.username
-                    });
-                }
-            });
+            if ( Config.HAS_TOUCH_CONTROLS ) {
+                // on iOS we will not hear anything unless it comes
+                // after a direct user response
+                handler = new EventHandler();
+                handler.listen( document, "touchstart", ( e ) => {
+                    startPlaying();
+                    handler.dispose();
+                    handler = null;
+                });
+            }
+            else {
+                startPlaying();
+            }
         });
     },
     
@@ -110,9 +114,13 @@ const Audio = module.exports = {
      * @public
      */
     stop() {
-        if ( _sound ) {
-            _sound.stop();
-            _sound = null;
+        if ( sound ) {
+            sound.stop();
+            sound = null;
+        }
+        if ( handler ) {
+            handler.dispose();
+            handler = null;
         }
         Audio.playing = false;
     }
@@ -133,10 +141,25 @@ function enqueueTrack() {
         do {
             trackId = tracks[ Math.floor( Math.random() * amount )];
         }
-        while ( _queuedTrackId === trackId );
+        while ( queuedTrackId === trackId );
     }
     else {
         trackId = tracks[ 0 ];
     }
     return trackId;
+}
+
+function startPlaying() {
+    sound.play();
+    self.playing = true;
+
+    // get track META
+    SC.get( "/tracks/" + queuedTrackId, ( track ) => {
+        if ( track && track.user ) {
+            Pubsub.publish( Messages.SHOW_MUSIC, {
+                title: track.title,
+                author: track.user.username
+            });
+        }
+    });
 }
