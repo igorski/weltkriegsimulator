@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,6 +25,9 @@
 const Ship    = require( "./Ship" );
 const Powerup = require( "./Powerup" );
 
+const DEFAULT_ENERGY = 10;
+const DEFAULT_WEAPON = 0;
+
 module.exports = class Player extends Ship {
 
     /**
@@ -37,8 +40,8 @@ module.exports = class Player extends Ship {
 
         /* inherit prototype properties of Ship */
 
-        energy = ( typeof energy === "number" ) ? energy : 10;
-        weapon = ( typeof weapon === "number" ) ? weapon : 0;
+        energy = ( typeof energy === "number" ) ? energy : DEFAULT_ENERGY;
+        weapon = ( typeof weapon === "number" ) ? weapon : DEFAULT_WEAPON;
 
         super( game, 0, 0, 0, 0, energy, weapon );
     }
@@ -58,5 +61,16 @@ module.exports = class Player extends Ship {
         else {
             super.hit( actor );
         }
+    }
+
+    /**
+     * @public
+     */
+    reset() {
+        this.energy = DEFAULT_ENERGY;
+        this.weapon = DEFAULT_WEAPON;
+
+        if ( this.renderer )
+            this.renderer.switchAnimation( 0 );
     }
 };

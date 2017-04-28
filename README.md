@@ -4,6 +4,8 @@ WELTKRIEGSIMULATOR
 _Weltkriegsimulator_ (WKS) is a vertical scrolling shoot 'em up that was created to showcase the
 possibilities of creating a game using the open source [zCanvas library](https://github.com/igorski/zCanvas).
 
+You can play the game directly in your browser by [navigating here](https://www.igorski.nl/weltkriegsimulator).
+
 Project requirements
 --------------------
 
@@ -19,7 +21,7 @@ You can start the dev mode by running:
 
     grunt dev
     
-This mode will launch a local server allowing you to debug the application on _http://localhost:9001_.
+This mode will launch a local server allowing you to debug the application on _http://localhost:3000.
 When you make changes / additions to the source files, a watcher will register the changes, rebuild the
 application and refresh the browser.
 
@@ -39,6 +41,14 @@ up into:
  * controllers
  * model
  * view
+ 
+The _controllers_ are responsible for managing changes in the model and updating the appropriate views. These
+controllers are:
+
+ * _GameController_ sets up the game, changes game world properties, delegates changes in game state
+ * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
+ * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen
+ * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
  
 zCanvas in WKS
 --------------
@@ -61,3 +71,14 @@ learn about the API.
 
 Note zCanvas is _always_ on-screen, the different screens (e.g. Title, High Scores, etc.) are overlaid on top (see
 _ScreenController.js_).
+
+Object pooling
+--------------
+
+A vertical scrolling shoot 'em up is pure mayhem with a lot of Objects being in use simultaneously, as well
+a lot of generation / removal of Actors.
+
+For this purpose, this application uses pooling. When a resource is no longer needed (for instance: bullet
+is out of screen bounds), it is not disposed, but returned to the pool. The next time a new instance of
+that type (for instance: newly fired bullet) is needed, it is retrieved from the pool and updated to have
+the appropriate properties (e.g. new position, direction, etc.). This pool is maintained in _Game.js_.

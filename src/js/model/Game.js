@@ -46,6 +46,14 @@ const Game = module.exports = {
     actors: [],
 
     /**
+     * whether the game is currently active
+     *
+     * @public
+     * @type {boolean}
+     */
+    active : false,
+
+    /**
      * fire a Bullet from the Pool
      *
      * @public
@@ -134,7 +142,9 @@ const Game = module.exports = {
      */
     update( aTimestamp ) {
 
-        const player = Game.player;
+        const player = Game.player,
+              actors = Game.actors,
+              active = Game.active;
         
         player.update();
 
@@ -143,11 +153,16 @@ const Game = module.exports = {
               playerWidth  = player.width,
               playerHeight = player.height;
 
-        let i = Game.actors.length, actor;
+        let i = actors.length, actor;
 
         while ( i-- ) {
-            actor = Game.actors[ i ];
+            actor = actors[ i ];
             actor.update();
+
+            // no collision detection if game is inactive
+
+            if ( !active )
+                continue;
 
             const myX      = actor.x,
                   myY      = actor.y,
@@ -158,7 +173,7 @@ const Game = module.exports = {
             // TODO: dimensions implied by zCanvas size, needs to come from model
 
             if ( myY + myHeight < 0 || myY > 400 ||
-                 myX + myWidth < 0  || myX > 400 ) {
+                 myX + myWidth  < 0 || myX > 400 ) {
 
                 actor.dispose();
                 continue;
@@ -175,7 +190,6 @@ const Game = module.exports = {
                 player.hit( actor );
                 Pubsub.publish( Messages.PLAYER_HIT, player );
 
-                // TODO: halt game, prevent resending this message
                 if ( player.energy === 0 ) {
                     Pubsub.publish( Messages.GAME_OVER );
                 }
@@ -293,8 +307,3 @@ function calcPosition( originX, originY, radius, angle ) {
         y: originY + radius * Math.sin( angle * Math.PI / 180 )
     }
 }
-
-// TODO / QQQ
-setTimeout( function() {
-    Game.createPowerup( 100, 10, 0, 1, ( Game.player.layer === 1 ) ? 0 : 1, 1, 1);
-}, 1000);

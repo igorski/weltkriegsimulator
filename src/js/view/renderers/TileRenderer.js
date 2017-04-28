@@ -25,6 +25,7 @@
 const Config   = require( "../../config/Config" );
 const zCanvas  = require( "zcanvas" );
 const TileUtil = require( "../../util/TileUtil" );
+const Assets   = require( "../../definitions/Assets" );
 
 module.exports = TileRenderer;
 
@@ -49,7 +50,7 @@ function TileRenderer( x, y, speed, scale ) {
 
     const self = this;
 
-    TileUtil.createTileMap( Config.getBaseURL() + "/assets/images/sprites/tile.png", scale ).
+    TileUtil.createTileMap( Assets.TILE, scale ).
         then(( cvs ) => {
             self.setBitmap( cvs, cvs.width, cvs.height );
         });

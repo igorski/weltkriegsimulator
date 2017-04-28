@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016-2017 - http://www.igorski.nl
+ * Igor Zinken 2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,55 +22,54 @@
  */
 "use strict";
 
-const Messages        = require( "../definitions/Messages" );
-const Pubsub          = require( "pubsub-js" );
-const TemplateService = new ( require( "../services/TemplateService" ))();
-const TitleScreen     = require( "../view/TitleScreen" );
-const GameScreen      = require( "../view/GameScreen" );
+const Messages   = require( "../definitions/Messages" );
+const Pubsub     = require( "pubsub-js" );
+const AudioTrack = require( "../definitions/AudioTracks" );
+const Player     = require( "../model/actors/Player" );
 
-let wrapper, currentScreen;
+let audioModel, gameModel;
 
 module.exports = {
 
-    init( wks, container ) {
+    init( wks ) {
 
-        wrapper = document.createElement( "div" );
-        wrapper.setAttribute( "id", "screenOverlay" );
-        container.appendChild( wrapper );
+        audioModel = wks.audioModel;
+        gameModel  = wks.gameModel;
 
-        // subscribe to messaging system
+        // subscribe to pubsub system to receive and broadcast messages
 
         [
             Messages.GAME_STARTED,
-            Messages.GAME_OVER
+            Messages.GAME_OVER,
+            Messages.FIRE_BULLET
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
-
-        // render the first screen
-
-        renderScreen( TitleScreen );
     }
 };
 
 /* private methods */
 
-function handleBroadcast( msg, payload ) {
-    switch ( msg ) {
+function handleBroadcast( type, payload ) {
+
+    switch ( type ) {
         case Messages.GAME_STARTED:
-            renderScreen( GameScreen );
+            gameModel.player.reset();
+            gameModel.active = true;
+            audioModel.playTrack( AudioTrack.BATTLE_THEME );
             break;
 
         case Messages.GAME_OVER:
-            renderScreen( TitleScreen );
+            gameModel.active = false;
+            break;
+
+        case Messages.FIRE_BULLET:
+            gameModel.fireBullet( payload );
             break;
     }
 }
 
-function renderScreen( screen ) {
-    if ( currentScreen ) {
-        currentScreen.dispose();
-        wrapper.innerHTML = "";
-    }
-    screen.render( wrapper, TemplateService );
-    currentScreen = screen;
-}
+// TODO / QQQ create a nice set of functions for these periodic changes to the world
+
+setTimeout( function() {
+    gameModel.createPowerup( 100, 10, 0, 1, ( gameModel.player.layer === 1 ) ? 0 : 1, 1, 1);
+}, 2500);

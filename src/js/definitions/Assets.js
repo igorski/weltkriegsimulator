@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016-2017 - http://www.igorski.nl
+ * Igor Zinken 2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,29 +22,26 @@
  */
 "use strict";
 
-/* initialize application */
+const Config  = require( "../config/Config" );
+const baseURL = Config.getBaseURL() + "/assets/images/";
 
-if ( !"TweenMax" in window )
-    throw new Error( "GreenSock TweenMax required" );
+const Assets = module.exports = {
 
-// grab reference to application container in template
+    POWERUP : baseURL + "sprites/powerup.png",
+    SHIP    : baseURL + "sprites/ship_spritesheet.png",
+    SKY     : baseURL + "sprites/clouds.png",
+    TILE    : baseURL + "sprites/tile.png",
 
-const container = document.querySelector( "#application" );
-
-// set up "framework"
-
-const WKS = window.WKS = {
-    inputController  : require( "./controller/InputController" ),
-    gameController   : require( "./controller/GameController" ),
-    renderController : require( "./controller/RenderController" ),
-    screenController : require( "./controller/ScreenController" ),
-    gameModel        : require( "./model/Game" ),
-    audioModel       : require( "./model/Audio" )
+    /**
+     * @public
+     * @return {Array.<string>}
+     */
+    getAll() {
+        return [
+            Assets.POWERUP,
+            Assets.SHIP,
+            Assets.SKY,
+            Assets.TILE
+        ];
+    }
 };
-
-/* initialize controllers */
-
-WKS.gameController.init( WKS );
-WKS.inputController.init( WKS );
-WKS.renderController.init( WKS, container );
-WKS.screenController.init( WKS, container );

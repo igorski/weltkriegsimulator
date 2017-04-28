@@ -24,6 +24,7 @@
 
 const Config  = require( "../../config/Config" );
 const zCanvas = require( "zcanvas" );
+const Assets  = require( "../../definitions/Assets" );
 
 module.exports = SkyRenderer;
 
@@ -43,7 +44,7 @@ function SkyRenderer( x, y, speed, scale ) {
 
     SkyRenderer.super(
         this, "constructor", x, y, 300 * scale, 508 * scale,
-        Config.getBaseURL() + "/assets/images/sprites/clouds.png"
+        Assets.SKY
     );
 
     /* instance properties */

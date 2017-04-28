@@ -25,6 +25,7 @@
 const Config        = require( "../../config/Config" );
 const Powerup       = require( "../../model/actors/Powerup" );
 const ActorRenderer = require( "./ActorRenderer" );
+const Assets        = require( "../../definitions/Assets" );
 
 module.exports = PowerupRenderer;
 
@@ -38,6 +39,6 @@ module.exports = PowerupRenderer;
 function PowerupRenderer( powerup, renderController ) {
     PowerupRenderer.super( this, "constructor", powerup, renderController );
 
-    this.setBitmap( Config.getBaseURL() + "/assets/images/sprites/powerup.png" );
+    this.setBitmap( Assets.POWERUP );
 }
 ActorRenderer.extend( PowerupRenderer );

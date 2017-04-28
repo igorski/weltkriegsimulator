@@ -43,7 +43,7 @@ const layers = new Array( 5 );
 
 const RenderController = module.exports = {
 
-    init( game, container ) {
+    init( wks, container ) {
 
         canvas = new zCanvas.canvas({
             width: IDEAL_WIDTH,
@@ -52,11 +52,11 @@ const RenderController = module.exports = {
             smoothing: false,
             stretchToFit: true,
             fps: 60,
-            onUpdate: game.gameModel.update
+            onUpdate: wks.gameModel.update
         });
         canvas.insertInPage( container );
 
-        setupGame( game.gameModel );
+        setupGame( wks.gameModel );
 
         // subscribe to messaging system
 

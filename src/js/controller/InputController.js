@@ -44,9 +44,9 @@ let gameModel, player, listener;
 
 const InputController = module.exports = {
 
-    init( game ) {
+    init( wks ) {
 
-        gameModel = game.gameModel;
+        gameModel = wks.gameModel;
         player = gameModel.player;
 
         if ( !hasListeners ) {

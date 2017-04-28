@@ -25,6 +25,7 @@
 const Config        = require( "../../config/Config" );
 const Ship          = require( "../../model/actors/Ship" );
 const ActorRenderer = require( "./ActorRenderer" );
+const Assets        = require( "../../definitions/Assets" );
 
 module.exports = ShipRenderer;
 
@@ -39,7 +40,7 @@ function ShipRenderer( ship, renderController ) {
 
     ShipRenderer.super( this, "constructor", ship, renderController );
 
-    this.setBitmap( Config.getBaseURL() + "/assets/images/sprites/ship_spritesheet.png" );
+    this.setBitmap( Assets.SHIP );
     this.setSheet([
             { row: 0, col: 0, fpt: 3, amount: 1 },  // Player ship, facing up
             { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
