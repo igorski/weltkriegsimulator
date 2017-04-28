@@ -51,7 +51,16 @@ const Game = module.exports = {
      * @public
      * @type {boolean}
      */
-    active : false,
+    active: false,
+
+    /**
+     * @public
+     * @type {Object}
+     */
+    world: {
+        width: 400,
+        height: 400
+    },
 
     /**
      * fire a Bullet from the Pool
@@ -100,6 +109,7 @@ const Game = module.exports = {
     /**
      * remove Actor from the Game, this should always be
      * invoked form Actor.dispose() and never directly
+     * note: Player always remains in Game
      *
      * @public
      * @param {Actor} actor
@@ -144,7 +154,8 @@ const Game = module.exports = {
 
         const player = Game.player,
               actors = Game.actors,
-              active = Game.active;
+              active = Game.active,
+              world  = Game.world;
         
         player.update();
 
@@ -170,10 +181,9 @@ const Game = module.exports = {
                   myHeight = actor.height;
 
             // keep Actor within world bounds
-            // TODO: dimensions implied by zCanvas size, needs to come from model
 
-            if ( myY + myHeight < 0 || myY > 400 ||
-                 myX + myWidth  < 0 || myX > 400 ) {
+            if ( myY + myHeight < 0 || myY > world.height ||
+                 myX + myWidth  < 0 || myX > world.width ) {
 
                 actor.dispose();
                 continue;
@@ -265,13 +275,12 @@ function createBulletForActor( actor ) {
             break;
 
         case 1:
-
+            // spray Bullets
             const isTopLayer = ( actor.layer === 0 );
             const w = ( !isTopLayer ) ? actor.width / 2 : actor.width / 2;
             const h = ( !isTopLayer ) ? actor.height / 2 : actor.height / 2;
             let angle, pos, targetPos;
 
-            // spray Bullets
             for ( let i = 0, total = 16; i < total; ++i ) {
                 angle = ( 360 / total ) * i;
                 pos = calcPosition( actor.x + w, actor.y + h, ( isTopLayer ) ? actor.width * 2 : actor.width, angle );
@@ -282,11 +291,10 @@ function createBulletForActor( actor ) {
 
                 bullets.push( bullet );
 
-                // TODO : 400 is magic number (canvas width should come from model)
                 targetPos = calcPosition(
                     actor.x + w,
                     actor.y + h,
-                    400 + ( w * 2 ), angle
+                    Game.world.width + ( w * 2 ), angle
                 );
 
                 // we don't supply an x and y speed to the Bullet but use the

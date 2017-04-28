@@ -44,6 +44,10 @@ module.exports = class Player extends Ship {
         weapon = ( typeof weapon === "number" ) ? weapon : DEFAULT_WEAPON;
 
         super( game, 0, 0, 0, 0, energy, weapon );
+
+        // Player is re-used through appication lifetime
+
+        this.pooled = true;
     }
 
     /**

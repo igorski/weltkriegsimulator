@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -29,8 +29,12 @@ const RendererFactory = require( "../factory/RendererFactory" );
 const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
 
-const IDEAL_WIDTH = 400;
 let gameModel, canvas, player, playerLayer, background;
+
+// ideal width of the game, this is blown up by CSS
+// for a fullscreen experience, while maintaining the "pixel art" vibe
+// height will be calculated to use the same ratio as the available window size
+const IDEAL_WIDTH = 400;
 
 // all Actors apart from the Player
 const actors = [];
@@ -58,9 +62,17 @@ const RenderController = module.exports = {
 
         setupGame( wks.gameModel );
 
+        // add listeners for resize/orientation change so we can update the world
+        // note: zCanvas will automatically stretch to fit (see its constructor)
+        // so we don't have to worry about that in our code here
+
+        window.addEventListener( "resize",            handleResize );
+        window.addEventListener( "orientationchange", handleResize );
+
         // subscribe to messaging system
 
         [
+            Messages.GAME_STARTED,
             Messages.ACTOR_ADDED,
             Messages.ACTOR_REMOVED,
             Messages.ACTOR_LAYER_SWITCH,
@@ -81,6 +93,7 @@ const RenderController = module.exports = {
 function setupGame( aGameModel ) {
 
     gameModel = aGameModel;
+    gameModel.canvas = canvas;
     clearGame();
 
     player = RendererFactory.createRenderer(
@@ -102,17 +115,18 @@ function setupGame( aGameModel ) {
     player.x = canvas.getWidth() / 2 - player.width / 2;
     player.y = canvas.getHeight() - player.height;
 
-    // will trigger organization of Display List
-    addRendererToAppropriateLayer( gameModel.player );
-
     // ensures optimal size
-    resize();
+    handleResize();
 }
 
 function handleBroadcast( type, payload ) {
 
     let renderer;
     switch ( type ) {
+        case Messages.GAME_STARTED:
+            addRendererToAppropriateLayer( gameModel.player );
+            break;
+
         case Messages.ACTOR_ADDED:
 
             renderer = RendererFactory.createRenderer(
@@ -231,23 +245,9 @@ function rumble() {
     );
 }
 
-function resize() {
-  return;
-    const windowWidth  = document.documentElement.clientWidth;
-    const windowHeight = document.documentElement.clientHeight;
-
-    const tilesInWidth  = IDEAL_WIDTH;
-    const tilesInHeight = Math.round(( windowHeight / windowWidth ) * tilesInWidth );
-
-    canvas.setDimensions( tilesInWidth, tilesInHeight );
-
-    // scale canvas element up using CSS
-
-    const xScale = windowWidth  / tilesInWidth;
-    const yScale = windowHeight / tilesInHeight;
-    const canvasElement = canvas.getElement();
-
-    canvasElement.style[ "-webkit-transform" ] = "scale(" + xScale + ", " + yScale + ")";
-    canvasElement.style[ "transform" ]         = "scale(" + xScale + ", " + yScale + ")";
-    canvasElement.style[ "transform-origin" ]  = "0 0";
+function handleResize() {
+    // update the world viewport size in the GameModel
+    // as this is used to determine boundaries for Actors
+    gameModel.world.width  = canvas.getWidth();
+    gameModel.world.height = canvas.getHeight();
 }
