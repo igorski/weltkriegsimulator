@@ -79,7 +79,6 @@ module.exports = class Player extends Ship {
      * @public
      */
     cacheBounds() {
-        console.warn("CACHING BOUNDS");
         MAX_X = this.game.world.width  - this.width;
         MAX_Y = this.game.world.height - this.height;
     }

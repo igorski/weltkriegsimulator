@@ -83,8 +83,8 @@ ActorRenderer.prototype.sync = function() {
 
     // cache render parameters
 
-    bounds.left = actor.x;
-    bounds.top  = actor.y;
+    bounds.left = ( actor.x + actor.offsetX );
+    bounds.top  = ( actor.y + actor.offsetY );
 
     if ( actor.layer !== this.cache.lastLayer ) {
 

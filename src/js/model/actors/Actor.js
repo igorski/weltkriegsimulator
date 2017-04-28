@@ -69,6 +69,8 @@ module.exports = class Actor {
          */
         this.ySpeed = ( typeof ySpeed === "number" ) ? ySpeed : 0;
 
+        // absolute coordinates for this Actor within the world
+
         /**
          * @public
          * @type {number}
@@ -76,10 +78,27 @@ module.exports = class Actor {
         this.x = ( typeof x === "number" ) ? x : 0;
 
         /**
+         * absolute coordinate for this Actor within the world
+         *
          * @public
          * @type {number}
          */
         this.y = ( typeof y === "number" ) ? y : 0;
+
+        // temporary offset (as in: margin) that can be used
+        // at certain times (e.g. layer transitions)
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.offsetX = 0;
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.offsetY = 0;
 
         /**
          * @public
@@ -155,12 +174,20 @@ module.exports = class Actor {
         const width  = this.orgWidth  * .5 + ( this.orgWidth  * multiplier );
         const height = this.orgHeight * .5 + ( this.orgHeight * multiplier );
 
+        // animate the following properties
+        // note we animate offsetX and offsetY (instead of direct X and Y)
+        // to keep the relative coordinate centered (relative from its unscaled poiont)
+        // this allows us to change Actor position during the animation of the layer
+        // switch (for instance: Player to keep moving during dive/rise)
+
         ActorUtil.setDelayed( self,
-            [ "layer", "x", "y", "width", "height" ],
+            [ "layer", "offsetX", "offsetY", "width", "height" ],
             [
-                targetLayer, this.x + (( this.width * .5 ) - ( width * .5 )),
-                this.y + (( this.width * .5 ) - ( height * .5 )),
-                width, height
+                targetLayer,
+                (( this.width * .5 ) - ( width  * .5 )),
+                (( this.width * .5 ) - ( height * .5 )),
+                width,
+                height
             ],
             1, () => {
                 self.layer = targetLayer; // overcome JS rounding errors
@@ -171,11 +198,25 @@ module.exports = class Actor {
     }
 
     /**
+     * invoked whenever the layer switch animation
+     * has completed
+     *
      * @protected
      */
     _onLayerSwitch() {
         this.switching = false;
         this.game.updateActorLayer( this );
+
+        // commit the offset to the final coordinate now
+        // that the layer switch animation has completed
+
+        this.x += this.offsetX;
+        this.y += this.offsetY;
+
+        // restore offset
+
+        this.offsetX =
+        this.offsetY = 0;
     }
 
     /**
