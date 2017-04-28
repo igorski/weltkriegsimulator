@@ -42,9 +42,25 @@ const WKS = window.WKS = {
     audioModel       : require( "./model/Audio" )
 };
 
-/* initialize controllers */
+// prepare dependencies
 
-WKS.gameController.init( WKS );
-WKS.inputController.init( WKS );
-WKS.renderController.init( WKS, container );
-WKS.screenController.init( WKS, container );
+const MusicService = require( "./services/MusicService" );
+MusicService.prepare().
+    then(() => {
+        WKS.audioModel.sdkReady = true;
+        init();
+    }).
+    catch(() => {
+        // failure during loading of SoundCloud SDK, continue
+        // as is (Audio model will not play music)
+        init();
+    });
+
+// initialize controllers, this starts the app
+
+function init() {
+    WKS.gameController.init( WKS );
+    WKS.inputController.init( WKS );
+    WKS.renderController.init( WKS, container );
+    WKS.screenController.init( WKS, container );
+}

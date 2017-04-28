@@ -25,37 +25,20 @@
 const Config = require( "../config/Config" );
 
 let _inited      = false;
-let _scSDKLoaded = false;
-let _scSDKError  = false;
 let _sound       = null;      // currently playing sound
 let _lastTrackId = null;  // last played track Id
 
 const Audio = module.exports = {
 
-    playing : false,
-    muted   : false, // window.location.href.indexOf( "localhost" ) !== -1,
-
-    setup() {
-        // load SoundCloud SDK
-
-        const scriptTag = document.createElement( "script" );
-        scriptTag.setAttribute( "type", "text/javascript" );
-        scriptTag.setAttribute( "async", "true" );
-        scriptTag.setAttribute( "src", "https://connect.soundcloud.com/sdk.js" );
-        scriptTag.onload = () => _scSDKLoaded = true;
-        scriptTag.onerror = () => {
-            // Error occurred during loading of SoundCloud SDK, mark Error
-            // and continue application without audio
-            _scSDKError = true;
-        };
-        document.getElementsByTagName( "head" )[ 0 ].appendChild( scriptTag );
-    },
+    playing  : false,
+    muted    : false, // window.location.href.indexOf( "localhost" ) !== -1,
+    sdkReady : false,
 
     /**
      * @public
      */
     init() {
-        if ( _inited || !_scSDKLoaded )
+        if ( _inited || !Audio.sdkReady )
             return;
 
         SC.initialize({
@@ -77,7 +60,8 @@ const Audio = module.exports = {
      */
     playTrack( aTrackId ) {
         const self = Audio;
-        if ( !_scSDKLoaded || self.muted )
+
+        if ( !self.sdkReady || self.muted )
             return;
     
         self.init();
@@ -121,6 +105,3 @@ const Audio = module.exports = {
         Audio.playing = false;
     }
 };
-
-// autoload Soundcloud SDK
-Audio.setup();

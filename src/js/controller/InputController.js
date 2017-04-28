@@ -30,8 +30,7 @@ const Bullet    = require( "../model/actors/Bullet" );
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let hasListeners = false,
     isFiring = false,
-    blockDefaults = true,
-    suspended = false;
+    blockDefaults = true;
 
 const activeMovement = {
     up: false,
@@ -40,7 +39,7 @@ const activeMovement = {
     right: false
 };
 
-let gameModel, player, listener;
+let gameModel, player;
 
 const InputController = module.exports = {
 
@@ -92,61 +91,56 @@ const InputController = module.exports = {
 
 function handleKeyDown( aEvent ) {
 
-    if ( !suspended ) {
+    const keyCode = aEvent.keyCode;
 
-        const keyCode = aEvent.keyCode;
+    // prevent defaults when using the arrows, space (prevents page jumps) and backspace (navigate back in history)
 
-        // prevent defaults when using the arrows, space (prevents page jumps) and backspace (navigate back in history)
+    if ( blockDefaults && DEFAULT_BLOCKED.indexOf( keyCode ) > -1 )
+        aEvent.preventDefault();
 
-        if ( blockDefaults && DEFAULT_BLOCKED.indexOf( keyCode ) > -1 )
-            aEvent.preventDefault();
+    if ( gameModel.active ) {
 
-        if ( listener && listener.handleKey ) {
-            listener.handleKey( "down", keyCode, aEvent );
-        }
-        else {
-            switch ( keyCode ) {
+        switch ( keyCode ) {
 
-                case 27: // escape
-                    // TODO / QQQ:   temporary
-                    const Enemy = require( "../model/actors/Actor" );
-                    Pubsub.publish(
-                        Messages.FIRE_BULLET, new Enemy( null, player.x, 0, 0, 0, player.layer )
-                    );
-                    break;
+            case 27: // escape
+                // TODO / QQQ:   temporary
+                const Enemy = require( "../model/actors/Actor" );
+                Pubsub.publish(
+                    Messages.FIRE_BULLET, new Enemy( null, player.x, 0, 0, 0, player.layer )
+                );
+                break;
 
-                case 32: // spacebar
-                    InputController.fire();
-                    break;
+            case 32: // spacebar
+                InputController.fire();
+                break;
 
-                case 38: // up
+            case 38: // up
 
-                    if ( !activeMovement.up ) {
-                        activeMovement.up = true;
-                        ActorUtil.setDelayed( player, "ySpeed", -5, .5 );
-                    }
-                    break;
+                if ( !activeMovement.up ) {
+                    activeMovement.up = true;
+                    ActorUtil.setDelayed( player, "ySpeed", -5, .5 );
+                }
+                break;
 
-                case 40: // down
+            case 40: // down
 
-                    if ( !activeMovement.down ) {
-                        activeMovement.down = true;
-                        ActorUtil.setDelayed( player, "ySpeed", 5, .5 );
-                    }
-                    break;
+                if ( !activeMovement.down ) {
+                    activeMovement.down = true;
+                    ActorUtil.setDelayed( player, "ySpeed", 5, .5 );
+                }
+                break;
 
-                case 39: // right
-                    InputController.right();
-                    break;
+            case 39: // right
+                InputController.right();
+                break;
 
-                case 37: // left
-                    InputController.left();
-                    break;
+            case 37: // left
+                InputController.left();
+                break;
 
-                case 13: // enter
-                    InputController.switchLayer();
-                    break;
-            }
+            case 13: // enter
+                InputController.switchLayer();
+                break;
         }
    }
 }

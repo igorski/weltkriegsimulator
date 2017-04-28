@@ -93,7 +93,6 @@ const RenderController = module.exports = {
 function setupGame( aGameModel ) {
 
     gameModel = aGameModel;
-    gameModel.canvas = canvas;
     clearGame();
 
     player = RendererFactory.createRenderer(
