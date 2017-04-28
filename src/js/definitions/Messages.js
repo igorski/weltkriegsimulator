@@ -32,6 +32,6 @@ module.exports = {
     "ACTOR_REMOVED"         : "G04", // payload is Actor to remove
     "ACTOR_LAYER_SWITCH"    : "G05", // payload is Actor that has switched layers
     "FIRE_BULLET"           : "G06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
-    "PLAYER_HIT"            : "G07", // payload is player Object,
+    "PLAYER_HIT"            : "G07", // payload is { player: Player, object: Actor }
     "SHOW_MUSIC"            : "G08"   // payload is { title: string, author: string }
 };

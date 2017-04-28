@@ -28,6 +28,7 @@ const zCanvas         = require( "zcanvas" );
 const RendererFactory = require( "../factory/RendererFactory" );
 const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
+const Powerup         = require( "../model/actors/Powerup" );
 
 let gameModel, canvas, player, playerLayer, background;
 
@@ -155,7 +156,9 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.PLAYER_HIT:
-            rumble();
+            // rumble the screen when we're hit!
+            if ( !( payload.object instanceof Powerup ))
+                rumble();
             break;
     }
 }

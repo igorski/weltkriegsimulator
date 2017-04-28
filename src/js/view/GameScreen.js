@@ -97,7 +97,7 @@ function handleBroadcast( msg, payload ) {
             break;
 
         case Messages.PLAYER_HIT:
-            updateEnergy( payload );
+            updateEnergy( payload.player );
             break;
     }
 }

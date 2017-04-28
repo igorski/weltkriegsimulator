@@ -198,7 +198,7 @@ const Game = module.exports = {
                  playerY < myY + myHeight && playerY + playerHeight > myY ) {
 
                 player.hit( actor );
-                Pubsub.publish( Messages.PLAYER_HIT, player );
+                Pubsub.publish( Messages.PLAYER_HIT, { player: player, object: actor });
 
                 if ( player.energy === 0 ) {
                     Pubsub.publish( Messages.GAME_OVER );
