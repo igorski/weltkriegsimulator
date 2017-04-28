@@ -35,13 +35,12 @@ const Audio = module.exports = {
 
     playing  : false,
     muted    : false, // window.location.href.indexOf( "localhost" ) === -1,
-    sdkReady : false,
 
     /**
      * @public
      */
     init() {
-        if ( _inited || !Audio.sdkReady )
+        if ( _inited || !( "SC" in window ))
             return;
 
         SC.initialize({
@@ -63,13 +62,12 @@ const Audio = module.exports = {
     playTrack( aTrackId ) {
         const self = Audio;
 
-        if ( !self.sdkReady || self.muted )
+        if ( !_inited || self.muted )
             return;
     
         if ( _queuedTrackId === aTrackId && self.playing )
             return; // already playing this tune!
     
-        self.init();
         self.stop(); // stop playing the current track (TODO : fade out?)
     
         _queuedTrackId = aTrackId;

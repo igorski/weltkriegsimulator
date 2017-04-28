@@ -67,6 +67,7 @@ function handleStart( event ) {
         Config.HAS_TOUCH_CONTROLS = true;
     }
 
-    // start this game!
-    Pubsub.publish( Messages.GAME_STARTED );
+    // start this game! (by making this synchronous we should
+    // be able to get audio on iOS devices as it's on a user action)
+    Pubsub.publishSync( Messages.GAME_STARTED );
 }

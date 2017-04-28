@@ -47,7 +47,7 @@ const WKS = window.WKS = {
 const MusicService = require( "./services/MusicService" );
 MusicService.prepare().
     then(() => {
-        WKS.audioModel.sdkReady = true;
+        WKS.audioModel.init();
         init();
     }).
     catch(() => {
