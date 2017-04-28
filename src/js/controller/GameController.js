@@ -24,9 +24,10 @@
 
 const Messages = require( "../definitions/Messages" );
 const Pubsub   = require( "pubsub-js" );
-const Player   = require( "../model/actors/Player" );
+const Actions  = require( "../actions/Actions" );
 
 let audioModel, gameModel;
+let actionTimeout;
 
 module.exports = {
 
@@ -56,10 +57,13 @@ function handleBroadcast( type, payload ) {
             gameModel.active = true;
             // start the music
             audioModel.play();
+            // start the game actions queue
+            startActions( Actions.reset() );
             break;
 
         case Messages.GAME_OVER:
             gameModel.active = false;
+            stopActions();
             break;
 
         case Messages.FIRE_BULLET:
@@ -68,8 +72,19 @@ function handleBroadcast( type, payload ) {
     }
 }
 
-// TODO / QQQ create a nice set of functions for these periodic changes to the world
+/**
+ * actions are scheduled periodic changes that
+ * update the game world and its properties
+ */
+function startActions( timeout ) {
+    actionTimeout = setTimeout( executeAction, timeout );
+}
 
-setTimeout( function() {
-    gameModel.createPowerup( 100, 10, 0, 1, ( gameModel.player.layer === 1 ) ? 0 : 1, 1, 1);
-}, 2500);
+function executeAction() {
+    // execute and enqueue next action
+    startActions( Actions.execute( gameModel ));
+}
+
+function stopActions() {
+    clearTimeout( actionTimeout );
+}

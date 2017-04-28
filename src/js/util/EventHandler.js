@@ -48,13 +48,14 @@ function EventHandler() {
  * @param {Element|EventDispatcher} aElement
  * @param {string} aType
  * @param {!Function} aCallback
+ * @param {boolean|Object=} aOptOptions
  *
  * @return {boolean} whether the listener has been attached successfully
  */
-EventHandler.prototype.listen = function( aElement, aType, aCallback ) {
+EventHandler.prototype.listen = function( aElement, aType, aCallback, aOptOptions ) {
     if ( !this.isListening( aElement, aType )) {
         if ( aElement.addEventListener ) {
-            aElement.addEventListener( aType, aCallback, false );
+            aElement.addEventListener( aType, aCallback, aOptOptions || false );
         }
         else if ( aElement.attachEvent ) {
             aElement.attachEvent( "on" + aType, aCallback );

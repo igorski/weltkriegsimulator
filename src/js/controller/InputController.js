@@ -49,8 +49,13 @@ const InputController = module.exports = {
         player = gameModel.player;
 
         if ( !hasListeners ) {
-            window.addEventListener( "keydown", handleKeyDown );
-            window.addEventListener( "keyup",   handleKeyUp );
+            window.addEventListener( "keydown",    handleKeyDown );
+            window.addEventListener( "keyup",      handleKeyUp );
+
+            // prevent page scrolling on touch devices/mouse wheel scrolls
+
+            window.addEventListener( "touchmove",  preventDefault, { passive: false });
+            window.addEventListener( "mousewheel", preventDefault );
 
             hasListeners = true;
         }
@@ -188,6 +193,10 @@ function handleKeyUp( aEvent ) {
             InputController.cancelHorizontal();
             break;
     }
+}
+
+function preventDefault( event ) {
+    event.preventDefault();
 }
 
 function unsetFire() {

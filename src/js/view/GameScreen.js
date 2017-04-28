@@ -57,13 +57,18 @@ module.exports = {
 
                 handler = new EventHandler();
 
+                // listen to window resize/orientation changes
+
                 handler.listen( window,   "resize",            handleResize );
                 handler.listen( window,   "orientationchange", handleResize );
-                handler.listen( btnFire,  "touchstart",        handleFire );
-                handler.listen( btnLayer, "touchstart",        handleLayerSwitch );
-                handler.listen( dPad,     "touchmove",         handleDPad );
-                handler.listen( dPad,     "touchend",          handleDPad );
-                handler.listen( dPad,     "touchcancel",       handleDPad );
+
+                // button handlers
+
+                handler.listen( btnFire,  "touchstart",  handleFire );
+                handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
+                handler.listen( dPad,     "touchmove",   handleDPad );
+                handler.listen( dPad,     "touchend",    handleDPad );
+                handler.listen( dPad,     "touchcancel", handleDPad );
 
                 // calculates and caches dPad offsets
                 handleResize();

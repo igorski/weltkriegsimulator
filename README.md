@@ -46,7 +46,7 @@ up into:
 The _controllers_ are responsible for managing changes in the model and updating the appropriate views. These
 controllers are:
 
- * _GameController_ sets up the game, changes game world properties, delegates changes in game state
+ * _GameController_ sets up the game, changes game world properties, delegates changes in game state (through _GameActions.js_)
  * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
  * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen
  * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
