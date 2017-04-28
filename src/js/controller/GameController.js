@@ -27,15 +27,14 @@ const Pubsub     = require( "pubsub-js" );
 const AudioTrack = require( "../definitions/AudioTracks" );
 const Player     = require( "../model/actors/Player" );
 
-let audioModel, gameModel, renderController;
+let audioModel, gameModel;
 
 module.exports = {
 
     init( wks ) {
 
-        audioModel       = wks.audioModel;
-        gameModel        = wks.gameModel;
-        renderController = wks.renderController;
+        audioModel = wks.audioModel;
+        gameModel  = wks.gameModel;
 
         // subscribe to pubsub system to receive and broadcast messages
 
