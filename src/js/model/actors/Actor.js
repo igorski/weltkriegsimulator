@@ -164,11 +164,18 @@ module.exports = class Actor {
             ],
             1, () => {
                 self.layer = targetLayer; // overcome JS rounding errors
-                self.switching = false;
-                self.game.updateActorLayer( self );
+                self._onLayerSwitch();
             },
             Cubic.easeOut
         );
+    }
+
+    /**
+     * @protected
+     */
+    _onLayerSwitch() {
+        this.switching = false;
+        this.game.updateActorLayer( this );
     }
 
     /**

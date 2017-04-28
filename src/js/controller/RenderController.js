@@ -252,4 +252,5 @@ function handleResize() {
     // as this is used to determine boundaries for Actors
     gameModel.world.width  = canvas.getWidth();
     gameModel.world.height = canvas.getHeight();
+    gameModel.player.cacheBounds();
 }

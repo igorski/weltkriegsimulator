@@ -28,6 +28,9 @@ const Powerup = require( "./Powerup" );
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;
 
+const MIN_X = 0, MIN_Y = 0;
+let MAX_X, MAX_Y;
+
 module.exports = class Player extends Ship {
 
     /**
@@ -48,6 +51,46 @@ module.exports = class Player extends Ship {
         // Player is re-used through appication lifetime
 
         this.pooled = true;
+    }
+
+    /* public methods */
+
+    /**
+     * @override
+     * @public
+     */
+    update() {
+        super.update();
+
+        // keep Player within world bounds
+
+        if ( this.x > MAX_X )
+            this.x = MAX_X;
+        else if ( this.x < MIN_X )
+            this.x = MIN_X;
+
+        if ( this.y > MAX_Y )
+            this.y = MAX_Y;
+        else if ( this.y < MIN_Y )
+            this.y = MIN_Y;
+    }
+
+    /**
+     * @public
+     */
+    cacheBounds() {
+        console.warn("CACHING BOUNDS");
+        MAX_X = this.game.world.width  - this.width;
+        MAX_Y = this.game.world.height - this.height;
+    }
+
+    /**
+     * @override
+     * @protected
+     */
+    _onLayerSwitch() {
+        super._onLayerSwitch();
+        this.cacheBounds();
     }
 
     /**
