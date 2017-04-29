@@ -65,6 +65,17 @@ module.exports = {
     },
 
     /**
+     * award points to the player for the kill of given Enemy
+     *
+     * @param {Player} player
+     * @param {Enemy} enemy
+     */
+    awardPoints( player, enemy ) {
+        // TODO: Award more points depending on enemy type/weapon class/etc.
+        player.score += 100;
+    },
+
+    /**
      * @public
      * @return {number} time (in milliseconds to next action)
      */

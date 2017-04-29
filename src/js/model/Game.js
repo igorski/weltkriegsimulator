@@ -24,6 +24,7 @@
 
 const Pubsub   = require( "pubsub-js" );
 const Messages = require( "../definitions/Messages" );
+const Actions  = require( "../actions/Actions" );
 const Actor    = require( "./actors/Actor" );
 const Ship     = require( "./actors/Ship" );
 const Player   = require( "./actors/Player" );
@@ -72,6 +73,22 @@ const Game = module.exports = {
      */
     fireBullet( actor ) {
         createBulletForActor( actor );
+    },
+
+    /**
+     * handle a direct hit from a Bullet with a Ship
+     *
+     * @param {Bullet} bullet
+     * @param {Ship} ship
+     */
+    onBulletHit( bullet, ship ) {
+        ship.energy = Math.max( 0, ship.energy - bullet.damage );
+        bullet.dispose(); // Bullets disappear on impact
+
+        if ( bullet.owner === Game.player ) {
+            Actions.awardPoints( Game.player, /** @type {Enemy} */ ( ship ));
+            Pubsub.publish( Messages.UPDATE_SCORE, Game.player.score );
+        }
     },
 
     /**
@@ -135,7 +152,6 @@ const Game = module.exports = {
     /**
      * remove Actor from the Game, this should always be
      * invoked form Actor.dispose() and never directly
-     * note: Player always remains in Game
      *
      * @public
      * @param {Actor} actor

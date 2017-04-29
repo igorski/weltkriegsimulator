@@ -86,10 +86,8 @@ module.exports = class Ship extends Actor {
 
         if ( actor instanceof Bullet ) {
             // colliding with others' Bullets
-            if ( actor.owner !== this ) {
-                this.energy = Math.max( 0, this.energy - actor.damage );
-                actor.dispose(); // Bullets disappear on impact
-            }
+            if ( actor.owner !== this )
+                this.game.onBulletHit( actor, this );
         }
         else if ( actor && actor.collidable ) {
             // colliding with another Object, ouch!

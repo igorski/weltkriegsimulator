@@ -48,6 +48,12 @@ module.exports = class Player extends Ship {
 
         super( game, 0, 0, 0, 0, energy, weapon );
 
+        /**
+         * @public
+         * @type {number}
+         */
+        this.score = 0;
+
         // Player is re-used through appication lifetime
 
         this.pooled = true;
@@ -116,6 +122,7 @@ module.exports = class Player extends Ship {
     reset() {
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
+        this.score      = 0;
         this.collidable = true;
 
         if ( this.renderer )

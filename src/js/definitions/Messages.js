@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,12 +26,13 @@ module.exports = {
 
     /* Game state changes */
 
-    "GAME_STARTED"          : "G01",
-    "GAME_OVER"             : "G02",
-    "ACTOR_ADDED"           : "G03", // payload is newly added Actor,
-    "ACTOR_REMOVED"         : "G04", // payload is Actor to remove
-    "ACTOR_LAYER_SWITCH"    : "G05", // payload is Actor that has switched layers
-    "FIRE_BULLET"           : "G06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
-    "PLAYER_HIT"            : "G07", // payload is { player: Player, object: Actor }
-    "SHOW_MUSIC"            : "G08"   // payload is { title: string, author: string }
+    GAME_STARTED          : "G01",
+    GAME_OVER             : "G02",
+    ACTOR_ADDED           : "G03", // payload is newly added Actor
+    ACTOR_REMOVED         : "G04", // payload is Actor to remove
+    ACTOR_LAYER_SWITCH    : "G05", // payload is Actor that has switched layers
+    FIRE_BULLET           : "G06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
+    PLAYER_HIT            : "G07", // payload is { player: Player, object: Actor }
+    UPDATE_SCORE          : "G08", // payload is numerical value of new score
+    SHOW_MUSIC            : "G09"  // payload is { title: string, author: string }
 };

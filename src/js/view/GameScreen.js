@@ -28,7 +28,7 @@ const Pubsub          = require( "pubsub-js" );
 const EventHandler    = require( "../util/EventHandler" );
 const InputController = require( "../controller/InputController" );
 
-let energyUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
+let energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
 let handler, tokens = [];
 
@@ -46,6 +46,7 @@ module.exports = {
 
             // grab references to HTML Elements
             energyUI       = wrapper.querySelector( "#energy" );
+            scoreUI        = wrapper.querySelector( "#score" );
             messagePanel   = wrapper.querySelector( "#messages" );
             messageTitleUI = messagePanel.querySelector( ".title" );
             messageBodyUI  = messagePanel.querySelector( ".body" );
@@ -78,9 +79,12 @@ module.exports = {
 
             [
                 Messages.SHOW_MUSIC,
+                Messages.UPDATE_SCORE,
                 Messages.PLAYER_HIT
 
             ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
+
+            updateScore( 0 );
         });
     },
 
@@ -107,6 +111,10 @@ function handleBroadcast( msg, payload ) {
             animateMessage();
             break;
 
+        case Messages.UPDATE_SCORE:
+            updateScore( payload );
+            break;
+
         case Messages.PLAYER_HIT:
             updateEnergy( payload.player );
             break;
@@ -115,6 +123,10 @@ function handleBroadcast( msg, payload ) {
 
 function updateEnergy( player ) {
     energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
+}
+
+function updateScore( score ) {
+    scoreUI.innerHTML = score + "pts.";
 }
 
 function animateMessage() {
