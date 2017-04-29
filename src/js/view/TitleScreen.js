@@ -27,26 +27,32 @@ const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
-let handler, startButton;
+let container, handler, startButton, highScoresButton, howToPlayButton;
 
 module.exports = {
 
     render( wrapper, templateService ) {
+
+        container = wrapper;
         templateService.render( "Screen_Title", wrapper, {
 
         }).then(() => {
 
             // grab references to HTML Elements
-            startButton = wrapper.querySelector( "#btnStart" );
+            startButton      = wrapper.querySelector( "#btnStart" );
+            highScoresButton = wrapper.querySelector( "#btnHighScores" );
+            howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+
+            animateIn();
 
             handler = new EventHandler();
 
             // we deliberately listen to mouse and touch events (instead of "click")
             // as we can determine whether we need to show on-screen game controls
 
-            handler.listen( startButton, "mouseup",     handleStart );
-            handler.listen( startButton, "touchcancel", handleStart );
-            handler.listen( startButton, "touchend",    handleStart );
+            handler.listen( startButton, "mouseup",     handleStartClick );
+            handler.listen( startButton, "touchcancel", handleStartClick );
+            handler.listen( startButton, "touchend",    handleStartClick );
         });
     },
 
@@ -59,7 +65,7 @@ module.exports = {
 
 /* private methods */
 
-function handleStart( event ) {
+function handleStartClick( event ) {
 
     // in case a touch event was fired, store this in the config
 
@@ -67,6 +73,44 @@ function handleStart( event ) {
         Config.HAS_TOUCH_CONTROLS = true;
     }
 
-    // start this game!
-    Pubsub.publish( Messages.GAME_STARTED );
+    animateOut(() => {
+        // start this game!
+        Pubsub.publish( Messages.GAME_STARTED );
+    });
+}
+
+function animateIn() {
+    const title = container.querySelector( "h1" );
+    const menu = container.querySelector( "#menu" );
+    const footer = container.querySelector( "footer" );
+    const buttons = container.querySelectorAll( "button" );
+
+    const tl = new TimelineMax();
+    tl.add( TweenMax.to( menu, 0, { css: { autoAlpha: 0 }} ));
+    tl.add( TweenMax.fromTo( title, 2,
+        { css: { marginTop: "-200px" }},
+        { css: { marginTop: 0 }, ease: Elastic.easeInOut })
+    );
+    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 1 }}));
+    tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+
+    for ( let i = 0; i < buttons.length; ++i ) {
+        const button = buttons[ i ];
+        TweenMax.from( button, 1.5, {
+            css: { marginLeft: `-${window.innerWidth}px` },
+            ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
+        });
+    }
+}
+
+function animateOut( callback ) {
+    const title = container.querySelector( "h1" );
+    const menu = container.querySelector( "#menu" );
+    const footer = container.querySelector( "footer" );
+
+    const tl = new TimelineMax();
+    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+        TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
+        TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
+    }}));
 }
