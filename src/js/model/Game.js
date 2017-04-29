@@ -123,6 +123,9 @@ const Game = module.exports = {
      */
     addActor( actor ) {
 
+        if ( Game.actors.indexOf( actor ) > -1 )
+            return;
+
         Game.actors.push( actor );
         Pubsub.publish(
             Messages.ACTOR_ADDED, actor
