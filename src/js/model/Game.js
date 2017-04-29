@@ -213,10 +213,16 @@ const Game = module.exports = {
             // or top vertical bounds (this allows other Actors to come into
             // view slowly from out of visual bounds)
 
-            if ( actor instanceof Bullet &&
-                 actorY + actorHeight < 0 || actorX + actorWidth < 0 || actorX > worldRight ) {
-                actor.dispose();
-                continue;
+            if ( actor instanceof Bullet ) {
+                // is Bullet out of horizontal bounds?
+                if ( actorX + actorWidth < 0 || actorX > worldRight ||
+                    // note we allow Bullets to exist below the world top
+                    // for Enemies (they start shooting when still out of sight, these
+                    // Bullets should be allowed to travel downwards towards the player)
+                    ( actor.owner === player && actorY + actorHeight < 0 )) {
+                    actor.dispose();
+                    continue;
+                }
             }
 
             // resolve collisions with other Actors in its vicinity
