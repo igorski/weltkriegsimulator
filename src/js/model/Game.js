@@ -269,11 +269,11 @@ function getActorFromPool( pool, x, y, xSpeed, ySpeed, layer ) {
     const actor = pool.shift();
 
     if ( actor ) {
-        actor.x = x;
-        actor.y = y;
+        actor.x      = x;
+        actor.y      = y;
         actor.xSpeed = xSpeed;
         actor.ySpeed = ySpeed;
-        actor.layer = Math.round( layer );
+        actor.layer  = Math.round( layer );
     }
     return actor;
 }

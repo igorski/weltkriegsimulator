@@ -71,8 +71,7 @@ function generateWave1( gameModel ) {
     for ( let i = 0; i < 5; ++i ) {
         gameModel.createEnemy(
             Math.round( Math.random() * gameModel.world.width ), 0,
-            0,
-            Math.random() * 5,
+            randomBool() ? 3 : 0,
             Math.random() * 5,
             targetLayer
         );
@@ -86,4 +85,10 @@ function createPowerup( gameModel ) {
         Math.round( Math.random() * gameModel.world.width ), 0,
         0, 1, targetLayer, 1, 1
     );
+}
+
+/* helper methods */
+
+function randomBool() {
+    return Math.random() > .5;
 }

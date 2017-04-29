@@ -77,28 +77,28 @@ const InputController = module.exports = {
         player.switchLayer();
     },
 
-    left( targetValue = -5 ) {
+    left( targetValue = -3 ) {
         if ( !activeMovement.left ) {
             activeMovement.left = true;
             ActorUtil.setDelayed( player, "xSpeed", targetValue, .5 );
         }
     },
 
-    right( targetValue = 5 ) {
+    right( targetValue = 3 ) {
         if ( !activeMovement.right ) {
             activeMovement.right = true;
             ActorUtil.setDelayed( player, "xSpeed", targetValue, .5 );
         }
     },
 
-    up( targetValue = -5 ) {
+    up( targetValue = -3 ) {
         if ( !activeMovement.up ) {
             activeMovement.up = true;
             ActorUtil.setDelayed( player, "ySpeed", targetValue, .5 );
         }
     },
 
-    down( targetValue = 5 ) {
+    down( targetValue = 3 ) {
         if ( !activeMovement.down ) {
             activeMovement.down = true;
             ActorUtil.setDelayed( player, "ySpeed", targetValue, .5 );
