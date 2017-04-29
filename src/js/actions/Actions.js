@@ -70,9 +70,8 @@ function generateWave1( gameModel ) {
     const targetLayer = gameModel.player.layer;
     for ( let i = 0; i < 5; ++i ) {
         gameModel.createEnemy(
-            Math.round( Math.random() * gameModel.world.width ), 0,
-            randomBool() ? 3 : 0,
-            Math.random() * 5,
+            Math.round( Math.random() * gameModel.world.width ), -100,
+            0, Math.random() * 5,
             targetLayer
         );
     }
@@ -82,7 +81,7 @@ function createPowerup( gameModel ) {
     // always generate power up on other layer than the players current layer
     const targetLayer = ( gameModel.player.layer === 1 ) ? 0 : 1;
     gameModel.createPowerup(
-        Math.round( Math.random() * gameModel.world.width ), 0,
+        Math.round( Math.random() * gameModel.world.width ), -50,
         0, 1, targetLayer, 1, 1
     );
 }

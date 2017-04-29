@@ -168,24 +168,21 @@ const Game = module.exports = {
     },
 
     /**
-     * update all Actors for the next cycle
+     * update all Actors for the next iteration of the game cycle
+     * this is in essence the game loop
      *
      * @public
      * @param {number} aTimestamp
      */
     update( aTimestamp ) {
 
-        const player = Game.player,
-              actors = Game.actors,
-              active = Game.active,
-              world  = Game.world;
+        const player      = Game.player,
+              actors      = Game.actors,
+              active      = Game.active,
+              worldRight  = Game.world.width,
+              worldBottom = Game.world.height;
         
         player.update( aTimestamp );
-
-        const playerX      = player.x,
-              playerY      = player.y,
-              playerWidth  = player.width,
-              playerHeight = player.height;
 
         let i = actors.length, actor;
 
@@ -198,15 +195,25 @@ const Game = module.exports = {
             if ( !active )
                 continue;
 
-            const myX      = actor.x,
-                  myY      = actor.y,
-                  myWidth  = actor.width,
-                  myHeight = actor.height;
+            const actorX      = actor.x,
+                  actorY      = actor.y,
+                  actorWidth  = actor.width,
+                  actorHeight = actor.height;
 
-            // keep Actor within world bounds
+            // if Actors y position exceeds the bottom of the worlds viewport,
+            // dispose the Actor (it will be returned to the pool)
 
-            if ( myY + myHeight < 0 || myY > world.height ||
-                 myX + myWidth  < 0 || myX > world.width ) {
+            if ( actor !== player && actorY > worldBottom ) {
+                actor.dispose();
+                continue;
+            }
+
+            // bullets are also disposed when they are out of horizontal
+            // or top vertical bounds (this allows other Actors to come into
+            // view slowly from out of visual bounds)
+
+            if ( actor instanceof Bullet &&
+                 actorY + actorHeight < 0 || actorX + actorWidth < 0 || actorX > worldRight ) {
                 actor.dispose();
                 continue;
             }
@@ -214,7 +221,7 @@ const Game = module.exports = {
             // resolve collisions with other Actors in its vicinity
             // TODO: is it cheaper to check with all other actors
             // rather than create a new unique Array per Actor in this loop ??
-            const others = getActorsUnderPoint( myX, myY, myWidth, myHeight );
+            const others = getActorsUnderPoint( actorX, actorY, actorWidth, actorHeight );
 
             others.forEach(( other ) => {
                 if ( actor.collides( other )) {
@@ -273,7 +280,13 @@ function getActorFromPool( pool, x, y, xSpeed, ySpeed, layer ) {
         actor.y      = y;
         actor.xSpeed = xSpeed;
         actor.ySpeed = ySpeed;
-        actor.layer  = Math.round( layer );
+
+        // if requested layer is different to old layer, switch it
+
+        const targetLayer = Math.round( layer );
+
+        if ( actor.layer !== targetLayer )
+            actor.switchLayer( 0 );
     }
     return actor;
 }

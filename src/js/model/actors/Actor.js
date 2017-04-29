@@ -182,8 +182,9 @@ module.exports = class Actor {
     
     /**
      * @public
+     * @param {number=} switchSpeed
      */
-    switchLayer() {
+    switchLayer( switchSpeed = 1 ) {
 
         if ( this.switching )
             return;
@@ -215,7 +216,7 @@ module.exports = class Actor {
                 width,
                 height
             ],
-            1, () => {
+            switchSpeed, () => {
                 self.layer = targetLayer; // overcome JS rounding errors
                 self._onLayerSwitch();
             },
