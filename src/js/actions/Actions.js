@@ -22,6 +22,15 @@
  */
 "use strict";
 
+/**
+ * list of actions
+ *
+ * "fn" describes the function to execute
+ * "timeout" describes the timeout in milliseconds until
+ * the next action in the list should be called
+ *
+ * @type {Array.<{fn: Function, timeout: number}>}
+ */
 const ACTION_LIST = [
     { fn: generateWave1, timeout: 2500 },
     { fn: createPowerup, timeout: 10000 }

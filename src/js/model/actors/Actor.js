@@ -149,8 +149,18 @@ module.exports = class Actor {
      * @param {number} aTimestamp
      */
     update( aTimestamp ) {
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
+
+        // update Actor position by its speed
+
+        if ( this.layer === 0 ) {
+            // if Actor is on lower layer, reduce the speed
+            this.x += ( this.xSpeed * .75 );
+            this.y += ( this.ySpeed * .75 );
+        }
+        else {
+            this.x += this.xSpeed;
+            this.y += this.ySpeed;
+        }
     }
 
     /**

@@ -220,7 +220,7 @@ const Game = module.exports = {
 
             // resolve collisions with other Actors in its vicinity
             // TODO: is it cheaper to check with all other actors
-            // rather than create a new unique Array per Actor in this loop ??
+            // rather than to create a new unique Array per Actor in this loop ??
             const others = getActorsUnderPoint( actorX, actorY, actorWidth, actorHeight );
 
             others.forEach(( other ) => {
@@ -228,7 +228,7 @@ const Game = module.exports = {
                     actor.hit( other );
                     if ( actor instanceof Player || other instanceof Player ) {
                         Pubsub.publish( Messages.PLAYER_HIT, {
-                            player: player, object: ( actor instanceof Player ) ? other : actor
+                            player: player, object: ( other !== player ) ? other : actor
                         });
                         if ( player.energy === 0 )
                             Pubsub.publish( Messages.GAME_OVER );
