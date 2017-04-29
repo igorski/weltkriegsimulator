@@ -30,7 +30,7 @@ const EventHandler = require( "../util/EventHandler" );
 
 let inited        = false;
 let playing       = false;
-let sound         = null;
+let sound         = null; // HTML <audio> element
 let queuedTrackId = null;
 let handler       = new EventHandler();
 
@@ -69,17 +69,15 @@ const Audio = module.exports = {
     
         queuedTrackId = trackId;
 
-        // request the stream from SoundCloud, this will not
-        // actually play the track (see playEnqueuedTrack())
+        // prepare the stream from SoundCloud, we create an inline <audio> tag instead
+        // of using SC stream to overcome silence on mobile devices (looking at you, Apple!)
+        // this will thus not actually play the track (see playEnqueuedTrack())
 
-        SC.stream( "/tracks/" + trackId, ( track ) => {
-
-            // halt currently playing audio
-            Audio.stop();
-
-            // enqueue track
-            sound = track;
-        });
+        Audio.stop();
+        sound = document.createElement( "audio" );
+        sound.setAttribute( "src",
+            `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${Config.SOUNDCLOUD_CLIENT_ID}`
+        );
     },
 
     /**
@@ -114,7 +112,7 @@ const Audio = module.exports = {
      */
     stop() {
         if ( sound ) {
-            sound.stop();
+            sound.pause();
             sound = null;
         }
         handler.dispose();
