@@ -91,8 +91,10 @@ module.exports = class Ship extends Actor {
         else if ( actor && actor.collidable ) {
             // colliding with another Object, ouch!
             this.energy = 0;
-            if ( actor instanceof Ship )
+            if ( actor instanceof Ship ) {
+                actor.energy = 0;
                 actor.die();
+            }
         }
         if ( this.energy === 0 ) {
             this.die();

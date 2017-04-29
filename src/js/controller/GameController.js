@@ -55,6 +55,7 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_STARTED:
             gameModel.player.reset();
             gameModel.active = true;
+            gameModel.addActor( gameModel.player );
             // start the music
             audioModel.play();
             // start the game actions queue

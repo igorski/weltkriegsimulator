@@ -228,6 +228,7 @@ const Game = module.exports = {
                         Pubsub.publish( Messages.PLAYER_HIT, {
                             player: player, object: ( other !== player ) ? other : actor
                         });
+                        // are we still alive?
                         if ( player.energy === 0 )
                             Pubsub.publish( Messages.GAME_OVER );
                     }
@@ -240,7 +241,6 @@ const Game = module.exports = {
 /* initialize Pools for commonly (re)used Actors */
 
 Game.player = new Player( Game );
-Game.addActor( Game.player ); // always in the list
 
 const bulletPool  = new Array( 100 );
 const enemyPool   = new Array( 20 );
