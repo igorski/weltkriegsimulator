@@ -27,18 +27,24 @@ const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
-let container, handler, startButton, highScoresButton, howToPlayButton;
+let handler, startButton, highScoresButton, howToPlayButton;
+let title, menu, footer, buttons;
 
 module.exports = {
 
     render( wrapper, templateService ) {
 
-        container = wrapper;
         templateService.render( "Screen_Title", wrapper, {
 
         }).then(() => {
 
             // grab references to HTML Elements
+
+            title   = wrapper.querySelector( "h1" );
+            menu    = wrapper.querySelector( "#menu" );
+            footer  = wrapper.querySelector( "footer" );
+            buttons = wrapper.querySelectorAll( "button" );
+
             startButton      = wrapper.querySelector( "#btnStart" );
             highScoresButton = wrapper.querySelector( "#btnHighScores" );
             howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
@@ -67,6 +73,8 @@ module.exports = {
 
 function handleStartClick( event ) {
 
+    event.preventDefault(); // prevents double firing on touch screens
+
     // in case a touch event was fired, store this in the config
 
     if ( event.type.indexOf( "touch" ) >= 0 ) {
@@ -80,11 +88,6 @@ function handleStartClick( event ) {
 }
 
 function animateIn() {
-    const title = container.querySelector( "h1" );
-    const menu = container.querySelector( "#menu" );
-    const footer = container.querySelector( "footer" );
-    const buttons = container.querySelectorAll( "button" );
-
     const tl = new TimelineMax();
     tl.add( TweenMax.to( menu, 0, { css: { autoAlpha: 0 }} ));
     tl.add( TweenMax.fromTo( title, 2,
@@ -104,10 +107,6 @@ function animateIn() {
 }
 
 function animateOut( callback ) {
-    const title = container.querySelector( "h1" );
-    const menu = container.querySelector( "#menu" );
-    const footer = container.querySelector( "footer" );
-
     const tl = new TimelineMax();
     tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
         TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
