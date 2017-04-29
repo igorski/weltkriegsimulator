@@ -263,6 +263,20 @@ const Game = module.exports = {
                 }
             });
         }
+    },
+
+    /**
+     * @public
+     */
+    reset() {
+        // remove Actors (reverse loop as Array will be updated on Actor.dispose())
+        let i = Game.actors.length;
+        while ( i-- )
+            Game.actors[ i ].dispose();
+
+        Game.player.reset();
+        Game.addActor( Game.player );
+        Game.active = true;
     }
 };
 

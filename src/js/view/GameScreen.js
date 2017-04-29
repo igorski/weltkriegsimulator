@@ -180,10 +180,12 @@ function handleDPad( event ) {
 }
 
 function handleFire( event ) {
+    event.preventDefault(); // prevent document zoom on double tap
     InputController.fire();
 }
 
 function handleLayerSwitch( event ) {
+    event.preventDefault(); // prevent document zoom on double tap
     InputController.switchLayer();
 }
 

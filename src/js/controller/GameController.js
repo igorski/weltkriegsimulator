@@ -53,9 +53,7 @@ function handleBroadcast( type, payload ) {
 
     switch ( type ) {
         case Messages.GAME_STARTED:
-            gameModel.player.reset();
-            gameModel.active = true;
-            gameModel.addActor( gameModel.player );
+            gameModel.reset();
             // start the music
             audioModel.playEnqueuedTrack();
             // start the game actions queue
