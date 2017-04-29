@@ -34,8 +34,9 @@ const Random = require( "../util/Random" );
  * @type {Array.<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
-    { fn: generateWave1, timeout: 2500 },
-    { fn: createPowerup, timeout: 10000 }
+    { fn: generateWave1, timeout: 5000 },
+    { fn: createPowerup, timeout: 2500 },
+    { fn: generateWave2, timeout: 2500 }
 ];
 let queuedAction;
 
@@ -93,11 +94,24 @@ function generateWave1( gameModel ) {
 
     for ( let i = 0, total = 5; i < total; ++i ) {
         gameModel.createEnemy(
-            ( gameModel.world.width / total ) * i ,
+            ( gameModel.world.width / total ) * i,
             -( 100 + i * 50 ),
             0, 1 + ( i * .25 ),
             targetLayer
         );
+    }
+}
+
+function generateWave2( gameModel ) {
+    generateWave1( gameModel );
+    const targetLayer = ( gameModel.player.layer === 0 ) ? 1 : 0;
+    for ( let i = 0, total = Random.range( 2, 10 ); i < total; ++i ) {
+        gameModel.createEnemy(
+            ( gameModel.world.width / total ) * i,
+            -( gameModel.world.height + 100 + i * 50 ),
+            0, 1 + ( i * .25 ),
+            targetLayer
+        )
     }
 }
 
