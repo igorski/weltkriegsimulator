@@ -22,6 +22,8 @@
  */
 "use strict";
 
+const Random = require( "../util/Random" );
+
 /**
  * list of actions
  *
@@ -77,10 +79,12 @@ module.exports = {
 function generateWave1( gameModel ) {
     // always generate enemy on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
-    for ( let i = 0; i < 5; ++i ) {
+
+    for ( let i = 0, total = 5; i < total; ++i ) {
         gameModel.createEnemy(
-            Math.round( Math.random() * gameModel.world.width ), -100,
-            0, Math.random() * 5,
+            ( gameModel.world.width / total ) * i ,
+            -( 100 + i * 50 ),
+            0, 1 + ( i * .25 ),
             targetLayer
         );
     }
@@ -93,10 +97,4 @@ function createPowerup( gameModel ) {
         Math.round( Math.random() * gameModel.world.width ), -50,
         0, 1, targetLayer, 1, 1
     );
-}
-
-/* helper methods */
-
-function randomBool() {
-    return Math.random() > .5;
 }

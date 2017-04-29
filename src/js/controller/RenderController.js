@@ -30,7 +30,7 @@ const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
 const Powerup         = require( "../model/actors/Powerup" );
 
-let gameModel, canvas, player, playerLayer, background;
+let gameModel, canvas, player, background;
 
 // ideal width of the game, this is blown up by CSS
 // for a fullscreen experience, while maintaining the "pixel art" vibe
@@ -99,7 +99,6 @@ function setupGame( aGameModel ) {
     player = RendererFactory.createRenderer(
         gameModel.player, RenderController
     );
-    playerLayer = gameModel.player.layer;
 
     for ( let i = 0; i < layers.length; ++i ) {
         const layer = new zCanvas.sprite({ width: 0, height: 0 });
@@ -195,17 +194,6 @@ function addRendererToAppropriateLayer( actor ) {
         default: // middle actor layer
             layers[ 2 ].addChild( renderer );
             break;
-    }
-
-    // player is always on top of his respective layer
-
-    if ( actor === gameModel.player ) {
-        playerLayer = actor.layer;
-    }
-    else {
-        const index = ( playerLayer === 1 ) ? 3 : 1; // see switch above for indices
-        layers[ index ].removeChild( player );
-        layers[ index ].addChild( player );
     }
 }
 

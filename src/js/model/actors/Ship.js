@@ -84,9 +84,11 @@ module.exports = class Ship extends Actor {
             return;
 
         if ( actor instanceof Bullet ) {
-            // colliding with Bullets
-            this.energy = Math.max( 0, this.energy - actor.damage );
-            actor.dispose(); // Bullets disappear on impact
+            // colliding with others' Bullets
+            if ( actor.owner !== this ) {
+                this.energy = Math.max( 0, this.energy - actor.damage );
+                actor.dispose(); // Bullets disappear on impact
+            }
         }
         else if ( actor && actor.collidable ) {
             // colliding with another Object, ouch!
@@ -96,9 +98,8 @@ module.exports = class Ship extends Actor {
                 actor.die();
             }
         }
-        if ( this.energy === 0 ) {
+        if ( this.energy === 0 )
             this.die();
-        }
     }
 
     die() {

@@ -128,6 +128,12 @@ module.exports = class Actor {
         this.pooled = false;
 
         /**
+         * @public
+         * @type {boolean}
+         */
+        this.disposed = false;
+
+        /**
          * whether other Actors can collide with this Actor
          *
          * @type {boolean}
@@ -262,6 +268,11 @@ module.exports = class Actor {
      * @public
      */
     dispose() {
+
+        if ( this.disposed )
+            return;
+
+        this.disposed = true;
 
         this.game.removeActor( this );
 

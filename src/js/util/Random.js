@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,47 +22,27 @@
  */
 "use strict";
 
-const Actor = require( "./Actor" );
-
-module.exports = class Bullet extends Actor {
+/**
+ * convenience helper for all things associated
+ * with chance and randomizing values :)
+ */
+module.exports = {
 
     /**
-     * @constructor
-     *
-     * @param {Game} game
-     * @param {number} x
-     * @param {number} y
-     * @param {number} xSpeed
-     * @param {number} ySpeed
-     * @param {number=} optDamage optional damage Bullet deals (defaults to 1)
+     * random value from given range
+     * @param {number} min
+     * @param {number} max
+     * @return {number}
      */
-    constructor( game, x, y, xSpeed, ySpeed, optDamage ) {
+    range( min, max ) {
+        return Math.floor( Math.random() * ( max - min + 1 )) + min;
+    },
 
-        /* inherit prototype properties of Actor */
-
-        super( game, x, y, xSpeed, ySpeed );
-
-        /* instance properties */
-
-        /**
-         * the amount of damage a collision with this bullet deals
-         *
-         * @public
-         * @type {number}
-         */
-        this.damage = ( typeof optDamage === "number" )  ? optDamage : 1;
-
-        /**
-         * reference to the Ship that fired this Bullet
-         *
-         * @public
-         * @type {Ship}
-         */
-        this.owner = null;
-
-        /* initialization */
-
-        this.width  = this.orgWidth  =
-        this.height = this.orgHeight = 10;
+    /**
+     * random boolean true/false
+     * @return {boolean}
+     */
+    bool() {
+        return Math.random() > .5;
     }
 };

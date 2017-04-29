@@ -258,7 +258,8 @@ const powerupPool = new Array( 5 );
 
 /**
  * retrieve an Actor from one of the pools and apply given
- * properties onto the Actor
+ * properties onto the Actor, this function also resets previously
+ * used (and disposed) Actors
  *
  * @private
  * @param {Array.<Actor>} pool
@@ -285,6 +286,9 @@ function getActorFromPool( pool, x, y, xSpeed, ySpeed, layer ) {
 
         if ( actor.layer !== targetLayer )
             actor.switchLayer( 0 );
+
+        // ready for next iteration!
+        actor.disposed = false;
     }
     return actor;
 }
@@ -313,35 +317,47 @@ function createBulletForActor( actor ) {
 
         case 1:
             // spray Bullets
-            const isTopLayer = ( actor.layer === 0 );
-            const w = ( !isTopLayer ) ? actor.width  * .5 : actor.width  * .5;
-            const h = ( !isTopLayer ) ? actor.height * .5 : actor.height * .5;
+
+            const orgX = actor.x + actor.offsetX + ( actor.width  * .5 );
+            const orgY = actor.y + actor.offsetY + ( actor.height * .5 );
+            const sprayRadius = Game.world.width + actor.width;
             let angle, pos, targetPos;
 
-            for ( let i = 0, total = 16; i < total; ++i ) {
+            for ( let i = 0, total = 16, max = total - 1; i < total; ++i ) {
 
-                const orgX = actor.x + actor.offsetX + w;
-                const orgY = actor.y + actor.offsetY + h;
-
-                angle = ( 360 / total ) * i;
-                pos = calcPosition( orgX, orgY, ( isTopLayer ) ? actor.width * 2 : actor.width, angle );
+                angle  = ( 360 / total ) * i;
+                pos    = calcPosition( orgX, orgY, actor.width, angle );
                 bullet = getActorFromPool( bulletPool, pos.x, pos.y, 0, 0, actor.layer );
 
                 if ( !bullet )
-                    break; // ran out of available bullets :(
+                    break; // ran out of available bullets, FML right? :(
 
                 bullets.push( bullet );
 
-                targetPos = calcPosition( orgX, orgY, Game.world.width + ( w * 2 ), angle );
+                // ensure no pending Tweens exist for the bullet
+                TweenMax.killTweensOf( bullet );
+
+                targetPos = calcPosition( orgX, orgY, sprayRadius, angle );
 
                 // we don't supply an xSpeed and ySpeed to the Bullet but use the
-                // Tweening engine to update the Bullet position
-                TweenMax.to( bullet, 1, { x: targetPos.x, y: targetPos.y, ease: Cubic.easeOut });
+                // Tweening engine to update the Bullet position, this also allows
+                // for fancy easing functions
+
+                const opts = { x: targetPos.x, y: targetPos.y, ease: Cubic.easeOut };
+
+                // the last Tween will dispose all the Bullets (can get stuck on screen
+                // edge during rapid movement / cancellation of pooled Tweens)
+                if ( i === max )
+                    opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
+
+                TweenMax.to( bullet, 1, opts );
             }
             break;
     }
-    for ( bullet of bullets )
+    for ( bullet of bullets ) {
+        bullet.owner = actor;
         Game.addActor( bullet );
+    }
 }
 
 // helper function to calculate x, y coordinate within a circular pattern
