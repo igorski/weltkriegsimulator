@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,8 +22,9 @@
  */
 "use strict";
 
-const Actor  = require( "./Actor" );
-const Bullet = require( "./Bullet" );
+const Actor        = require( "./Actor" );
+const Bullet       = require( "./Bullet" );
+const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
 
 module.exports = class Ship extends Actor {
 
@@ -66,8 +67,8 @@ module.exports = class Ship extends Actor {
 
         /* initialization */
 
-        this.width  = this.orgWidth  =
-        this.height = this.orgHeight = 64; // spritesheet tile
+        this.width  = this.orgWidth  = ShipRenderer.TILE_SIZE.width;
+        this.height = this.orgHeight = ShipRenderer.TILE_SIZE.height;
     }
 
     /* public methods */

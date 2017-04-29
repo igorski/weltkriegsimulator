@@ -46,10 +46,18 @@ function ShipRenderer( ship, renderController ) {
             { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
             { row: 2, col: 0, fpt: 3, amount: 16, onComplete: ship.dispose.bind( ship ) } // Explosion
         ],
-        ship.width,
-        ship.height
+        ShipRenderer.TILE_SIZE.width,
+        ShipRenderer.TILE_SIZE.height
     );
 
     this.canRumble = true;
 }
 ActorRenderer.extend( ShipRenderer );
+
+/**
+ * dimensions of each tile in the spritesheet
+ *
+ * @public
+ * @type {{width: number, height: number}}
+ */
+ShipRenderer.TILE_SIZE = { width: 64, height: 64 };
