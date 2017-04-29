@@ -182,8 +182,6 @@ const Game = module.exports = {
               worldRight  = Game.world.width,
               worldBottom = Game.world.height;
         
-        player.update( aTimestamp );
-
         let i = actors.length, actor;
 
         while ( i-- ) {
