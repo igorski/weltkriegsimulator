@@ -57,7 +57,7 @@ function handleBroadcast( type, payload ) {
             gameModel.active = true;
             gameModel.addActor( gameModel.player );
             // start the music
-            audioModel.play();
+            audioModel.playEnqueuedTrack();
             // start the game actions queue
             startActions( Actions.reset() );
             break;
@@ -65,6 +65,8 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
+            // enqueue next track
+            audioModel.enqueueTrack();
             break;
 
         case Messages.FIRE_BULLET:

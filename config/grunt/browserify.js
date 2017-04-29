@@ -4,9 +4,7 @@ module.exports = {
             browserifyOptions: {
                 debug: true,
                 transform: [
-                    ["babelify", {
-                        loose: "all"
-                    }],
+                    ["babelify", {presets: ['es2015']}],
                     "workerify"
                 ]
             }
@@ -20,9 +18,7 @@ module.exports = {
             browserifyOptions: {
                 debug: false,
                 transform: [
-                    ["babelify", {
-                        loose: "all"
-                    }],
+                    ["babelify", {presets: ['es2015']}],
                     "workerify"
                 ]
             }

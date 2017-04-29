@@ -29,14 +29,14 @@ const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
 let inited        = false;
+let playing       = false;
 let sound         = null;
 let queuedTrackId = null;
-let handler;
+let handler       = new EventHandler();
 
 const Audio = module.exports = {
 
-    playing  : false,
-    muted    : false, // window.location.href.indexOf( "localhost" ) === -1,
+    muted: false, // window.location.href.indexOf( "localhost" ) === -1,
 
     /**
      * @public
@@ -50,64 +50,63 @@ const Audio = module.exports = {
             //    ,redirect_uri: "https://developers.soundcloud.com/callback.html"
         });
         inited = true;
+
+        // enqueue the first track for playback
+        Audio.enqueueTrack();
     },
     
     /**
-     * play a track by its unique identifier
-     * (you can retrieve the identifier by clicking "Share" on the track page,
-     * selecting "Embed" and retrieving the numerical value from the URL)
-     *
-     * @public
-     *
-     * @param {string} aTrackId
+     * enqueue a track from the available pool for playing
      */
-    playTrack( aTrackId ) {
-        const self = Audio;
+    enqueueTrack() {
+        if ( !inited || Audio.muted )
+            return;
 
-        if ( !inited || self.muted )
+        const trackId = _getTrackIdFromPool();
+    
+        if ( queuedTrackId === trackId  )
             return;
     
-        if ( queuedTrackId === aTrackId && self.playing )
-            return; // already playing this tune!
-    
-        self.stop(); // stop playing the current track (TODO : fade out?)
-    
-        queuedTrackId = aTrackId;
-    
-        SC.stream( "/tracks/" + aTrackId, ( track ) => {
-            sound = track;
+        queuedTrackId = trackId;
 
-            if ( Config.HAS_TOUCH_CONTROLS ) {
-                // on iOS we will not hear anything unless it comes
-                // after a direct user response
-                handler = new EventHandler();
-                handler.listen( document, "touchstart", ( e ) => {
-                    startPlaying();
-                    handler.dispose();
-                    handler = null;
-                });
-            }
-            else {
-                startPlaying();
-            }
+        // request the stream from SoundCloud, this will not
+        // actually play the track (see playEnqueuedTrack())
+
+        SC.stream( "/tracks/" + trackId, ( track ) => {
+
+            // halt currently playing audio
+            Audio.stop();
+
+            // enqueue track
+            sound = track;
         });
     },
-    
+
     /**
-     * play the music!
+     * play the music! note this is proxied via a user action
+     * (click on document) to overcome total silence on
+     * mobile devices
      *
      * @public
      */
-    play() {
-        const self = Audio;
-        if ( !self.muted ) {
-            const trackId = enqueueTrack();
+    playEnqueuedTrack() {
 
-            if ( trackId )
-                self.playTrack( trackId );
+        if ( !inited || Audio.muted )
+            return;
+
+        if ( Config.HAS_TOUCH_CONTROLS ) {
+            // on iOS we will not hear anything unless it comes
+            // after a direct user response
+            handler.listen( document, "touchstart", ( e ) => {
+                _startPlayingEnqueuedTrack();
+                handler.dispose();
+            });
+        }
+        else {
+            _startPlayingEnqueuedTrack();
         }
     },
-    
+
     /**
      * stops playing all tracks
      *
@@ -118,15 +117,14 @@ const Audio = module.exports = {
             sound.stop();
             sound = null;
         }
-        if ( handler ) {
-            handler.dispose();
-            handler = null;
-        }
-        Audio.playing = false;
+        handler.dispose();
+        playing = false;
     }
 };
 
-function enqueueTrack() {
+/* private methods */
+
+function _getTrackIdFromPool() {
     const tracks = AudioTracks.getAll();
     const amount = tracks.length;
 
@@ -149,9 +147,13 @@ function enqueueTrack() {
     return trackId;
 }
 
-function startPlaying() {
+function _startPlayingEnqueuedTrack() {
+
+    if ( !sound )
+        return;
+
     sound.play();
-    self.playing = true;
+    playing = true;
 
     // get track META
     SC.get( "/tracks/" + queuedTrackId, ( track ) => {

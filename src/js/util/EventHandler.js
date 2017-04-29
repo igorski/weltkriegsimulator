@@ -126,8 +126,7 @@ EventHandler.prototype.isListening = function( aElement, aType ) {
 };
 
 /**
- * @override
- * @protected
+ * @public
  */
 EventHandler.prototype.dispose = function() {
     let i = this._mappedEvents.length;

@@ -24,10 +24,19 @@
 
 const AudioTracks = module.exports =
 {
+    /**
+     * Track ids of music on SoundCloud
+     *
+     * (you can retrieve a SoundCloud identifier by clicking "Share" on the track page,
+     * selecting "Embed" and retrieving the numerical value from the URL)
+     */
     OVERGROUND_THEME    : "98712665",
     BATTLE_THEME        : "174846797",
 
     /**
+     * convenience method to return a list of all track ids
+     * listed in this Object
+     *
      * @public
      * @return {Array.<string>}
      */
