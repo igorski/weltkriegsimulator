@@ -40,15 +40,21 @@ const IDEAL_WIDTH = 400;
 
 // all Actors apart from the Player
 const actors = [];
+let COLLIDABLE_TILE;
 
 // create Sprites for each layer, they will not have any visual content
 // of their own, but will act as containers (renderers for each of the
 // Game's Actors will be added to their internal display lists)
-// layers in order: ground, bottom actors, middle actors, top actors, sky
+// layers in order: ground, bottom actors, bottom decoration (e.g. non-collidable tiles), top actors, top decoration (e.g. clouds)
 const layers = new Array( 5 );
 
-// pool of top level renderers, these render special effects on the
-// highest layer of the display list
+let GROUND_LAYER            = 0;
+let BOTTOM_ACTOR_LAYER      = 1;
+let BOTTOM_DECORATION_LAYER = 2;
+let TOP_ACTOR_LAYER         = 3;
+let TOP_DECORATION_LAYER    = 4;
+
+// pool of renderers that show effects like transitions or explosions
 const FXRenderers = new Array( 25 );
 
 const RenderController = module.exports = {
@@ -115,7 +121,7 @@ function setupGame( aGameModel ) {
 
     gameModel = aGameModel;
     clearGame();
-
+  debugger;
     player = RendererFactory.createRenderer(
         gameModel.player, RenderController
     );
@@ -126,10 +132,22 @@ function setupGame( aGameModel ) {
         layers[ i ] = layer;
     }
 
-    layers[ 0 ].addChild( new TileRenderer( 0, 0, 1, .5 ) ); // ground
-    layers[ 2 ].addChild( new SkyRenderer( 0, 0, .5 ) ); // middle actor layer
-    layers[ 3 ].addChild( new TileRenderer( 0, -200, 1.5 ) ); // top actor layer
-    layers[ 4 ].addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 1 ) ); // sky layer
+    // cache the layers into more readable names
+
+    GROUND_LAYER            = layers[ 0 ];
+    BOTTOM_ACTOR_LAYER      = layers[ 1 ];
+    BOTTOM_DECORATION_LAYER = layers[ 2 ];
+    TOP_ACTOR_LAYER         = layers[ 3 ];
+    TOP_DECORATION_LAYER    = layers[ 4 ];
+
+    COLLIDABLE_TILE = new TileRenderer( 0, -200, 1.5 );
+
+    // add some default renderers for scenery
+
+    GROUND_LAYER.addChild( new TileRenderer( 0, 0, 1, .5 ) );
+    BOTTOM_DECORATION_LAYER.addChild( new SkyRenderer( 0, 0, .5 ) );
+    TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
+    TOP_DECORATION_LAYER.addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 1 ) );
 
     // create Pool of top level renderers
 
@@ -215,14 +233,14 @@ function addRendererToAppropriateLayer( layer, renderer ) {
     // that aren't part of the Game, thus contain no Actors!)
 
     switch ( layer ) {
-        case 1: // top actor layer
-            layers[ 3 ].addChild( renderer );
+        case 1:
+            TOP_ACTOR_LAYER.addChild( renderer );
             break;
-        case 0: // bottom actor layer
-            layers[ 1 ].addChild( renderer );
+        case 0:
+            BOTTOM_ACTOR_LAYER.addChild( renderer );
             break;
-        default: // middle actor layer
-            layers[ 2 ].addChild( renderer );
+        default:
+            BOTTOM_DECORATION_LAYER.addChild( renderer );
             break;
     }
 }
@@ -269,10 +287,10 @@ function rumble() {
 function checkLayerSwitchCollision( actor ) {
     // check if the Actor has collided with the scenery during layer switch
     // (e.g. the tiles present on the middle layer)
-    const tile = layers[ 3 ].getChildAt( 0 );
+
     if ( actor === gameModel.player &&
          // pixel transparency check to ensure we're not moving through holes in the tiles
-         zCanvas.collision.pixelCollision( actor.renderer, tile )) {
+         zCanvas.collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
 
         actor.layer = 1;
         actor.die();
