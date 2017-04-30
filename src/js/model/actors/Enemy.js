@@ -65,7 +65,10 @@ module.exports = class Enemy extends Ship {
     update( aTimestamp ) {
         super.update( aTimestamp );
 
-        if ( this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
+        // fire a shot in case the shoot interval has passed
+        // (and this Enemy is getting close to sliding into view)
+
+        if ( this.y > -400 && this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
             this.lastShot = Date.now();
             this.game.fireBullet( this );
         }

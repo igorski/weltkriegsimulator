@@ -125,6 +125,10 @@ module.exports = class Player extends Ship {
         this.score      = 0;
         this.collidable = true;
 
+        // start centered horizontally at the bottom of the screen
+        this.x = this.game.world.width / 2 - this.width / 2;
+        this.y = this.game.world.height - ( this.height * 1.5 );
+
         if ( this.renderer )
             this.renderer.switchAnimation( 0 );
     }

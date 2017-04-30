@@ -36,7 +36,7 @@ const Random = require( "../util/Random" );
 const ACTION_LIST = [
     { fn: generateWave1, timeout: 5000 },
     { fn: createPowerup, timeout: 2500 },
-    { fn: generateWave2, timeout: 2500 }
+    { fn: generateWave2, timeout: 7500 }
 ];
 let queuedAction;
 
@@ -93,25 +93,30 @@ function generateWave1( gameModel ) {
     const targetLayer = gameModel.player.layer;
 
     for ( let i = 0, total = 5; i < total; ++i ) {
-        gameModel.createEnemy(
-            ( gameModel.world.width / total ) * i,
-            -( 100 + i * 50 ),
-            0, 1 + ( i * .25 ),
-            targetLayer
-        );
+
+        const x      = ( gameModel.world.width / total ) * i;
+        const y      = -( 100 + i * 50 );
+        const xSpeed = 0;
+        const ySpeed = 1 + ( i *.25 );
+
+        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer );
     }
 }
 
 function generateWave2( gameModel ) {
-    generateWave1( gameModel );
-    const targetLayer = ( gameModel.player.layer === 0 ) ? 1 : 0;
+    generateWave1( gameModel ); // generate first squadron
+
+    // squadron 2 at random target layers
+
     for ( let i = 0, total = Random.range( 2, 10 ); i < total; ++i ) {
-        gameModel.createEnemy(
-            ( gameModel.world.width / total ) * i,
-            -( gameModel.world.height + 100 + i * 50 ),
-            0, 1 + ( i * .25 ),
-            targetLayer
-        )
+
+        const x      = ( gameModel.world.width / total ) * i;
+        const y      = -( gameModel.world.height + 100 + i * 50 );
+        const xSpeed = 0;
+        const ySpeed = 1 + ( i * .25 );
+        const targetLayer = Random.bool() ? 1 : 0;
+
+        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer );
     }
 }
 

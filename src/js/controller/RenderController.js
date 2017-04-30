@@ -59,6 +59,7 @@ const RenderController = module.exports = {
             fps: 60,
             onUpdate: wks.gameModel.update
         });
+        canvas.setBackgroundColor( "#0055d8" );
         canvas.insertInPage( container );
 
         setupGame( wks.gameModel );
@@ -107,9 +108,9 @@ function setupGame( aGameModel ) {
     }
 
     layers[ 0 ].addChild( new TileRenderer( 0, 0, 1, .5 ) ); // ground
-    layers[ 2 ].addChild( new SkyRenderer( 0, 0, 1 ) ); // middle actor layer
+    layers[ 2 ].addChild( new SkyRenderer( 0, 0, .5 ) ); // middle actor layer
     layers[ 3 ].addChild( new TileRenderer( 0, -200, 1.5 ) ); // top actor layer
-    layers[ 4 ].addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 2 ) ); // sky layer
+    layers[ 4 ].addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 1 ) ); // sky layer
 
     player.x = canvas.getWidth() / 2 - player.width / 2;
     player.y = canvas.getHeight() - player.height;
