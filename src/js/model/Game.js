@@ -155,8 +155,12 @@ const Game = module.exports = {
      *
      * @public
      * @param {Actor} actor
+     * @param {boolean=} optExplode whether to trigger explosion
      */
-    removeActor( actor ) {
+    removeActor( actor, optExplode ) {
+
+        if ( optExplode === true )
+            Pubsub.publish( Messages.ACTOR_EXPLODE, actor );
 
         const index = Game.actors.indexOf( actor );
         if ( index !== -1 )
@@ -185,7 +189,7 @@ const Game = module.exports = {
      */
     updateActorLayer( actor ) {
         Pubsub.publish(
-            Messages.ACTOR_LAYER_SWITCH, actor
+            Messages.ACTOR_LAYER_SWITCH_COMPLETE, actor
         )
     },
 

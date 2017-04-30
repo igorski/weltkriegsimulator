@@ -126,8 +126,10 @@ ActorRenderer.prototype.draw = function( aCanvasContext ) {
     }
     ActorRenderer.super( this, "draw", aCanvasContext );
 
-    this.debug( aCanvasContext );
+    //this.debug( aCanvasContext );
 };
+
+/* protected methods */
 
 /**
  * can be called from the draw()-method to show the
@@ -140,7 +142,9 @@ ActorRenderer.prototype.debug = function( aCanvasContext ) {
 
     aCanvasContext.strokeStyle = "#FF0000";
     aCanvasContext.lineWidth = 2;
+
     const hitBox = this.actor.hitBox;
+
     aCanvasContext.strokeRect(
         hitBox.left, hitBox.top,
         hitBox.right - hitBox.left,

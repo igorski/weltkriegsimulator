@@ -248,8 +248,7 @@ module.exports = class Actor {
                 targetLayer,
                 (( this.width * .5 ) - ( width  * .5 )),
                 (( this.width * .5 ) - ( height * .5 )),
-                width,
-                height
+                width, height
             ],
             switchSpeed, () => {
                 self.layer = targetLayer; // overcome JS rounding errors

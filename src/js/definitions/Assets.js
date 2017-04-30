@@ -28,20 +28,24 @@ const baseURL = Config.getBaseURL() + "/assets/images/";
 const Assets = module.exports = {
 
     POWERUP : baseURL + "sprites/powerup.png",
-    SHIP    : baseURL + "sprites/ship_spritesheet.png",
+    SHIP    : baseURL + "sprites/spritesheet_ship.png",
+    FX      : baseURL + "sprites/spritesheet_fx.png",
     SKY     : baseURL + "sprites/clouds.png",
     TILE    : baseURL + "sprites/tile.png",
 
     /**
+     * convenience method to return a list of all assets
+     * listed in this Object
+     *
      * @public
      * @return {Array.<string>}
      */
     getAll() {
-        return [
-            Assets.POWERUP,
-            Assets.SHIP,
-            Assets.SKY,
-            Assets.TILE
-        ];
+        const out = [];
+        Object.keys( Assets ).forEach(( key ) => {
+            if ( typeof Assets[ key ] !== "function" )
+                out.push( Assets[ key ] );
+        });
+        return out;
     }
 };

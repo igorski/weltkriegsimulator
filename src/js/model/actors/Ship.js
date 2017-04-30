@@ -103,9 +103,6 @@ module.exports = class Ship extends Actor {
 
     die() {
         this.collidable = false;
-
-        if ( this.renderer ) {
-            this.renderer.switchAnimation( 2 );
-        }
+        this.game.removeActor( this, true );
     }
 };

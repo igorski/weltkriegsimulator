@@ -22,8 +22,9 @@
  */
 "use strict";
 
-const Ship    = require( "./Ship" );
-const Powerup = require( "./Powerup" );
+const Ship         = require( "./Ship" );
+const Powerup      = require( "./Powerup" );
+const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;
@@ -130,6 +131,6 @@ module.exports = class Player extends Ship {
         this.y = this.game.world.height - ( this.height * 1.5 );
 
         if ( this.renderer )
-            this.renderer.switchAnimation( 0 );
+            this.renderer.switchAnimation( ShipRenderer.ANIMATION.PLAYER_IDLE );
     }
 };

@@ -39,7 +39,7 @@ module.exports = EnemyRenderer;
 function EnemyRenderer( enemy, renderController ) {
 
     EnemyRenderer.super( this, "constructor", enemy, renderController );
-    this.switchAnimation( 1 );
+    this.switchAnimation( ShipRenderer.ANIMATION.ENEMY_IDLE );
     this.canRumble = false;
 }
 ShipRenderer.extend( EnemyRenderer );

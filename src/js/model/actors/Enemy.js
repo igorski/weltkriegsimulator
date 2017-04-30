@@ -22,7 +22,8 @@
  */
 "use strict";
 
-const Ship = require( "./Ship" );
+const Ship         = require( "./Ship" );
+const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = 0;
@@ -83,6 +84,6 @@ module.exports = class Enemy extends Ship {
         this.collidable = true;
 
         if ( this.renderer )
-            this.renderer.switchAnimation( 1 );
+            this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_IDLE );
     }
 };

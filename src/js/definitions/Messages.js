@@ -26,15 +26,17 @@ module.exports = {
 
     /* Game state changes */
 
-    GAME_STARTED          : "G01",
-    GAME_OVER             : "G02",
-    ACTOR_ADDED           : "G03", // payload is newly added Actor
-    ACTOR_REMOVED         : "G04", // payload is Actor to remove
-    ACTOR_LAYER_SWITCH    : "G05", // payload is Actor that has switched layers
-    FIRE_BULLET           : "G06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
-    PLAYER_HIT            : "G07", // payload is { player: Player, object: Actor }
-    UPDATE_SCORE          : "G08", // payload is numerical value of new score
-    SHOW_MUSIC            : "G09", // payload is { title: string, author: string }
-    SHOW_TITLE_SCREEN     : "G10",
-    SHOW_HOW_TO_PLAY      : "G11"
+    GAME_STARTED                : "G01",
+    GAME_OVER                   : "G02",
+    ACTOR_ADDED                 : "G03", // payload is newly added Actor
+    ACTOR_REMOVED               : "G04", // payload is Actor to remove
+    ACTOR_EXPLODE               : "G05", // payload is Actor that is about to explode
+    ACTOR_LAYER_SWITCH_START    : "G06", // payload is Actor that is about to switch layer
+    ACTOR_LAYER_SWITCH_COMPLETE : "G07", // payload is Actor that has switched layers
+    FIRE_BULLET                 : "G08", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
+    PLAYER_HIT                  : "G09", // payload is { player: Player, object: Actor }
+    UPDATE_SCORE                : "G10", // payload is numerical value of new score
+    SHOW_MUSIC                  : "G11", // payload is { title: string, author: string }
+    SHOW_TITLE_SCREEN           : "G12",
+    SHOW_HOW_TO_PLAY            : "G13"
 };

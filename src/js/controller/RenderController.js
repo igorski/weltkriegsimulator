@@ -28,6 +28,7 @@ const zCanvas         = require( "zcanvas" );
 const RendererFactory = require( "../factory/RendererFactory" );
 const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
+const FXRenderer      = require( "../view/renderers/FXRenderer" );
 const Powerup         = require( "../model/actors/Powerup" );
 
 let gameModel, canvas, player, background;
@@ -45,6 +46,10 @@ const actors = [];
 // Game's Actors will be added to their internal display lists)
 // layers in order: ground, bottom actors, middle actors, top actors, sky
 const layers = new Array( 5 );
+
+// pool of top level renderers, these render special effects on the
+// highest layer of the display list
+const FXRenderers = new Array( 25 );
 
 const RenderController = module.exports = {
 
@@ -77,10 +82,24 @@ const RenderController = module.exports = {
             Messages.GAME_STARTED,
             Messages.ACTOR_ADDED,
             Messages.ACTOR_REMOVED,
-            Messages.ACTOR_LAYER_SWITCH,
+            Messages.ACTOR_EXPLODE,
+            Messages.ACTOR_LAYER_SWITCH_START,
+            Messages.ACTOR_LAYER_SWITCH_COMPLETE,
             Messages.PLAYER_HIT
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
+    },
+
+    /**
+     * invoked when an FXRenderer has completed its animation
+     *
+     * @public
+     * @param {FXRenderer} renderer
+     */
+    onFXComplete( renderer ) {
+        // remove renderer from zCanvas, return to pool
+        removeRendererFromDisplayList( renderer );
+        FXRenderers.push( renderer );
     },
 
     /**
@@ -112,8 +131,10 @@ function setupGame( aGameModel ) {
     layers[ 3 ].addChild( new TileRenderer( 0, -200, 1.5 ) ); // top actor layer
     layers[ 4 ].addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 1 ) ); // sky layer
 
-    player.x = canvas.getWidth() / 2 - player.width / 2;
-    player.y = canvas.getHeight() - player.height;
+    // create Pool of top level renderers
+
+    for ( let i = 0; i < FXRenderers.length; ++i )
+        FXRenderers[ i ] = new FXRenderer( RenderController );
 
     // ensures optimal size
     handleResize();
@@ -124,7 +145,7 @@ function handleBroadcast( type, payload ) {
     let renderer;
     switch ( type ) {
         case Messages.GAME_STARTED:
-            addRendererToAppropriateLayer( gameModel.player );
+            addRendererToAppropriateLayer( gameModel.player.layer, gameModel.player.renderer );
             break;
 
         case Messages.ACTOR_ADDED:
@@ -132,7 +153,7 @@ function handleBroadcast( type, payload ) {
             renderer = RendererFactory.createRenderer(
                 payload, RenderController
             );
-            addRendererToAppropriateLayer( payload );
+            addRendererToAppropriateLayer( /** @type {Actor}*/ ( payload ).layer, renderer );
             actors.push( payload );
             break;
 
@@ -142,16 +163,27 @@ function handleBroadcast( type, payload ) {
             if ( index !== -1 )
                 actors.splice( index, 1 );
 
-            removeRendererFromDisplayList( payload );
+            removeRendererFromDisplayList( /** @type {Actor} */ ( payload ).renderer );
             break;
 
-        case Messages.ACTOR_LAYER_SWITCH:
+        case Messages.ACTOR_EXPLODE:
+            showExplodeAnimation( payload );
+            break;
+
+        case Messages.ACTOR_LAYER_SWITCH_START:
+            showLayerSwitchAnimation( payload );
+            break;
+
+        case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
 
             renderer = payload.renderer;
 
             if ( renderer ) {
-                removeRendererFromDisplayList( payload );
-                addRendererToAppropriateLayer( payload );
+                removeRendererFromDisplayList( /** @type {Actor} */ ( payload ).renderer );
+                addRendererToAppropriateLayer(
+                    /** @type {Actor} */ ( payload ).layer,
+                    /** @type {Actor} */ ( payload ).renderer
+                );
             }
             break;
 
@@ -177,15 +209,13 @@ function clearGame() {
     layers.forEach(( layer ) => layer.dispose());
 }
 
-function addRendererToAppropriateLayer( actor ) {
-
-    const renderer = actor.renderer;
+function addRendererToAppropriateLayer( layer, renderer ) {
 
     // note that Actor layer indices don't match the indices
     // inside this controllers layer-index (we have decorative layers
     // that aren't part of the Game, thus contain no Actors!)
 
-    switch ( actor.layer ) {
+    switch ( layer ) {
         case 1: // top actor layer
             layers[ 3 ].addChild( renderer );
             break;
@@ -198,9 +228,7 @@ function addRendererToAppropriateLayer( actor ) {
     }
 }
 
-function removeRendererFromDisplayList( actor ) {
-
-    const renderer = actor.renderer;
+function removeRendererFromDisplayList( renderer ) {
 
     if ( !renderer )
         return;
@@ -234,6 +262,26 @@ function rumble() {
             "x": 0, "y": 0, "ease": Power1.easeInOut
         })
     );
+}
+
+function showExplodeAnimation( actor ) {
+    // get FXRenderer from pool
+    const renderer = FXRenderers.shift();
+
+    if ( renderer ) {
+        renderer.showAnimation( actor, FXRenderer.ANIMATION.EXPLOSION );
+        addRendererToAppropriateLayer( actor.layer, renderer );
+    }
+}
+
+function showLayerSwitchAnimation( actor ) {
+    // get FXRenderer from pool
+    const renderer = FXRenderers.shift();
+
+    if ( renderer ) {
+        renderer.showAnimation( actor, FXRenderer.ANIMATION.CLOUD );
+        addRendererToAppropriateLayer( actor.layer, renderer );
+    }
 }
 
 function handleResize() {

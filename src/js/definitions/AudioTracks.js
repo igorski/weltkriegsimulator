@@ -42,7 +42,6 @@ const AudioTracks = module.exports =
      */
     getAll() {
         const out = [];
-
         Object.keys( AudioTracks ).forEach(( key ) => {
             if ( typeof AudioTracks[ key ] !== "function" )
                 out.push( AudioTracks[ key ] );

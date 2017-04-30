@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -42,9 +42,12 @@ function ShipRenderer( ship, renderController ) {
 
     this.setBitmap( Assets.SHIP );
     this.setSheet([
-            { row: 0, col: 0, fpt: 3, amount: 1 },  // Player ship, facing up
-            { row: 1, col: 0, fpt: 3, amount: 1 },  // Enemy ship, facing down
-            { row: 2, col: 0, fpt: 3, amount: 16, onComplete: ship.dispose.bind( ship ) } // Explosion
+
+            // Player ship (facing up)
+            { row: 0, col: 0, fpt: 3, amount: 1 },
+
+            // Enemy ship (facing down)
+            { row: 1, col: 0, fpt: 3, amount: 1 }
         ],
         ShipRenderer.TILE_SIZE.width,
         ShipRenderer.TILE_SIZE.height
@@ -61,3 +64,15 @@ ActorRenderer.extend( ShipRenderer );
  * @type {{width: number, height: number}}
  */
 ShipRenderer.TILE_SIZE = { width: 64, height: 64 };
+
+/**
+ * all animations that are available to this renderer
+ * these translate to animation indices in the sprite sheet
+ *
+ * @public
+ * @type {Object}
+ */
+ShipRenderer.ANIMATION = {
+    PLAYER_IDLE: 0,
+    ENEMY_IDLE : 1
+};
