@@ -74,8 +74,10 @@ const InputController = module.exports = {
     },
 
     switchLayer() {
-        player.switchLayer();
-        Pubsub.publish( Messages.ACTOR_LAYER_SWITCH_START, player );
+        if ( !player.switching ) {
+            player.switchLayer();
+            Pubsub.publish( Messages.ACTOR_LAYER_SWITCH_START, player );
+        }
     },
 
     left( targetValue = -5 ) {

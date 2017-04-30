@@ -92,6 +92,18 @@ const Game = module.exports = {
     },
 
     /**
+     * handle a direct collision between the Player and another Actor
+     *
+     * @param {Actor} actor
+     */
+    onPlayerHit( actor ) {
+        Pubsub.publish( Messages.PLAYER_HIT, { player: Game.player, object: actor });
+        // are we still alive?
+        if ( Game.player.energy === 0 )
+            Pubsub.publish( Messages.GAME_OVER )
+    },
+
+    /**
      * create a powerup
      *
      * @param {number} x
@@ -256,14 +268,8 @@ const Game = module.exports = {
             others.forEach(( other ) => {
                 if ( actor.collides( other )) {
                     actor.hit( other );
-                    if ( actor instanceof Player || other instanceof Player ) {
-                        Pubsub.publish( Messages.PLAYER_HIT, {
-                            player: player, object: ( other !== player ) ? other : actor
-                        });
-                        // are we still alive?
-                        if ( player.energy === 0 )
-                            Pubsub.publish( Messages.GAME_OVER );
-                    }
+                    if ( actor instanceof Player || other instanceof Player )
+                        Game.onPlayerHit(( other !== player ) ? other : actor );
                 }
             });
         }

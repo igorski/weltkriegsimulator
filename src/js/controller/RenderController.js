@@ -153,13 +153,13 @@ function handleBroadcast( type, payload ) {
             renderer = RendererFactory.createRenderer(
                 payload, RenderController
             );
-            addRendererToAppropriateLayer( /** @type {Actor}*/ ( payload ).layer, renderer );
+            addRendererToAppropriateLayer( /** @type {Actor} */ ( payload ).layer, renderer );
             actors.push( payload );
             break;
 
         case Messages.ACTOR_REMOVED:
 
-            const index = actors.indexOf( payload );
+            const index = actors.indexOf( /** @type {Actor} */ ( payload ));
             if ( index !== -1 )
                 actors.splice( index, 1 );
 
@@ -167,23 +167,22 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.ACTOR_EXPLODE:
-            showExplodeAnimation( payload );
+            showExplodeAnimation( /** @type {Actor} */ ( payload ));
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_START:
             showLayerSwitchAnimation( payload );
+            setTimeout(() => checkLayerSwitchCollision( payload ), 500 );
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
 
-            renderer = payload.renderer;
+            const actor = /** @type {Actor} */ ( payload );
+            renderer    = actor.renderer;
 
             if ( renderer ) {
-                removeRendererFromDisplayList( /** @type {Actor} */ ( payload ).renderer );
-                addRendererToAppropriateLayer(
-                    /** @type {Actor} */ ( payload ).layer,
-                    /** @type {Actor} */ ( payload ).renderer
-                );
+                removeRendererFromDisplayList( renderer );
+                addRendererToAppropriateLayer( actor.layer, renderer );
             }
             break;
 
@@ -264,10 +263,26 @@ function rumble() {
     );
 }
 
+// TODO: does this belong here ? The tiles aren't actually Actors, but by
+// treating them as collidable objects, we just made them so...
+
+function checkLayerSwitchCollision( actor ) {
+    // check if the Actor has collided with the scenery during layer switch
+    // (e.g. the tiles present on the middle layer)
+    const tile = layers[ 3 ].getChildAt( 0 );
+    if ( actor === gameModel.player &&
+         // pixel transparency check to ensure we're not moving through holes in the tiles
+         zCanvas.collision.pixelCollision( actor.renderer, tile )) {
+
+        actor.layer = 1;
+        actor.die();
+        gameModel.onPlayerHit( null );
+    }
+}
+
 function showExplodeAnimation( actor ) {
     // get FXRenderer from pool
     const renderer = FXRenderers.shift();
-
     if ( renderer ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.EXPLOSION );
         addRendererToAppropriateLayer( actor.layer, renderer );
@@ -277,7 +292,6 @@ function showExplodeAnimation( actor ) {
 function showLayerSwitchAnimation( actor ) {
     // get FXRenderer from pool
     const renderer = FXRenderers.shift();
-
     if ( renderer ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.CLOUD );
         addRendererToAppropriateLayer( actor.layer, renderer );
