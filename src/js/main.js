@@ -39,7 +39,8 @@ const WKS = window.WKS = {
     renderController : require( "./controller/RenderController" ),
     screenController : require( "./controller/ScreenController" ),
     gameModel        : require( "./model/Game" ),
-    audioModel       : require( "./model/Audio" )
+    audioModel       : require( "./model/Audio" ),
+    pubSub           : require( "pubsub-js" )
 };
 
 // prepare dependencies

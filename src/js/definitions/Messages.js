@@ -24,19 +24,24 @@
 
 module.exports = {
 
+    /* General application states */
+
+    GAME_STARTED                : "GAME_START",
+    GAME_OVER                   : "GAME_OVER",
+    HIGH_SCORES_RETRIEVED       : "HIGH_SCORES_RETRIEVED", // payload is Array.<{name: string, score: number}>
+    HIGH_SCORE_SUBMITTED        : "HIGH_SCORE_SUBMITTED",  // payload is { name: string, score: number }
+
     /* Game state changes */
 
-    GAME_STARTED                : "G01",
-    GAME_OVER                   : "G02",
-    ACTOR_ADDED                 : "G03", // payload is newly added Actor
-    ACTOR_REMOVED               : "G04", // payload is Actor to remove
-    ACTOR_EXPLODE               : "G05", // payload is Actor that is about to explode
-    ACTOR_LAYER_SWITCH_START    : "G06", // payload is Actor that is about to switch layer
-    ACTOR_LAYER_SWITCH_COMPLETE : "G07", // payload is Actor that has switched layers
-    FIRE_BULLET                 : "G08", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
-    PLAYER_HIT                  : "G09", // payload is { player: Player, object: Actor }
-    UPDATE_SCORE                : "G10", // payload is numerical value of new score
-    SHOW_MUSIC                  : "G11", // payload is { title: string, author: string }
-    SHOW_TITLE_SCREEN           : "G12",
-    SHOW_HOW_TO_PLAY            : "G13"
+    ACTOR_ADDED                 : "S01", // payload is newly added Actor
+    ACTOR_REMOVED               : "S02", // payload is Actor to remove
+    ACTOR_EXPLODE               : "S03", // payload is Actor that is about to explode
+    ACTOR_LAYER_SWITCH_START    : "S04", // payload is Actor that is about to switch layer
+    ACTOR_LAYER_SWITCH_COMPLETE : "S05", // payload is Actor that has switched layers
+    FIRE_BULLET                 : "S06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
+    PLAYER_HIT                  : "S07", // payload is { player: Player, object: Actor }
+    UPDATE_SCORE                : "S08", // payload is numerical value of new score
+    SHOW_MUSIC                  : "S09", // payload is { title: string, author: string }
+    SHOW_TITLE_SCREEN           : "S10",
+    SHOW_HOW_TO_PLAY            : "S11"
 };
