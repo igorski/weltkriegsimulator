@@ -113,6 +113,16 @@ module.exports = class Actor {
         this.height = 25;
 
         /**
+         * Box to determine collision area
+         * (it is slightly smaller than the actual bounds of the actor which
+         * match the size of its renderer)
+         *
+         * @public
+         * @type {{ left: number, top: number, right: number, bottom: number }}
+         */
+        this.hitBox = { left: 0, top: 0, right: 0, bottom: 0 };
+
+        /**
          * @public
          * @type {ActorRenderer}
          */
@@ -146,10 +156,12 @@ module.exports = class Actor {
 
         this.orgWidth  = this.width;
         this.orgHeight = this.height;
+
+        this._cacheHitbox();
     }
-    
+
     /* public methods */
-    
+
     /**
      * @public
      * @param {number} aTimestamp
@@ -167,6 +179,11 @@ module.exports = class Actor {
             this.x += this.xSpeed;
             this.y += this.ySpeed;
         }
+
+        // recalculate the hit box bounds if this Actor is inside the viewport
+
+        if ( this.y > -this.height )
+            this._cacheHitbox();
     }
 
     /**
@@ -178,24 +195,26 @@ module.exports = class Actor {
 
         if ( !actor.collidable || actor.layer !== this.layer || actor === this )
             return false;
-        
+
+        const myBox = this.hitBox, otherBox = actor.hitBox;
+
         return !(
-            (( this.y + this.height ) < ( actor.y )) ||
-            ( this.y > ( actor.y + actor.height )) ||
-            (( this.x + this.width ) < actor.x ) ||
-            ( this.x > ( actor.x + actor.width ))
+            ( myBox.bottom < otherBox.top ) ||
+            ( myBox.top    > otherBox.bottom ) ||
+            ( myBox.right  < otherBox.left ) ||
+            ( myBox.left   > otherBox.right )
         );
     }
-    
+
     /**
      * @public
      * @param {Object=} actor optional Actor to collide with
      */
     hit( actor ) {
-    
+
         // extend in inheriting classes
     }
-    
+
     /**
      * @public
      * @param {number=} switchSpeed
@@ -236,30 +255,8 @@ module.exports = class Actor {
                 self.layer = targetLayer; // overcome JS rounding errors
                 self._onLayerSwitch();
             },
-            Cubic.easeOut
+            Cubic.easeOut, () => self._cacheHitbox()
         );
-    }
-
-    /**
-     * invoked whenever the layer switch animation
-     * has completed
-     *
-     * @protected
-     */
-    _onLayerSwitch() {
-        this.switching = false;
-        this.game.updateActorLayer( this );
-
-        // commit the offset to the final coordinate now
-        // that the layer switch animation has completed
-
-        this.x += this.offsetX;
-        this.y += this.offsetY;
-
-        // restore offset
-
-        this.offsetX =
-        this.offsetY = 0;
     }
 
     /**
@@ -286,5 +283,47 @@ module.exports = class Actor {
                 this.renderer = null;
             }
         }
+    }
+
+    /* protected methods */
+
+    /**
+     * invoked whenever the layer switch animation
+     * has completed
+     *
+     * @protected
+     */
+    _onLayerSwitch() {
+        this.switching = false;
+        this.game.updateActorLayer( this );
+
+        // commit the offset to the final coordinate now
+        // that the layer switch animation has completed
+
+        this.x += this.offsetX;
+        this.y += this.offsetY;
+
+        // restore offset
+
+        this.offsetX =
+        this.offsetY = 0;
+    }
+
+    /**
+     * cache the properties of this Actors hitbox, invoke
+     * whenever dimensions of the Actor change
+     *
+     * @protected
+     */
+    _cacheHitbox() {
+
+        // relative to the bounds described by x, y, width, and height
+        // we want to hitbox to be inside this area by this margin
+        const margin = this.width * .25;
+
+        this.hitBox.left   = this.x + this.offsetX + margin;
+        this.hitBox.top    = this.y + this.offsetY + margin;
+        this.hitBox.right  = this.x + this.offsetX + ( this.width  - margin );
+        this.hitBox.bottom = this.y + this.offsetY + ( this.height - margin );
     }
 };

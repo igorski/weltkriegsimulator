@@ -34,12 +34,17 @@ module.exports = {
      * @param {number} delayTime in seconds
      * @param {Function=} optCallback optional callback to execute when ready
      * @param {Function=} optEase optional easing function to use
+     * @param {Function=} optUpdate optional method to execute while Tween
+     *                    updates on each interation of its execution
      */
-    setDelayed( actor, property, targetValue, delayTime, optCallback, optEase ) {
+    setDelayed( actor, property, targetValue, delayTime, optCallback, optEase, optUpdate ) {
 
         const vars = {
             onComplete: optCallback
         };
+
+        if ( optUpdate )
+            vars.onUpdate = optUpdate;
 
         if ( Array.isArray( property )) {
             for ( let i = 0, l = property.length; i < l; ++i )

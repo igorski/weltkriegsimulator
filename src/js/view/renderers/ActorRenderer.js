@@ -125,4 +125,25 @@ ActorRenderer.prototype.draw = function( aCanvasContext ) {
         }
     }
     ActorRenderer.super( this, "draw", aCanvasContext );
+
+    this.debug( aCanvasContext );
+};
+
+/**
+ * can be called from the draw()-method to show the
+ * collidable bounding box around this Actor
+ *
+ * @protected
+ * @param {CanvasRenderingContext2D} aCanvasContext
+ */
+ActorRenderer.prototype.debug = function( aCanvasContext ) {
+
+    aCanvasContext.strokeStyle = "#FF0000";
+    aCanvasContext.lineWidth = 2;
+    const hitBox = this.actor.hitBox;
+    aCanvasContext.strokeRect(
+        hitBox.left, hitBox.top,
+        hitBox.right - hitBox.left,
+        hitBox.bottom - hitBox.top
+    );
 };
