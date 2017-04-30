@@ -27,40 +27,29 @@ const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
-let handler, startButton, highScoresButton, howToPlayButton;
-let title, menu, footer, buttons;
+let handler, text, backButton;
+let title, footer;
 
 module.exports = {
 
     render( wrapper, templateService ) {
 
-        templateService.render( "Screen_Title", wrapper, {
+        templateService.render( "Screen_HowToPlay", wrapper, {
 
         }).then(() => {
 
             // grab references to HTML Elements
 
             title   = wrapper.querySelector( "h1" );
-            menu    = wrapper.querySelector( "#menu" );
             footer  = wrapper.querySelector( "footer" );
-            buttons = wrapper.querySelectorAll( "button" );
+            text    = wrapper.querySelector( "#text" );
 
-            startButton      = wrapper.querySelector( "#btnStart" );
-            highScoresButton = wrapper.querySelector( "#btnHighScores" );
-            howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+            backButton = wrapper.querySelector( "#btnBack" );
 
             animateIn();
 
             handler = new EventHandler();
-
-            handler.listen( howToPlayButton, "click", handleHowToPlayClick );
-
-            // we deliberately listen to mouse and touch events (instead of "click")
-            // as we can determine whether we need to show on-screen game controls
-
-            handler.listen( startButton, "mouseup",     handleStartClick );
-            handler.listen( startButton, "touchcancel", handleStartClick );
-            handler.listen( startButton, "touchend",    handleStartClick );
+            handler.listen( backButton, "click", handleBackClick );
         });
     },
 
@@ -73,50 +62,30 @@ module.exports = {
 
 /* private methods */
 
-function handleStartClick( event ) {
+function handleBackClick( event ) {
 
     event.preventDefault(); // prevents double firing on touch screens
 
-    // in case a touch event was fired, store this in the config
-
-    if ( event.type.indexOf( "touch" ) >= 0 ) {
-        Config.HAS_TOUCH_CONTROLS = true;
-    }
-
     animateOut(() => {
         // start this game!
-        Pubsub.publish( Messages.GAME_STARTED );
-    });
-}
-
-function handleHowToPlayClick( event ) {
-    animateOut(() => {
-        Pubsub.publish( Messages.SHOW_HOW_TO_PLAY );
+        Pubsub.publish( Messages.SHOW_TITLE_SCREEN );
     });
 }
 
 function animateIn() {
     const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 0, { css: { autoAlpha: 0 }} ));
+    tl.add( TweenMax.to( text, 0, { css: { autoAlpha: 0 }} ));
     tl.add( TweenMax.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 1 }}));
+    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 1 }}));
     tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
-
-    for ( let i = 0; i < buttons.length; ++i ) {
-        const button = buttons[ i ];
-        TweenMax.from( button, 1.5, {
-            css: { marginLeft: `-${window.innerWidth}px` },
-            ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
-        });
-    }
 }
 
 function animateOut( callback ) {
     const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 0 }, onComplete: () => {
         TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
         TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
     }}));

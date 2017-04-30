@@ -54,6 +54,8 @@ function handleBroadcast( type, payload ) {
     switch ( type ) {
         case Messages.GAME_STARTED:
             gameModel.reset();
+            // ensure all is visible (TODO: this means we have a problem elsewhere ;)
+            window.scrollTo( 0, 0 );
             // start the music
             audioModel.playEnqueuedTrack();
             // start the game actions queue

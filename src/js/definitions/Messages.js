@@ -34,5 +34,7 @@ module.exports = {
     FIRE_BULLET           : "G06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
     PLAYER_HIT            : "G07", // payload is { player: Player, object: Actor }
     UPDATE_SCORE          : "G08", // payload is numerical value of new score
-    SHOW_MUSIC            : "G09"  // payload is { title: string, author: string }
+    SHOW_MUSIC            : "G09", // payload is { title: string, author: string }
+    SHOW_TITLE_SCREEN     : "G10",
+    SHOW_HOW_TO_PLAY      : "G11"
 };
