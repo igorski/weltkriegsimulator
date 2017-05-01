@@ -53,7 +53,8 @@ module.exports = {
 
             handler = new EventHandler();
 
-            handler.listen( howToPlayButton, "click", handleHowToPlayClick );
+            handler.listen( howToPlayButton,  "click", handleHowToPlayClick );
+            handler.listen( highScoresButton, "click", handleHighScoresClick );
 
             // we deliberately listen to mouse and touch events (instead of "click")
             // as we can determine whether we need to show on-screen game controls
@@ -86,6 +87,12 @@ function handleStartClick( event ) {
     animateOut(() => {
         // start this game!
         Pubsub.publish( Messages.GAME_STARTED );
+    });
+}
+
+function handleHighScoresClick( event ) {
+    animateOut(() => {
+        Pubsub.publish( Messages.SHOW_HIGHSCORES );
     });
 }
 

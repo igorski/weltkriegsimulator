@@ -1,0 +1,51 @@
+header {
+  width: 100%;
+  text-align: center;
+}
+
+#menu {
+  width: 100%;
+
+  button {
+    width: 50%;
+    display: block;
+    padding: 2em;
+    margin: .5em auto;
+    cursor: pointer;
+  }
+}
+
+#text {
+  width: 50%;
+  height: 75%;
+  overflow-y: scroll;
+  margin: 0 auto;
+  padding: 0 1em;
+  .boxSize;
+
+  button {
+    width: 50%;
+    display: block;
+    padding: 2em;
+    margin: .5em auto;
+    cursor: pointer;
+  }
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: .5em;
+  text-align: center;
+  .boxSize;
+}
+
+/* mobile view */
+
+@media screen and ( max-width: @mobile-width )
+{
+  #text {
+    width: 100%;
+  }
+}

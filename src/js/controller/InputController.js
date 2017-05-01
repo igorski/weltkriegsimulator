@@ -52,11 +52,6 @@ const InputController = module.exports = {
             window.addEventListener( "keydown",    handleKeyDown );
             window.addEventListener( "keyup",      handleKeyUp );
 
-            // prevent page scrolling on touch devices/mouse wheel scrolls
-
-            window.addEventListener( "touchmove",  preventDefault, { passive: false });
-            window.addEventListener( "mousewheel", preventDefault );
-
             hasListeners = true;
         }
     },

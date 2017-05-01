@@ -63,7 +63,10 @@ Actors are defined as ES6 classes as the Object Oriented Pattern works well for 
 remainder of the applications business logic follows the Functional Programming pattern.
 
 Communication between these models, views and controllers is done using the publish-subscribe pattern where
-messages are broadcast to subscribed listeners to act upon.
+messages are broadcast to subscribed listeners to act upon. As such, different players might be interested in
+the same message for the same purpose (for instance: a message of GAME_OVER might trigger the _GameController_ to
+stop the action queue and freeze the game loop, while at the same time the _InputController_ decides to stop
+listening to input events and the _ScreenController_ to open the high score input screen. "Separate the concerns"! 
  
 zCanvas in WKS
 --------------
@@ -96,4 +99,7 @@ a lot of generation / removal of Actors.
 For this purpose, this application uses pooling. When a resource is no longer needed (for instance: bullet
 is out of screen bounds), it is not disposed, but returned to the pool. The next time a new instance of
 that type (for instance: newly fired bullet) is needed, it is retrieved from the pool and updated to have
-the appropriate properties (e.g. new position, direction, etc.). This pool is maintained in _Game.js_.
+the appropriate properties (e.g. new position, direction, etc.). This pool is maintained by _Game.js_.
+
+Apart from game Actors pools, there is also a pool for decorative effects (e.g. explosions which are
+triggered by Actors, but not actually an Actor by themselves). These are managed by _RenderController.js_.

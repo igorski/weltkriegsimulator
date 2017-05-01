@@ -40,6 +40,7 @@ const WKS = window.WKS = {
     screenController : require( "./controller/ScreenController" ),
     gameModel        : require( "./model/Game" ),
     audioModel       : require( "./model/Audio" ),
+    highScoresModel  : require( "./model/HighScores" ),
     pubSub           : require( "pubsub-js" )
 };
 
@@ -57,9 +58,11 @@ MusicService.prepare().
         init();
     });
 
-// initialize controllers, this starts the app
+// initialize models and controllers, this starts the app
 
 function init() {
+    WKS.highScoresModel.init();
+
     WKS.gameController.init( WKS );
     WKS.inputController.init( WKS );
     WKS.renderController.init( WKS, container );

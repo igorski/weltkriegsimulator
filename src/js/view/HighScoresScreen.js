@@ -33,8 +33,8 @@ module.exports = {
 
     render( wrapper, templateService ) {
 
-        templateService.render( "Screen_HowToPlay", wrapper, {
-
+        templateService.render( "Screen_HighScores", wrapper, {
+            scores: window.WKS.highScoresModel.get()
         }).then(() => {
 
             // grab references to HTML Elements

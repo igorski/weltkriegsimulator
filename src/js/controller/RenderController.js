@@ -121,7 +121,7 @@ function setupGame( aGameModel ) {
 
     gameModel = aGameModel;
     clearGame();
-  debugger;
+
     player = RendererFactory.createRenderer(
         gameModel.player, RenderController
     );

@@ -26,10 +26,10 @@ module.exports = {
 
     /* General application states */
 
-    GAME_STARTED                : "GAME_START",
-    GAME_OVER                   : "GAME_OVER",
-    HIGH_SCORES_RETRIEVED       : "HIGH_SCORES_RETRIEVED", // payload is Array.<{name: string, score: number}>
-    HIGH_SCORE_SUBMITTED        : "HIGH_SCORE_SUBMITTED",  // payload is { name: string, score: number }
+    GAME_STARTED          : "GAME_START",
+    GAME_OVER             : "GAME_OVER",
+    HIGH_SCORES_RETRIEVED : "HIGH_SCORES_RETRIEVED", // payload is Array.<{name: string, score: number}>
+    HIGH_SCORE_SAVED      : "HIGH_SCORE_SAVED",      // payload is { name: string, score: number }
 
     /* Game state changes */
 
@@ -43,5 +43,6 @@ module.exports = {
     UPDATE_SCORE                : "S08", // payload is numerical value of new score
     SHOW_MUSIC                  : "S09", // payload is { title: string, author: string }
     SHOW_TITLE_SCREEN           : "S10",
-    SHOW_HOW_TO_PLAY            : "S11"
+    SHOW_HOW_TO_PLAY            : "S11",
+    SHOW_HIGHSCORES             : "S12"
 };

@@ -22,12 +22,13 @@
  */
 "use strict";
 
-const Messages        = require( "../definitions/Messages" );
-const Pubsub          = require( "pubsub-js" );
-const TemplateService = new ( require( "../services/TemplateService" ))();
-const TitleScreen     = require( "../view/TitleScreen" );
-const GameScreen      = require( "../view/GameScreen" );
-const HowToPlayScreen = require( "../view/HowToPlayScreen" );
+const Messages         = require( "../definitions/Messages" );
+const Pubsub           = require( "pubsub-js" );
+const TemplateService  = new ( require( "../services/TemplateService" ))();
+const TitleScreen      = require( "../view/TitleScreen" );
+const GameScreen       = require( "../view/GameScreen" );
+const HighScoresScreen = require( "../view/HighScoresScreen" );
+const HowToPlayScreen  = require( "../view/HowToPlayScreen" );
 
 let wrapper, currentScreen;
 
@@ -43,6 +44,7 @@ module.exports = {
 
         [
             Messages.SHOW_TITLE_SCREEN,
+            Messages.SHOW_HIGHSCORES,
             Messages.SHOW_HOW_TO_PLAY,
             Messages.GAME_STARTED,
             Messages.GAME_OVER
@@ -61,6 +63,10 @@ function handleBroadcast( msg, payload ) {
     switch ( msg ) {
         case Messages.SHOW_TITLE_SCREEN:
             renderScreen( TitleScreen );
+            break;
+
+        case Messages.SHOW_HIGHSCORES:
+            renderScreen( HighScoresScreen );
             break;
 
         case Messages.SHOW_HOW_TO_PLAY:
