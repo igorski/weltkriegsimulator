@@ -22,46 +22,55 @@
  */
 "use strict";
 
-const Config       = require( "../config/Config" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
-let handler, startButton, highScoresButton, howToPlayButton;
-let title, menu, footer, buttons;
+let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
+let title, footer;
 
 module.exports = {
 
     render( wrapper, templateService, wks ) {
 
-        templateService.render( "Screen_Title", wrapper, {
+        gameModel       = wks.gameModel;
+        highScoresModel = wks.highScoresModel;
+
+        const player       = gameModel.player;
+        const score        = player.score;
+        const hasHighScore = highScoresModel.isNewScore( score );
+
+        templateService.render( "Screen_GameOver", wrapper, {
+
+            highScore: hasHighScore,
+            score: score
 
         }).then(() => {
 
             // grab references to HTML Elements
 
             title   = wrapper.querySelector( "h1" );
-            menu    = wrapper.querySelector( "#menu" );
             footer  = wrapper.querySelector( "footer" );
-            buttons = wrapper.querySelectorAll( "button" );
+            text    = wrapper.querySelector( "#text" );
 
-            startButton      = wrapper.querySelector( "#btnStart" );
-            highScoresButton = wrapper.querySelector( "#btnHighScores" );
-            howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+            nameInput  = wrapper.querySelector( "#nameInput" );
+            saveButton = wrapper.querySelector( "#saveHighScore" );
+            playButton = wrapper.querySelector( "#btnPlay" );
+            homeButton = wrapper.querySelector( "#btnHome" );
+
+            // in case of new high score, show last known player name
+            // as well as option to save this stuff!
+
+            if ( hasHighScore && player.name.length > 0 ) {
+                nameInput.value = player.name;
+                handler.listen( saveButton, "click", handleSaveClick );
+            }
 
             animateIn();
 
             handler = new EventHandler();
-
-            handler.listen( howToPlayButton,  "click", handleHowToPlayClick );
-            handler.listen( highScoresButton, "click", handleHighScoresClick );
-
-            // we deliberately listen to mouse and touch events (instead of "click")
-            // as we can determine whether we need to show on-screen game controls
-
-            handler.listen( startButton, "mouseup",     handleStartClick );
-            handler.listen( startButton, "touchcancel", handleStartClick );
-            handler.listen( startButton, "touchend",    handleStartClick );
+            handler.listen( playButton, "click", handlePlayClick );
+            handler.listen( homeButton, "click", handleHomeClick );
         });
     },
 
@@ -74,56 +83,56 @@ module.exports = {
 
 /* private methods */
 
-function handleStartClick( event ) {
+function handleSaveClick( event ) {
+
+    event.preventDefault();
+
+    if ( nameInput.value.length > 2 ) {
+
+        gameModel.player.name = nameInput.value;
+        highScoresModel.save( gameModel.player.name, gameModel.player.score );
+
+        animateOut(() => {
+            Pubsub.publish( Messages.SHOW_HIGHSCORES );
+        });
+    }
+    else {
+        nameInput.classList.add( "error" );
+    }
+}
+
+function handlePlayClick( event ) {
 
     event.preventDefault(); // prevents double firing on touch screens
 
-    // in case a touch event was fired, store this in the config
-
-    if ( event.type.indexOf( "touch" ) >= 0 ) {
-        Config.HAS_TOUCH_CONTROLS = true;
-    }
-
     animateOut(() => {
-        // start this game!
         Pubsub.publish( Messages.GAME_START );
     });
 }
 
-function handleHighScoresClick( event ) {
-    animateOut(() => {
-        Pubsub.publish( Messages.SHOW_HIGHSCORES );
-    });
-}
+function handleHomeClick( event ) {
 
-function handleHowToPlayClick( event ) {
+    event.preventDefault(); // prevents double firing on touch screens
+
     animateOut(() => {
-        Pubsub.publish( Messages.SHOW_HOW_TO_PLAY );
+        Pubsub.publish( Messages.SHOW_TITLE_SCREEN );
     });
 }
 
 function animateIn() {
     const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 0, { css: { autoAlpha: 0 }} ));
+    tl.add( TweenMax.to( text, 0, { css: { autoAlpha: 0 }} ));
     tl.add( TweenMax.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 1 }}));
+    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 1 }}));
     tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
-
-    for ( let i = 0; i < buttons.length; ++i ) {
-        const button = buttons[ i ];
-        TweenMax.from( button, 1.5, {
-            css: { marginLeft: `-${window.innerWidth}px` },
-            ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
-        });
-    }
 }
 
 function animateOut( callback ) {
     const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 0 }, onComplete: () => {
         TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
         TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
     }}));

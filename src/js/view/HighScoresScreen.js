@@ -26,15 +26,17 @@ const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
-let handler, text, backButton;
+let handler, text, playButton, homeButton;
 let title, footer;
 
 module.exports = {
 
-    render( wrapper, templateService ) {
+    render( wrapper, templateService, wks ) {
 
         templateService.render( "Screen_HighScores", wrapper, {
-            scores: window.WKS.highScoresModel.get()
+
+            scores: wks.highScoresModel.get()
+
         }).then(() => {
 
             // grab references to HTML Elements
@@ -43,12 +45,14 @@ module.exports = {
             footer  = wrapper.querySelector( "footer" );
             text    = wrapper.querySelector( "#text" );
 
-            backButton = wrapper.querySelector( "#btnBack" );
+            playButton = wrapper.querySelector( "#btnPlay" );
+            homeButton = wrapper.querySelector( "#btnHome" );
 
             animateIn();
 
             handler = new EventHandler();
-            handler.listen( backButton, "click", handleBackClick );
+            handler.listen( playButton, "click", handlePlayClick );
+            handler.listen( homeButton, "click", handleBackClick );
         });
     },
 
@@ -61,12 +65,20 @@ module.exports = {
 
 /* private methods */
 
+function handlePlayClick( event ) {
+
+    event.preventDefault();
+
+    animateOut(() => {
+        Pubsub.publish( Messages.GAME_START );
+    });
+}
+
 function handleBackClick( event ) {
 
     event.preventDefault(); // prevents double firing on touch screens
 
     animateOut(() => {
-        // start this game!
         Pubsub.publish( Messages.SHOW_TITLE_SCREEN );
     });
 }

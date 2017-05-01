@@ -1,0 +1,22 @@
+<header>
+    <h1>Game over</h1>
+</header>
+<section id="text">
+    {{#if highScore}}
+        <p>
+            You perished in bravely in battle... AND got a new high score ({{score}} points)!
+        </p>
+        <input type="text" id="nameInput" pattern=".{3,}" required placeholder="Enter your name..." />
+        <input type="submit" id="saveHighScore" value="OK" />
+    {{else}}
+        <p>
+            You gave it your best. Alas, they gave their best...er.
+        </p>
+    {{/if}}
+</section>
+<footer>
+    <section id="menu">
+        <button id="btnPlay">Play</button>
+        <button id="btnHome">Home</button>
+    </section>
+</footer>

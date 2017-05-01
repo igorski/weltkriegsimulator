@@ -55,6 +55,12 @@ module.exports = class Player extends Ship {
          */
         this.score = 0;
 
+        /**
+         * @public
+         * @type {string}
+         */
+        this.name = "";
+
         // Player is re-used through appication lifetime
 
         this.pooled = true;

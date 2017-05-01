@@ -31,7 +31,7 @@ let title, footer;
 
 module.exports = {
 
-    render( wrapper, templateService ) {
+    render( wrapper, templateService, wks ) {
 
         templateService.render( "Screen_HowToPlay", wrapper, {
 
@@ -66,7 +66,6 @@ function handleBackClick( event ) {
     event.preventDefault(); // prevents double firing on touch screens
 
     animateOut(() => {
-        // start this game!
         Pubsub.publish( Messages.SHOW_TITLE_SCREEN );
     });
 }

@@ -224,6 +224,11 @@ const Game = module.exports = {
 
         while ( i-- ) {
             actor = actors[ i ];
+
+            // could be spliced during update
+            if ( !actor )
+                continue;
+
             actor.update( aTimestamp );
 
             // no collision detection if game is inactive

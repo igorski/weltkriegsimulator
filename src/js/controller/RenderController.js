@@ -85,7 +85,7 @@ const RenderController = module.exports = {
         // subscribe to messaging system
 
         [
-            Messages.GAME_STARTED,
+            Messages.GAME_START,
             Messages.ACTOR_ADDED,
             Messages.ACTOR_REMOVED,
             Messages.ACTOR_EXPLODE,
@@ -162,7 +162,7 @@ function handleBroadcast( type, payload ) {
 
     let renderer;
     switch ( type ) {
-        case Messages.GAME_STARTED:
+        case Messages.GAME_START:
             addRendererToAppropriateLayer( gameModel.player.layer, gameModel.player.renderer );
             break;
 

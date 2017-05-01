@@ -39,7 +39,7 @@ module.exports = {
         // subscribe to pubsub system to receive and broadcast messages
 
         [
-            Messages.GAME_STARTED,
+            Messages.GAME_START,
             Messages.GAME_OVER,
             Messages.FIRE_BULLET
 
@@ -52,10 +52,8 @@ module.exports = {
 function handleBroadcast( type, payload ) {
 
     switch ( type ) {
-        case Messages.GAME_STARTED:
+        case Messages.GAME_START:
             gameModel.reset();
-            // ensure all is visible (TODO: this means we have a problem elsewhere ;)
-            window.scrollTo( 0, 0 );
             // start the music
             audioModel.playEnqueuedTrack();
             // start the game actions queue

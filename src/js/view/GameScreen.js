@@ -34,7 +34,7 @@ let handler, tokens = [];
 
 module.exports = {
 
-    render( wrapper, templateService ) {
+    render( wrapper, templateService, wks ) {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
 

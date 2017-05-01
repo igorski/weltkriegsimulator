@@ -27,14 +27,17 @@ const Pubsub           = require( "pubsub-js" );
 const TemplateService  = new ( require( "../services/TemplateService" ))();
 const TitleScreen      = require( "../view/TitleScreen" );
 const GameScreen       = require( "../view/GameScreen" );
+const GameOverScreen   = require( "../view/GameOverScreen" );
 const HighScoresScreen = require( "../view/HighScoresScreen" );
 const HowToPlayScreen  = require( "../view/HowToPlayScreen" );
 
-let wrapper, currentScreen;
+let wks, wrapper, currentScreen;
 
 module.exports = {
 
-    init( wks, container ) {
+    init( wksRef, container ) {
+
+        wks = wksRef;
 
         wrapper = document.createElement( "div" );
         wrapper.setAttribute( "id", "screenOverlay" );
@@ -46,7 +49,7 @@ module.exports = {
             Messages.SHOW_TITLE_SCREEN,
             Messages.SHOW_HIGHSCORES,
             Messages.SHOW_HOW_TO_PLAY,
-            Messages.GAME_STARTED,
+            Messages.GAME_START,
             Messages.GAME_OVER
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
@@ -73,12 +76,12 @@ function handleBroadcast( msg, payload ) {
             renderScreen( HowToPlayScreen );
             break;
 
-        case Messages.GAME_STARTED:
+        case Messages.GAME_START:
             renderScreen( GameScreen );
             break;
 
         case Messages.GAME_OVER:
-            renderScreen( TitleScreen );
+            renderScreen( GameOverScreen );
             break;
     }
 }
@@ -88,6 +91,6 @@ function renderScreen( screen ) {
         currentScreen.dispose();
         wrapper.innerHTML = "";
     }
-    screen.render( wrapper, TemplateService );
+    screen.render( wrapper, TemplateService, wks );
     currentScreen = screen;
 }

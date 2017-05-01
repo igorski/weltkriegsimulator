@@ -26,7 +26,7 @@ module.exports = {
 
     /* General application states */
 
-    GAME_STARTED          : "GAME_START",
+    GAME_START            : "GAME_START",
     GAME_OVER             : "GAME_OVER",
     HIGH_SCORES_RETRIEVED : "HIGH_SCORES_RETRIEVED", // payload is Array.<{name: string, score: number}>
     HIGH_SCORE_SAVED      : "HIGH_SCORE_SAVED",      // payload is { name: string, score: number }
