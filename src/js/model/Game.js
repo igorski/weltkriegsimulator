@@ -372,7 +372,7 @@ function createBulletForActor( actor ) {
 
             const orgX = actor.x + actor.offsetX + ( actor.width  * .5 );
             const orgY = actor.y + actor.offsetY + ( actor.height * .5 );
-            const sprayRadius = Game.world.width + actor.width;
+            const sprayRadius = Math.max( Game.world.width, Game.world.height ) + actor.width;
             let angle, pos, targetPos;
 
             for ( let i = 0, total = 16, max = total - 1; i < total; ++i ) {
