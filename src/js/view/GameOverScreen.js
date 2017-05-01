@@ -58,19 +58,21 @@ module.exports = {
             playButton = wrapper.querySelector( "#btnPlay" );
             homeButton = wrapper.querySelector( "#btnHome" );
 
+            handler = new EventHandler();
+
             // in case of new high score, show last known player name
             // as well as option to save this stuff!
 
-            if ( hasHighScore && player.name.length > 0 ) {
-                nameInput.value = player.name;
+            if ( hasHighScore ) {
+                if ( player.name.length > 0 )
+                    nameInput.value = player.name;
+
                 handler.listen( saveButton, "click", handleSaveClick );
             }
-
-            animateIn();
-
-            handler = new EventHandler();
             handler.listen( playButton, "click", handlePlayClick );
             handler.listen( homeButton, "click", handleHomeClick );
+
+            animateIn();
         });
     },
 

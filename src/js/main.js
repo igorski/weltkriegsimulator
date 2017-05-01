@@ -22,6 +22,9 @@
  */
 "use strict";
 
+const Messages = require( "./definitions/Messages" );
+const PubSub   = require( "pubsub-js" );
+
 /* initialize application */
 
 if ( !"TweenMax" in window )
@@ -41,7 +44,7 @@ const WKS = window.WKS = {
     gameModel        : require( "./model/Game" ),
     audioModel       : require( "./model/Audio" ),
     highScoresModel  : require( "./model/HighScores" ),
-    pubSub           : require( "pubsub-js" )
+    pubSub           : PubSub
 };
 
 // prepare dependencies
@@ -67,4 +70,6 @@ function init() {
     WKS.inputController.init( WKS );
     WKS.renderController.init( WKS, container );
     WKS.screenController.init( WKS, container );
+
+    PubSub.publish( Messages.READY );
 }
