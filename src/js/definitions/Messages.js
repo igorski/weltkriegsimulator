@@ -44,6 +44,7 @@ module.exports = {
     UPDATE_SCORE                : "S08", // payload is numerical value of new score
     SHOW_MUSIC                  : "S09", // payload is { title: string, author: string }
     SHOW_TITLE_SCREEN           : "S10",
-    SHOW_HOW_TO_PLAY            : "S11",
-    SHOW_HIGHSCORES             : "S12"
+    SHOW_ABOUT                  : "S11",
+    SHOW_HOW_TO_PLAY            : "S12",
+    SHOW_HIGHSCORES             : "S13"
 };

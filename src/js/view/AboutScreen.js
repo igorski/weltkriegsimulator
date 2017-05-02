@@ -33,7 +33,7 @@ module.exports = {
 
     render( wrapper, templateService, wks ) {
 
-        templateService.render( "Screen_HowToPlay", wrapper, {
+        templateService.render( "Screen_About", wrapper, {
 
         }).then(() => {
 

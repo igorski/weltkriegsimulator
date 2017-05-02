@@ -105,16 +105,12 @@ function handleSaveClick( event ) {
 
 function handlePlayClick( event ) {
 
-    event.preventDefault(); // prevents double firing on touch screens
-
     animateOut(() => {
         Pubsub.publish( Messages.GAME_START );
     });
 }
 
 function handleHomeClick( event ) {
-
-    event.preventDefault(); // prevents double firing on touch screens
 
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_TITLE_SCREEN );

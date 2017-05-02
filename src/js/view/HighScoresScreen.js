@@ -67,16 +67,12 @@ module.exports = {
 
 function handlePlayClick( event ) {
 
-    event.preventDefault();
-
     animateOut(() => {
         Pubsub.publish( Messages.GAME_START );
     });
 }
 
 function handleBackClick( event ) {
-
-    event.preventDefault(); // prevents double firing on touch screens
 
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_TITLE_SCREEN );

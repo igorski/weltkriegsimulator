@@ -26,8 +26,9 @@ const Config       = require( "../config/Config" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
+const Bowser       = require( "bowser" );
 
-let handler, startButton, highScoresButton, howToPlayButton;
+let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
 
 module.exports = {
@@ -48,6 +49,7 @@ module.exports = {
             startButton      = wrapper.querySelector( "#btnStart" );
             highScoresButton = wrapper.querySelector( "#btnHighScores" );
             howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+            aboutButton      = wrapper.querySelector( "#btnAbout" );
 
             animateIn();
 
@@ -55,6 +57,7 @@ module.exports = {
 
             handler.listen( howToPlayButton,  "click", handleHowToPlayClick );
             handler.listen( highScoresButton, "click", handleHighScoresClick );
+            handler.listen( aboutButton,      "click", handleAboutClick );
 
             // we deliberately listen to mouse and touch events (instead of "click")
             // as we can determine whether we need to show on-screen game controls
@@ -76,11 +79,12 @@ module.exports = {
 
 function handleStartClick( event ) {
 
-    event.preventDefault(); // prevents double firing on touch screens
+    // will otherwise fire multiple times on touch screen (due to multiple handlers for different event types)
+    event.preventDefault();
 
     // in case a touch event was fired, store this in the config
 
-    if ( event.type.indexOf( "touch" ) >= 0 ) {
+    if ( event.type.indexOf( "touch" ) >= 0 || Bowser.tablet || Bowser.mobile ) {
         Config.HAS_TOUCH_CONTROLS = true;
     }
 
@@ -91,12 +95,21 @@ function handleStartClick( event ) {
 }
 
 function handleHighScoresClick( event ) {
+
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_HIGHSCORES );
     });
 }
 
+function handleAboutClick( event ) {
+
+    animateOut(() => {
+        Pubsub.publish( Messages.SHOW_ABOUT );
+    });
+}
+
 function handleHowToPlayClick( event ) {
+
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_HOW_TO_PLAY );
     });

@@ -29,6 +29,7 @@ const TitleScreen      = require( "../view/TitleScreen" );
 const GameScreen       = require( "../view/GameScreen" );
 const GameOverScreen   = require( "../view/GameOverScreen" );
 const HighScoresScreen = require( "../view/HighScoresScreen" );
+const AboutScreen      = require( "../view/AboutScreen" );
 const HowToPlayScreen  = require( "../view/HowToPlayScreen" );
 
 let wks, wrapper, currentScreen;
@@ -48,6 +49,7 @@ module.exports = {
         [
             Messages.SHOW_TITLE_SCREEN,
             Messages.SHOW_HIGHSCORES,
+            Messages.SHOW_ABOUT,
             Messages.SHOW_HOW_TO_PLAY,
             Messages.GAME_START,
             Messages.GAME_OVER
@@ -74,6 +76,10 @@ function handleBroadcast( msg, payload ) {
 
         case Messages.SHOW_HOW_TO_PLAY:
             renderScreen( HowToPlayScreen );
+            break;
+
+        case Messages.SHOW_ABOUT:
+            renderScreen( AboutScreen );
             break;
 
         case Messages.GAME_START:
