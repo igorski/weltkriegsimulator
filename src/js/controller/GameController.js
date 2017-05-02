@@ -25,6 +25,7 @@
 const Messages = require( "../definitions/Messages" );
 const Pubsub   = require( "pubsub-js" );
 const Actions  = require( "../actions/Actions" );
+const Assets   = require( "../definitions/Assets" );
 
 let audioModel, gameModel;
 let actionTimeout;
@@ -63,12 +64,14 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
+            WKS.audioModel.playSoundFX( Assets.AU_EXPLOSION );
             // enqueue next track
             audioModel.enqueueTrack();
             break;
 
         case Messages.FIRE_BULLET:
             gameModel.fireBullet( payload );
+            WKS.audioModel.playSoundFX( Assets.AU_LASER );
             break;
     }
 }

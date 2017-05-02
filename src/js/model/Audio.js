@@ -23,6 +23,7 @@
 "use strict";
 
 const Config       = require( "../config/Config" );
+const Assets       = require( "../definitions/Assets" );
 const AudioTracks  = require( "../definitions/AudioTracks" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
@@ -33,6 +34,7 @@ let playing       = false;
 let sound         = null; // HTML <audio> element
 let queuedTrackId = null;
 let handler       = new EventHandler();
+let explosion, laser;
 
 const Audio = module.exports = {
 
@@ -51,8 +53,29 @@ const Audio = module.exports = {
         });
         inited = true;
 
+        explosion = createAudioElement( Assets.AU_EXPLOSION );
+        laser     = createAudioElement( Assets.AU_LASER );
+
         // enqueue the first track for playback
         Audio.enqueueTrack();
+    },
+
+    /**
+     * @public
+     * @param {string} effect asset path
+     */
+    playSoundFX( effect ) {
+        if ( inited && !Audio.muted ) {
+            switch ( effect ) {
+                case Assets.AU_EXPLOSION:
+                    explosion.play();
+                    break;
+
+                case Assets.AU_LASER:
+                    laser.play();
+                    break;
+            }
+        }
     },
     
     /**
@@ -74,8 +97,7 @@ const Audio = module.exports = {
         // this will thus not actually play the track (see playEnqueuedTrack())
 
         Audio.stop();
-        sound = document.createElement( "audio" );
-        sound.setAttribute( "src",
+        sound = createAudioElement(
             `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${Config.SOUNDCLOUD_CLIENT_ID}`
         );
     },
@@ -162,4 +184,11 @@ function _startPlayingEnqueuedTrack() {
             });
         }
     });
+}
+
+function createAudioElement( source ) {
+    const element = document.createElement( "audio" );
+    element.setAttribute( "src", source );
+
+    return element;
 }

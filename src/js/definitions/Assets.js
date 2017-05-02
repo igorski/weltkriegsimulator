@@ -23,15 +23,18 @@
 "use strict";
 
 const Config  = require( "../config/Config" );
-const baseURL = Config.getBaseURL() + "/assets/images/";
+const baseURL = Config.getBaseURL() + "/assets/";
 
 const Assets = module.exports = {
 
-    POWERUP : baseURL + "sprites/powerup.png",
-    SHIP    : baseURL + "sprites/spritesheet_ship.png",
-    FX      : baseURL + "sprites/spritesheet_fx.png",
-    SKY     : baseURL + "sprites/clouds.png",
-    TILE    : baseURL + "sprites/tile.png",
+    POWERUP : baseURL + "images/sprites/powerup.png",
+    SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
+    FX      : baseURL + "images/sprites/spritesheet_fx.png",
+    SKY     : baseURL + "images/sprites/clouds.png",
+    TILE    : baseURL + "images/sprites/tile.png",
+
+    AU_EXPLOSION : baseURL + "/sounds/explosion.mp3",
+    AU_LASER     : baseURL + "/sounds/laser.mp3",
 
     /**
      * convenience method to return a list of all assets

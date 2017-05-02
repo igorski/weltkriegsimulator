@@ -29,7 +29,7 @@ const EventHandler = require( "../util/EventHandler" );
 let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
 let title, footer;
 
-module.exports = {
+const GameOverScreen = module.exports = {
 
     render( wrapper, templateService, wks ) {
 
@@ -87,9 +87,9 @@ module.exports = {
 
 function handleSaveClick( event ) {
 
-    event.preventDefault();
-
     if ( nameInput.value.length > 2 ) {
+
+        GameOverScreen.dispose(); // prevent double save cheaply ;)
 
         gameModel.player.name = nameInput.value;
         highScoresModel.save( gameModel.player.name, gameModel.player.score );
