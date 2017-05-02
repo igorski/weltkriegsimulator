@@ -22,15 +22,16 @@
  */
 "use strict";
 
-const Messages  = require( "../definitions/Messages" );
-const Pubsub    = require( "pubsub-js" );
-const ActorUtil = require( "../util/ActorUtil" );
-const Bullet    = require( "../model/actors/Bullet" );
+const Messages     = require( "../definitions/Messages" );
+const Pubsub       = require( "pubsub-js" );
+const ActorUtil    = require( "../util/ActorUtil" );
+const Bullet       = require( "../model/actors/Bullet" );
+const EventHandler = require( "../util/EventHandler" );
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
-let hasListeners = false,
-    isFiring = false,
-    blockDefaults = true;
+let isFiring = false,
+    blockDefaults = true,
+    handler;
 
 const activeMovement = {
     up: false,
@@ -48,12 +49,11 @@ const InputController = module.exports = {
         gameModel = wks.gameModel;
         player = gameModel.player;
 
-        if ( !hasListeners ) {
-            window.addEventListener( "keydown",    handleKeyDown );
-            window.addEventListener( "keyup",      handleKeyUp );
+        [
+            Messages.GAME_START,
+            Messages.GAME_OVER
 
-            hasListeners = true;
-        }
+        ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
     },
 
     // player controls
@@ -129,6 +129,25 @@ const InputController = module.exports = {
 };
 
 /* private handlers */
+
+function handleBroadcast( msg, payload ) {
+    switch ( msg ) {
+        case Messages.GAME_START:
+            if ( !handler ) {
+                handler = new EventHandler();
+                handler.listen( window, "keydown", handleKeyDown );
+                handler.listen( window, "keyup",   handleKeyUp );
+            }
+            break;
+
+        case Messages.GAME_OVER:
+            if ( handler ) {
+                handler.dispose();
+                handler = null;
+            }
+            break;
+    }
+}
 
 function handleKeyDown( aEvent ) {
 
