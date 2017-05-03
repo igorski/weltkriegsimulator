@@ -118,8 +118,8 @@ const Audio = module.exports = {
             // on iOS we will not hear anything unless it comes
             // after a direct user response
             handler.listen( document, "touchstart", ( e ) => {
-                _startPlayingEnqueuedTrack();
                 handler.dispose();
+                _startPlayingEnqueuedTrack();
             });
         }
         else {
@@ -172,8 +172,22 @@ function _startPlayingEnqueuedTrack() {
     if ( !sound )
         return;
 
-    sound.play();
+    try {
+        sound.play();
+    }
+    catch ( e ) {
+        // no supported sources
+        nextTrack();
+        return;
+    }
+
     playing = true;
+
+    // when song ends, enqueue and play the next one in the pool
+
+    handler.listen( sound, "ended", ( e ) => {
+        nextTrack();
+    });
 
     // get track META
     SC.get( "/tracks/" + queuedTrackId, ( track ) => {
@@ -191,4 +205,10 @@ function createAudioElement( source ) {
     element.setAttribute( "src", source );
 
     return element;
+}
+
+function nextTrack() {
+    handler.dispose();
+    Audio.enqueueTrack();
+    Audio.playEnqueuedTrack();
 }
