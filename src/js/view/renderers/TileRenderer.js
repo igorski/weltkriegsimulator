@@ -50,7 +50,7 @@ function TileRenderer( x, y, speed, scale ) {
 
     const self = this;
 
-    TileUtil.createTileMap( Assets.TILE, scale ).
+    TileUtil.createTileMap( Assets.GRAPHICS.TILE, scale ).
         then(( cvs ) => {
             self.setBitmap( cvs, cvs.width, cvs.height );
         });

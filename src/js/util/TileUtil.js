@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 "use strict";
+
+const zCanvas = require( "zcanvas" );
 
 module.exports = {
 
@@ -47,17 +49,17 @@ module.exports = {
 
         return new Promise(( resolve, reject ) => {
 
-            onReady( aImage, () => {
+            zCanvas.loader.onReady( aImage, () => {
 
-                const tileWidth = aImage.width * aScale;
+                const tileWidth  = aImage.width * aScale;
                 const tileHeight = aImage.height * aScale;
 
                 const horAmount = Math.round( Math.random() * 25 );
                 const verAmount = Math.round( Math.random() * 15 );
 
-                const cvs = document.createElement( "canvas" );
-                const ctx = cvs.getContext( "2d" );
-                cvs.width = horAmount * tileWidth;
+                const cvs  = document.createElement( "canvas" );
+                const ctx  = cvs.getContext( "2d" );
+                cvs.width  = horAmount * tileWidth;
                 cvs.height = verAmount * tileHeight;
 
                 for ( let col = 0; col < horAmount; ++col ) {
@@ -78,21 +80,3 @@ module.exports = {
         });
     }
 };
-
-function onReady( aImage, callback ) {
-
-    const ITERATIONS = 32;
-    let tries = ITERATIONS;
-    const check = function() {
-        if ( aImage.complete && aImage.naturalWidth > 0 ) {
-            callback();
-        }
-        else {
-            if ( --tries > 0 )
-                requestAnimationFrame( check );
-            else
-                throw new Error( "Image didn't reach ready state after " + ITERATIONS + " iterations" );
-        }
-    };
-    check();
-}

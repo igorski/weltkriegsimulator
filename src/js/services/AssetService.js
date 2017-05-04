@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016-2017 - http://www.igorski.nl
+ * Igor Zinken 2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,23 +22,34 @@
  */
 "use strict";
 
-const Config        = require( "../../config/Config" );
-const Powerup       = require( "../../model/actors/Powerup" );
-const ActorRenderer = require( "./ActorRenderer" );
-const Assets        = require( "../../definitions/Assets" );
+const Assets  = require( "../definitions/Assets" );
+const zCanvas = require( "zcanvas" );
 
-module.exports = PowerupRenderer;
+module.exports = {
 
-/**
- * a renderer that represents the Powerup actor on screen
- *
- * @constructor
- * @param {Powerup} powerup
- * @param {RenderController} renderController
- */
-function PowerupRenderer( powerup, renderController ) {
-    PowerupRenderer.super( this, "constructor", powerup, renderController );
+    /**
+     * @public
+     * @return {Promise}
+     */
+    prepare() {
 
-    this.setBitmap( Assets.GRAPHICS.POWERUP );
-}
-ActorRenderer.extend( PowerupRenderer );
+        // load all graphic Assets
+
+        const graphics = [];
+        Object.keys( Assets.GRAPHICS ).forEach(( key ) => {
+            graphics.push( Assets.GRAPHICS[ key ] );
+        });
+
+        return new Promise(( resolve, reject ) => {
+
+            let pending = graphics.length;
+            graphics.forEach(( graphic ) => {
+                zCanvas.loader.loadImage( graphic, () => {
+                    if ( --pending === 0 ) {
+                        resolve();
+                    }
+                });
+            });
+        });
+    }
+};

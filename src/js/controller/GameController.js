@@ -64,14 +64,14 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
-            WKS.audioModel.playSoundFX( Assets.AU_EXPLOSION );
+            WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
             // enqueue next track
             audioModel.enqueueTrack();
             break;
 
         case Messages.FIRE_BULLET:
             gameModel.fireBullet( payload );
-            WKS.audioModel.playSoundFX( Assets.AU_LASER );
+            WKS.audioModel.playSoundFX( Assets.AUDIO.AU_LASER );
             break;
     }
 }

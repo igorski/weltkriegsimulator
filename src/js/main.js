@@ -41,29 +41,37 @@ const WKS = window.WKS = {
     gameController   : require( "./controller/GameController" ),
     renderController : require( "./controller/RenderController" ),
     screenController : require( "./controller/ScreenController" ),
-    gameModel        : require( "./model/Game" ),
     audioModel       : require( "./model/Audio" ),
+    gameModel        : require( "./model/Game" ),
     highScoresModel  : require( "./model/HighScores" ),
     pubSub           : PubSub
 };
 
 // prepare dependencies
 
+const AssetService = require( "./services/AssetService" );
 const MusicService = require( "./services/MusicService" );
-MusicService.prepare().
+
+AssetService.prepare().
     then(() => {
-        WKS.audioModel.init();
-        init();
-    }).
-    catch(() => {
-        // failure during loading of SoundCloud SDK, continue
-        // as is (Audio model will not play music)
-        init();
+        MusicService.prepare().
+            then(() => {
+                WKS.audioModel.init();
+                init();
+            }).
+            catch(() => {
+                // failure during loading of SoundCloud SDK, continue
+                // as is (Audio model will not play music)
+                init();
+            });
     });
 
 // initialize models and controllers, this starts the app
 
 function init() {
+
+    document.body.classList.remove( "loading" );
+
     WKS.highScoresModel.init();
 
     WKS.gameController.init( WKS );

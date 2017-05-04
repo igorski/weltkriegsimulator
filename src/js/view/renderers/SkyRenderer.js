@@ -44,7 +44,7 @@ function SkyRenderer( x, y, speed, scale ) {
 
     SkyRenderer.super(
         this, "constructor", x, y, 300 * scale, 508 * scale,
-        Assets.SKY
+        Assets.GRAPHICS.SKY
     );
 
     /* instance properties */

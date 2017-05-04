@@ -53,8 +53,8 @@ const Audio = module.exports = {
         });
         inited = true;
 
-        explosion = createAudioElement( Assets.AU_EXPLOSION );
-        laser     = createAudioElement( Assets.AU_LASER );
+        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
+        laser     = createAudioElement( Assets.AUDIO.AU_LASER );
 
         // enqueue the first track for playback
         Audio.enqueueTrack();
@@ -67,11 +67,11 @@ const Audio = module.exports = {
     playSoundFX( effect ) {
         if ( inited && !Audio.muted ) {
             switch ( effect ) {
-                case Assets.AU_EXPLOSION:
+                case Assets.AUDIO.AU_EXPLOSION:
                     explosion.play();
                     break;
 
-                case Assets.AU_LASER:
+                case Assets.AUDIO.AU_LASER:
                     laser.play();
                     break;
             }

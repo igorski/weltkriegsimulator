@@ -23,32 +23,20 @@
 "use strict";
 
 const Config  = require( "../config/Config" );
-const baseURL = Config.getBaseURL() + "/assets/";
+const baseURL = Config.getBaseURL() + "assets/";
 
 const Assets = module.exports = {
 
-    POWERUP : baseURL + "images/sprites/powerup.png",
-    SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
-    FX      : baseURL + "images/sprites/spritesheet_fx.png",
-    SKY     : baseURL + "images/sprites/clouds.png",
-    TILE    : baseURL + "images/sprites/tile.png",
+    GRAPHICS: {
+        POWERUP : baseURL + "images/sprites/powerup.png",
+        SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
+        FX      : baseURL + "images/sprites/spritesheet_fx.png",
+        SKY     : baseURL + "images/sprites/clouds.png",
+        TILE    : baseURL + "images/sprites/tile.png"
+    },
 
-    AU_EXPLOSION : baseURL + "/sounds/explosion.mp3",
-    AU_LASER     : baseURL + "/sounds/laser.mp3",
-
-    /**
-     * convenience method to return a list of all assets
-     * listed in this Object
-     *
-     * @public
-     * @return {Array.<string>}
-     */
-    getAll() {
-        const out = [];
-        Object.keys( Assets ).forEach(( key ) => {
-            if ( typeof Assets[ key ] !== "function" )
-                out.push( Assets[ key ] );
-        });
-        return out;
+    AUDIO: {
+        AU_EXPLOSION : baseURL + "sounds/explosion.mp3",
+        AU_LASER     : baseURL + "sounds/laser.mp3"
     }
 };
