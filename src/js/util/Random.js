@@ -26,7 +26,7 @@
  * convenience helper for all things associated
  * with chance and randomizing values :)
  */
-module.exports = {
+const Random = module.exports = {
 
     /**
      * random value from given range
@@ -36,6 +36,15 @@ module.exports = {
      */
     range( min, max ) {
         return Math.floor( Math.random() * ( max - min + 1 )) + min;
+    },
+
+    /**
+     * random value from given Array
+     * @param {Array.<*>} array
+     * @return {*}
+     */
+    from( array ) {
+        return array[ Random.range( 0, array.length  -1 )];
     },
 
     /**

@@ -108,6 +108,8 @@ function generateWave2( gameModel ) {
 
     // squadron 2 at random target layers
 
+    const type = Random.range( 1, 3 );
+
     for ( let i = 0, total = Random.range( 2, 10 ); i < total; ++i ) {
 
         const x      = ( gameModel.world.width / total ) * i;
@@ -115,8 +117,9 @@ function generateWave2( gameModel ) {
         const xSpeed = 0;
         const ySpeed = 1 + ( i * .25 );
         const targetLayer = Random.bool() ? 1 : 0;
+        const energy = Random.bool() ? 1 : 2;
 
-        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer );
+        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, energy, 0 ,type );
     }
 }
 

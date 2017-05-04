@@ -39,7 +39,28 @@ module.exports = EnemyRenderer;
 function EnemyRenderer( enemy, renderController ) {
 
     EnemyRenderer.super( this, "constructor", enemy, renderController );
-    this.switchAnimation( ShipRenderer.ANIMATION.ENEMY_IDLE );
+    this.setSheetForEnemy();
     this.canRumble = false;
 }
 ShipRenderer.extend( EnemyRenderer );
+
+/* public methods */
+
+/**
+ * @public
+ */
+EnemyRenderer.prototype.setSheetForEnemy = function() {
+    let animation = ShipRenderer.ANIMATION.ENEMY_1_IDLE;
+
+    switch ( /** @type {Enemy} */ ( this.actor ).type ) {
+        default:
+            break;
+        case 2:
+            animation = ShipRenderer.ANIMATION.ENEMY_2_IDLE;
+            break;
+        case 3:
+            animation = ShipRenderer.ANIMATION.ENEMY_3_IDLE;
+            break;
+    }
+    this.switchAnimation( animation );
+};

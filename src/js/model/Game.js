@@ -134,14 +134,16 @@ const Game = module.exports = {
      * @param {number} layer
      * @param {number=} optEnergy
      * @param {number=} optWeapon
+     * @param {number=} optType
      */
-    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0 ) {
+    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = 0 ) {
         const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
         if ( enemy ) {
             Game.addActor( enemy );
             enemy.reset();
             enemy.energy = optEnergy;
             enemy.weapon = optWeapon;
+            enemy.type   = optType;
         }
     },
 

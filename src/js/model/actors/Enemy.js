@@ -37,13 +37,11 @@ module.exports = class Enemy extends Ship {
      * @param {Game} game
      * @param {number=} energy
      * @param {number=} weapon
+     * @param {number=} type
      */
-    constructor( game, energy, weapon ) {
+    constructor( game, energy = DEFAULT_ENERGY, weapon = DEFAULT_WEAPON, type = 0 ) {
 
         /* inherit prototype properties of Ship */
-
-        energy = ( typeof energy === "number" ) ? energy : DEFAULT_ENERGY;
-        weapon = ( typeof weapon === "number" ) ? weapon : DEFAULT_WEAPON;
 
         super( game, 0, 0, 0, 0, energy, weapon );
 
@@ -54,6 +52,12 @@ module.exports = class Enemy extends Ship {
          * @type {number}
          */
         this.lastShot = 0;
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.type = type;
     }
 
     /* public methods */
@@ -84,6 +88,6 @@ module.exports = class Enemy extends Ship {
         this.collidable = true;
 
         if ( this.renderer )
-            this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_IDLE );
+            this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_1_IDLE );
     }
 };

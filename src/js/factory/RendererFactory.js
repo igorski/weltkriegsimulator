@@ -50,8 +50,12 @@ module.exports = {
 
         // return pooled renderer if one already existed
 
-        if ( actor.pooled && actor.renderer )
+        if ( actor.pooled && actor.renderer ) {
+            if ( actor instanceof Enemy )
+                actor.renderer.setSheetForEnemy();
+
             return actor.renderer;
+        }
 
         if ( actor instanceof Bullet ) {
             return new BulletRenderer( /** @type {Bullet} */ ( actor ), renderController );
