@@ -29,11 +29,12 @@ module.exports = {
     HAS_TOUCH_CONTROLS: false,
 
     /**
-     * API clientId for SoundCloud
+     * API clientId for SoundCloud, you can request one at
+     * soundcloud.com/you/apps
      *
      * @type {string}
      */
-    SOUNDCLOUD_CLIENT_ID: "0028757d978a9473e5310125967e7e47",
+    SOUNDCLOUD_CLIENT_ID: ( typeof window.scClientId === "string" ) ? window.scClientId : "iQnPKZVqsdsu5GbRJrjnVVIAYKuiXdm6",
 
     /**
      * @return {string}
