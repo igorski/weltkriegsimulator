@@ -48,7 +48,7 @@ function FXRenderer( renderController ) {
 
     const animationCompleteHandler = renderController.onFXComplete.bind( renderController, this );
 
-    this.setBitmap( Assets.GRAPHICS.FX );
+    this.setBitmap( Assets.GRAPHICS.FX.src );
     this.setSheet([
 
             // Animation when Actor is switching layer

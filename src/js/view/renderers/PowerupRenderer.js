@@ -39,6 +39,6 @@ module.exports = PowerupRenderer;
 function PowerupRenderer( powerup, renderController ) {
     PowerupRenderer.super( this, "constructor", powerup, renderController );
 
-    this.setBitmap( Assets.GRAPHICS.POWERUP );
+    this.setBitmap( Assets.GRAPHICS.POWERUP.src );
 }
 ActorRenderer.extend( PowerupRenderer );

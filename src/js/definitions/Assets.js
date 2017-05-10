@@ -25,14 +25,20 @@
 const Config  = require( "../config/Config" );
 const baseURL = Config.getBaseURL() + "assets/";
 
+const spriteURL = baseURL + "images/sprites/";
+
 const Assets = module.exports = {
 
     GRAPHICS: {
-        POWERUP : baseURL + "images/sprites/powerup.png",
-        SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
-        FX      : baseURL + "images/sprites/spritesheet_fx.png",
-        SKY     : baseURL + "images/sprites/clouds.png",
-        TILE    : baseURL + "images/sprites/tile.png"
+        POWERUP : { src: spriteURL + "powerup.png" },
+        SHIP    : { src: spriteURL + "spritesheet_ship.png" },
+        FX      : { src: spriteURL + "spritesheet_fx.png" },
+        SKY     : { src: spriteURL + "clouds.png" },
+        TILE    : { src: spriteURL + "tile.png" },
+        GRASS   : { src: spriteURL + "grass.png", target: new Image() },
+        ROCK    : { src: spriteURL + "rock.png",  target: new Image() },
+        SAND    : { src: spriteURL + "sand.png",  target: new Image() },
+        TREE    : { src: spriteURL + "tree.png",  target: new Image() }
     },
 
     AUDIO: {

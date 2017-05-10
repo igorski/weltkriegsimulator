@@ -71,7 +71,10 @@ AssetService.prepare().
 function init() {
 
     document.body.classList.remove( "loading" );
-
+    // QQQ
+    const foo = require("./util/Terrain");
+    foo.render();
+    // E.O. QQQ
     WKS.highScoresModel.init();
 
     WKS.gameController.init( WKS );

@@ -44,11 +44,11 @@ module.exports = {
 
             let pending = graphics.length;
             graphics.forEach(( graphic ) => {
-                zCanvas.loader.loadImage( graphic, () => {
+                zCanvas.loader.loadImage( graphic.src, () => {
                     if ( --pending === 0 ) {
                         resolve();
                     }
-                });
+                }, graphic.target );
             });
         });
     }

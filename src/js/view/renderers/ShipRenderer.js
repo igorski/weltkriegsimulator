@@ -40,7 +40,7 @@ function ShipRenderer( ship, renderController ) {
 
     ShipRenderer.super( this, "constructor", ship, renderController );
 
-    this.setBitmap( Assets.GRAPHICS.SHIP );
+    this.setBitmap( Assets.GRAPHICS.SHIP.src );
     this.setSheet([
 
             // Player ship (facing up)

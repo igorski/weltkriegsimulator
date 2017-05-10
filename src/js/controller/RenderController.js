@@ -26,6 +26,7 @@ const Pubsub          = require( "pubsub-js" );
 const Messages        = require( "../definitions/Messages" );
 const zCanvas         = require( "zcanvas" );
 const RendererFactory = require( "../factory/RendererFactory" );
+const GroundRenderer  = require( "../view/renderers/GroundRenderer" );
 const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
 const FXRenderer      = require( "../view/renderers/FXRenderer" );
@@ -144,6 +145,7 @@ function setupGame( aGameModel ) {
 
     // add some default renderers for scenery
 
+    GROUND_LAYER.addChild( new GroundRenderer( 0, 0, .33, .5 ) );
     GROUND_LAYER.addChild( new TileRenderer( 0, 0, 1, .5 ) );
     BOTTOM_DECORATION_LAYER.addChild( new SkyRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );

@@ -22,41 +22,43 @@
  */
 "use strict";
 
-const Config   = require( "../../config/Config" );
-const zCanvas  = require( "zcanvas" );
-const TileUtil = require( "../../util/TileUtil" );
-const Assets   = require( "../../definitions/Assets" );
+const Config  = require( "../../config/Config" );
+const zCanvas = require( "zcanvas" );
+const Assets  = require( "../../definitions/Assets" );
+const Terrain = require( "../../util/Terrain" );
 
-module.exports = TileRenderer;
+module.exports = SkyRenderer;
 
 /**
- * a renderer that represents a tiled background on screen
+ * a renderer that draws some pretty nice lookin' sky details
+ * there is no Actor for this renderer, it's merely decorative !
  *
  * @constructor
  * @param {number} x
  * @param {number} y
- * @param {number} speed
+ * @param {number=} speed
  * @param {number=} scale
  */
-function TileRenderer( x, y, speed, scale ) {
+function SkyRenderer( x, y, speed, scale ) {
 
-    TileRenderer.super( this, "constructor", x, y, 0, 0 );
+    scale = ( typeof scale === "number" ) ? scale : 1;
+
+    const img = Terrain.WORLD;
+
+    SkyRenderer.super(
+        this, "constructor", x, y, img.width * scale, img.height * scale,
+        img.src
+    );
 
     /* instance properties */
 
-    this.speed = speed;
-
-    /* initialization */
-
-    const self = this;
-
-    TileUtil.createTileMap( Assets.GRAPHICS.TILE.src, scale ).
-        then(( cvs ) => {
-            self.setBitmap( cvs, cvs.width, cvs.height );
-        });
+    /**
+     * @public
+     * @type {number}
+     */
+    this.speed = ( typeof speed === "number" ) ? speed : 1;
 }
-
-zCanvas.sprite.extend( TileRenderer );
+zCanvas.sprite.extend( SkyRenderer );
 
 /* public methods */
 
@@ -65,13 +67,13 @@ zCanvas.sprite.extend( TileRenderer );
  * @public
  * @param {CanvasRenderingContext2D} aCanvasContext
  */
-TileRenderer.prototype.draw = function( aCanvasContext ) {
+SkyRenderer.prototype.draw = function( aCanvasContext ) {
 
     this.sync();
-    TileRenderer.super( this, "draw", aCanvasContext );
+    SkyRenderer.super( this, "draw", aCanvasContext );
 };
 
-TileRenderer.prototype.sync = function() {
+SkyRenderer.prototype.sync = function() {
 
     this._bounds.top += this.speed;
 
