@@ -58,6 +58,12 @@ module.exports = class Enemy extends Ship {
          * @type {number}
          */
         this.type = type;
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.behaviour = 0;
     }
 
     /* public methods */
@@ -68,15 +74,62 @@ module.exports = class Enemy extends Ship {
      * @param {number} aTimestamp
      */
     update( aTimestamp ) {
-        super.update( aTimestamp );
+
+        // no special behaviour if Enemy is outside the viewport
+
+        const insideViewport = this.y > -this.height;
+
+        if ( !insideViewport )
+            return super.update( aTimestamp );
 
         // fire a shot in case the shoot interval has passed
-        // (and this Enemy is getting close to sliding into view)
 
-        if ( this.y > -400 && this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
+        if ( this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
             this.lastShot = Date.now();
             this.game.fireBullet( this );
         }
+
+        if ( this.behaviour === 0 )
+            return super.update( aTimestamp );
+
+        if ( !this.trajectoryCalculated )
+            this.calculateTrajectory();
+
+        this.y += ( this.layer === 0 ) ? this.ySpeed * .75 : this.ySpeed;
+
+        // recalculate the hit box bounds
+
+        if ( this.y > -this.height )
+            this._cacheHitbox();
+    }
+
+    calculateTrajectory() {
+
+        const speedMultiplier = ( this.layer === 0 ) ? 1.33 : 1;
+        let targetX, speed, ease;
+        switch ( this.behaviour ) {
+            default:
+            case 1:
+                this.x  = this.game.world.width * .25;
+                targetX = this.game.world.width * .75;
+                speed   = 1;
+                ease    = Sine.easeInOut;
+                break;
+
+            case 2:
+                targetX = this.game.world.width - this.width;
+                speed   = 3;
+                ease    = Cubic.easeInOut;
+                break;
+        }
+
+        // use TweenMax to provide the math functions and updates for the behaviour
+
+        this.trajectoryTween = TweenMax.to( this, speed * speedMultiplier, {
+            x: targetX, repeat: Infinity, yoyo: true, ease: ease
+        });
+
+        this.trajectoryCalculated = true;
     }
 
     /**
@@ -86,6 +139,12 @@ module.exports = class Enemy extends Ship {
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
         this.collidable = true;
+
+        if ( this.trajectoryTween ) {
+            this.trajectoryTween.kill();
+            this.trajectoryTween = null;
+        }
+        this.trajectoryCalculated = false;
 
         if ( this.renderer )
             this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_1_IDLE );

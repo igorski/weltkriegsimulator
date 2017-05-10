@@ -68,6 +68,12 @@ const GameOverScreen = module.exports = {
                     nameInput.value = player.name;
 
                 handler.listen( saveButton, "click", handleSaveClick );
+
+                // also save on keyboard enter press
+                handler.listen( window, "keyup", ( e ) => {
+                    if ( e.keyCode === 13 )
+                        handleSaveClick();
+                });
             }
             handler.listen( playButton, "click", handlePlayClick );
             handler.listen( homeButton, "click", handleHomeClick );

@@ -34,9 +34,10 @@ const Random = require( "../util/Random" );
  * @type {Array.<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
-    { fn: generateWave1, timeout: 5000 },
-    { fn: createPowerup, timeout: 2500 },
-    { fn: generateWave2, timeout: 7500 }
+    { fn: generateHorizontalWave, timeout: 5000 },
+    { fn: generateVerticalWave1,  timeout: 7500 },
+    { fn: createPowerup,          timeout: 3000 },
+    { fn: generateVerticalWave2,  timeout: 7500 }
 ];
 let queuedAction;
 
@@ -88,12 +89,13 @@ module.exports = {
 
 /* private methods */
 
-function generateWave1( gameModel ) {
+function generateHorizontalWave( gameModel ) {
     // always generate enemy on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
 
     for ( let i = 0, total = 5; i < total; ++i ) {
 
+        // wave 1 is spread horizontally across the screen
         const x      = ( gameModel.world.width / total ) * i;
         const y      = -( 100 + i * 50 );
         const xSpeed = 0;
@@ -103,23 +105,39 @@ function generateWave1( gameModel ) {
     }
 }
 
-function generateWave2( gameModel ) {
-    generateWave1( gameModel ); // generate first squadron
+function generateVerticalWave1( gameModel ) {
 
-    // squadron 2 at random target layers
-
-    const type = Random.range( 1, 3 );
+    // squadron 2 at random target layers and using behaviours
+    const type      = Random.range( 1, 3 );
+    const behaviour = 1;
+    const tileSize  = 64;
 
     for ( let i = 0, total = Random.range( 2, 10 ); i < total; ++i ) {
 
-        const x      = ( gameModel.world.width / total ) * i;
-        const y      = -( gameModel.world.height + 100 + i * 50 );
-        const xSpeed = 0;
-        const ySpeed = 1 + ( i * .25 );
+        const x           = ( gameModel.world.width / 2 ) - tileSize / 2;
+        const y           = -( i * ( tileSize * 4 ));
+        const ySpeed      = 1 + ( i * .25 );
         const targetLayer = Random.bool() ? 1 : 0;
-        const energy = Random.bool() ? 1 : 2;
+        const energy      = Random.bool() ? 1 : 2;
 
-        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, energy, 0 ,type );
+        gameModel.createEnemy( x, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
+    }
+}
+function generateVerticalWave2( gameModel ) {
+
+    // squadron 2 at random target layers and using behaviours
+    const type      = Random.range( 1, 3 );
+    const behaviour = 2;
+    const tileSize  = 64;
+
+    for ( let i = 0, total = Random.range( 5, 15 ); i < total; ++i ) {
+
+        const y           = -( i * ( tileSize * 3 ));
+        const ySpeed      = 1 + ( i * .25 );
+        const targetLayer = Random.bool() ? 1 : 0;
+        const energy      = Random.bool() ? 1 : 2;
+
+        gameModel.createEnemy( 0, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
     }
 }
 
