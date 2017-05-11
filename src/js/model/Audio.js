@@ -68,11 +68,11 @@ const Audio = module.exports = {
         if ( inited && !Audio.muted ) {
             switch ( effect ) {
                 case Assets.AUDIO.AU_EXPLOSION:
-                    explosion.play();
+                    playSoundFX( explosion );
                     break;
 
                 case Assets.AUDIO.AU_LASER:
-                    laser.play();
+                    playSoundFX( laser );
                     break;
             }
         }
@@ -212,4 +212,9 @@ function nextTrack() {
     handler.dispose();
     Audio.enqueueTrack();
     Audio.playEnqueuedTrack();
+}
+
+function playSoundFX( audioElement ) {
+    audioElement.currentTime = 0;
+    audioElement.play();
 }
