@@ -70,6 +70,7 @@ const RenderController = module.exports = {
             fps: 60,
             onUpdate: wks.gameModel.update
         });
+        canvas.preventEventBubbling( true );
         canvas.setBackgroundColor( "#0055d8" );
         canvas.insertInPage( container );
 
