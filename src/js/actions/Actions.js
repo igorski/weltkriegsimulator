@@ -73,8 +73,9 @@ module.exports = {
      * @param {Enemy} enemy
      */
     awardPoints( player, enemy ) {
-        // TODO: Award more points depending on enemy type/weapon class/etc.
-        player.score += 100;
+        // award points per defeated enemy type, their weapon and behaviour
+        // (a way to calculate the "class" of the Enemy)
+        player.score += ((( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.behaviour * 500 ));
     },
 
     /**

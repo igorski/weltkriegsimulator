@@ -38,7 +38,7 @@ let explosion, laser;
 
 const Audio = module.exports = {
 
-    muted: false, // window.location.href.indexOf( "localhost" ) === -1,
+    muted: window.location.href.indexOf( "localhost" ) > -1,
 
     /**
      * @public
@@ -191,7 +191,6 @@ function _startPlayingEnqueuedTrack() {
 
     // get track META
     SC.get( "/tracks/" + queuedTrackId, ( track ) => {
-        console.warn("playing " + queuedTrackId);
         if ( track && track.user ) {
             Pubsub.publish( Messages.SHOW_MUSIC, {
                 title: track.title,
