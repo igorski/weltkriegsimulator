@@ -41,10 +41,11 @@ module.exports = {
     ACTOR_LAYER_SWITCH_COMPLETE : "S05", // payload is Actor that has switched layers
     FIRE_BULLET                 : "S06", // payload is single Object or Array of: { x: number, y:number, xSpeed: number, ySpeed: number, layer: number }
     PLAYER_HIT                  : "S07", // payload is { player: Player, object: Actor }
-    UPDATE_SCORE                : "S08", // payload is numerical value of new score
-    SHOW_MUSIC                  : "S09", // payload is { title: string, author: string }
-    SHOW_TITLE_SCREEN           : "S10",
-    SHOW_ABOUT                  : "S11",
-    SHOW_HOW_TO_PLAY            : "S12",
-    SHOW_HIGHSCORES             : "S13"
+    UPDATE_ENERGY               : "S08", // payload is Player
+    UPDATE_SCORE                : "S09", // payload is numerical value of new score
+    SHOW_MUSIC                  : "S10", // payload is { title: string, author: string }
+    SHOW_TITLE_SCREEN           : "S11",
+    SHOW_ABOUT                  : "S12",
+    SHOW_HOW_TO_PLAY            : "S13",
+    SHOW_HIGHSCORES             : "S14"
 };

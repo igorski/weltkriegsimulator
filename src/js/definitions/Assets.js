@@ -28,7 +28,7 @@ const baseURL = Config.getBaseURL() + "assets/";
 const Assets = module.exports = {
 
     GRAPHICS: {
-        POWERUP : baseURL + "images/sprites/powerup.png",
+        POWERUP : baseURL + "images/sprites/spritesheet_powerups.png",
         SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
         FX      : baseURL + "images/sprites/spritesheet_fx.png",
         SKY     : baseURL + "images/sprites/clouds.png",

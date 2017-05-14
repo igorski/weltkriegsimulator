@@ -42,6 +42,8 @@ module.exports = {
 
         wrapper = document.createElement( "div" );
         wrapper.setAttribute( "id", "screenOverlay" );
+        // prevent page scroll on touch devices
+        wrapper.ontouchmove = ( e ) => e.preventDefault();
         container.appendChild( wrapper );
 
         // subscribe to messaging system

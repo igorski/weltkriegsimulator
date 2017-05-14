@@ -117,12 +117,10 @@ function handleHowToPlayClick( event ) {
 
 function animateIn() {
     const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 0, { css: { autoAlpha: 0 }} ));
     tl.add( TweenMax.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 1 }}));
     tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
 
     for ( let i = 0; i < buttons.length; ++i ) {

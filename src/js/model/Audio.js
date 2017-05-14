@@ -115,7 +115,7 @@ const Audio = module.exports = {
             return;
 
         if ( Config.HAS_TOUCH_CONTROLS ) {
-            // on iOS we will not hear anything unless it comes
+            // on mobile devices we will not hear anything unless it comes
             // after a direct user response
             handler.listen( document, "touchstart", ( e ) => {
                 handler.dispose();

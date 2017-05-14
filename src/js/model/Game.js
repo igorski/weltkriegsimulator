@@ -98,9 +98,38 @@ const Game = module.exports = {
      */
     onPlayerHit( actor ) {
         Pubsub.publish( Messages.PLAYER_HIT, { player: Game.player, object: actor });
+        Pubsub.publish( Messages.UPDATE_ENERGY, Game.player );
+
         // are we still alive?
         if ( Game.player.energy === 0 )
             Pubsub.publish( Messages.GAME_OVER )
+    },
+
+    /**
+     * when player touches a Powerup
+     *
+     * @param {Powerup} powerup
+     */
+    onPowerup( powerup ) {
+        const player = Game.player, powerupValue = powerup.value;
+        switch( powerup.type ) {
+            // energy
+            case 0:
+                player.energy = Math.min( player.energy + powerupValue, player.maxEnergy );
+                Pubsub.publish( Messages.UPDATE_ENERGY, player );
+                break;
+
+            // weapon
+            case 1:
+                player.weapon = powerupValue;
+                break;
+
+            // score
+            case 2:
+                player.score += powerupValue;
+                Pubsub.publish( Messages.UPDATE_SCORE, player.score );
+                break;
+        }
     },
 
     /**

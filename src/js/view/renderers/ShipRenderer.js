@@ -44,12 +44,12 @@ function ShipRenderer( ship, renderController ) {
     this.setSheet([
 
             // Player ship (facing up)
-            { row: 0, col: 0, fpt: 3, amount: 1 },
+            { row: 0, col: 0, fpt: 1, amount: 1 },
 
             // Enemy ships (facing down)
-            { row: 0, col: 1, fpt: 3, amount: 1 },
-            { row: 1, col: 0, fpt: 3, amount: 1 },
-            { row: 1, col: 1, fpt: 3, amount: 1 }
+            { row: 0, col: 1, fpt: 1, amount: 1 },
+            { row: 1, col: 0, fpt: 1, amount: 1 },
+            { row: 1, col: 1, fpt: 1, amount: 1 }
         ],
         ShipRenderer.TILE_SIZE.width,
         ShipRenderer.TILE_SIZE.height

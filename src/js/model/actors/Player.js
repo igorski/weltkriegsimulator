@@ -114,8 +114,7 @@ module.exports = class Player extends Ship {
     hit( actor ) {
 
         if ( actor instanceof Powerup ) {
-            if ( actor.type === 1 ) // powerup is of weapon type
-                this.weapon = actor.value;
+            this.game.onPowerup( actor );
             actor.dispose();
         }
         else {

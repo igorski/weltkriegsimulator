@@ -37,9 +37,14 @@ const ACTION_LIST = [
     { fn: generateHorizontalWave, timeout: 5000 },
     { fn: generateVerticalWave1,  timeout: 7500 },
     { fn: createPowerup,          timeout: 3000 },
-    { fn: generateVerticalWave2,  timeout: 7500 }
+    { fn: generateVerticalWave2,  timeout: 7500 },
+    { fn: progressLevel,          timeout: 1000 }
 ];
 let queuedAction;
+// as time progresses, we increase the level of the game, we can
+// use this as a multiplier for enemy properties or poewrups
+
+let level = 0;
 
 module.exports = {
 
@@ -84,6 +89,7 @@ module.exports = {
      */
     reset() {
         queuedAction = ACTION_LIST[ 0 ];
+        level        = 0;
         return queuedAction.timeout;
     }
 };
@@ -142,11 +148,33 @@ function generateVerticalWave2( gameModel ) {
     }
 }
 
+function progressLevel() {
+    // increase the level of the game
+    ++level;
+}
+
 function createPowerup( gameModel ) {
     // always generate power up on other layer than the players current layer
     const targetLayer = ( gameModel.player.layer === 1 ) ? 0 : 1;
+    const powerupType = Random.range( 0, 2 );
+    let powerupValue;
+    switch ( powerupType ) {
+        // energy
+        case 0:
+            powerupValue = Random.range( 2, 2 + ( level ));
+            break;
+        // weapon
+        case 1:
+            powerupValue = 1;
+            break;
+        // score
+        case 2:
+            powerupValue = Random.range( 5000, 5000 + ( level * 5000 ));
+            break;
+    }
+
     gameModel.createPowerup(
         Math.round( Math.random() * gameModel.world.width ), -50,
-        0, 1, targetLayer, 1, 1
+        0, 1, targetLayer, powerupType, powerupValue
     );
 }

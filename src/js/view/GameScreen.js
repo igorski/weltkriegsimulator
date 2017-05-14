@@ -32,6 +32,9 @@ let energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFir
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
 let handler, tokens = [];
 
+let eventOffsetX, eventOffsetY;
+const MOVE_RAMP_UP_DURATION = .1;
+
 module.exports = {
 
     render( wrapper, templateService, wks ) {
@@ -60,8 +63,8 @@ module.exports = {
 
                 // listen to window resize/orientation changes
 
-                handler.listen( window,   "resize",            handleResize );
-                handler.listen( window,   "orientationchange", handleResize );
+                handler.listen( window, "resize",            handleResize );
+                handler.listen( window, "orientationchange", handleResize );
 
                 // button handlers
 
@@ -80,7 +83,7 @@ module.exports = {
             [
                 Messages.SHOW_MUSIC,
                 Messages.UPDATE_SCORE,
-                Messages.PLAYER_HIT
+                Messages.UPDATE_ENERGY
 
             ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
 
@@ -115,8 +118,8 @@ function handleBroadcast( msg, payload ) {
             updateScore( payload );
             break;
 
-        case Messages.PLAYER_HIT:
-            updateEnergy( payload.player );
+        case Messages.UPDATE_ENERGY:
+            updateEnergy( payload );
             break;
     }
 }
@@ -152,20 +155,20 @@ function handleDPad( event ) {
                 // calculate in which direction(s) the Player should move
                 // by determining where in the D pad the pointer is
 
-                const eventOffsetX = touches[ 0 ].pageX - DPAD_OFFSET.left;
-                const eventOffsetY = touches[ 0 ].pageY - DPAD_OFFSET.top;
+                eventOffsetX = touches[ 0 ].pageX - DPAD_OFFSET.left;
+                eventOffsetY = touches[ 0 ].pageY - DPAD_OFFSET.top;
 
                 if ( eventOffsetX < DPAD_LEFT )
-                    InputController.left();
+                    InputController.left( MOVE_RAMP_UP_DURATION, true );
                 else if ( eventOffsetX > DPAD_RIGHT )
-                    InputController.right();
+                    InputController.right( MOVE_RAMP_UP_DURATION, true );
                 else
                     InputController.cancelHorizontal();
 
                 if ( eventOffsetY < DPAD_TOP )
-                    InputController.up();
+                    InputController.up( MOVE_RAMP_UP_DURATION, true );
                 else if ( eventOffsetY > DPAD_BOTTOM )
-                    InputController.down();
+                    InputController.down( MOVE_RAMP_UP_DURATION, true );
                 else
                     InputController.cancelVertical();
             }

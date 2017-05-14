@@ -54,6 +54,9 @@ module.exports = {
             if ( actor instanceof Enemy )
                 actor.renderer.setSheetForEnemy();
 
+            if ( actor instanceof Powerup )
+                actor.renderer.setSheetForPowerup();
+
             return actor.renderer;
         }
 

@@ -40,5 +40,37 @@ function PowerupRenderer( powerup, renderController ) {
     PowerupRenderer.super( this, "constructor", powerup, renderController );
 
     this.setBitmap( Assets.GRAPHICS.POWERUP );
+    this.setSheet([
+            // energy
+            { row: 0, col: 0, fpt: 1, amount: 1 },
+            // bullet spray
+            { row: 0, col: 1, fpt: 1, amount: 1 },
+            // score
+            { row: 0, col: 2, fpt: 1, amount: 1 }
+        ],
+        64, 64
+    );
+    this.setSheetForPowerup();
 }
 ActorRenderer.extend( PowerupRenderer );
+
+/* public methods */
+
+/**
+ * @public
+ */
+PowerupRenderer.prototype.setSheetForPowerup = function() {
+    let animation = 0;
+
+    switch ( /** @type {Powerup} */ ( this.actor ).type ) {
+        default:
+            break;
+        case 1:
+            animation = 1;
+            break;
+        case 2:
+            animation = 2;
+            break;
+    }
+    this.switchAnimation( animation );
+};
