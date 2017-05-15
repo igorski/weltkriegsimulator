@@ -159,6 +159,7 @@ function handleDPad( event ) {
 
         case "touchmove":
 
+            // retrieve the pointer that is touching the dPad
             let touch;
             for ( let i = 0; i < touches.length; ++i ) {
                 touch = touches[ i ];

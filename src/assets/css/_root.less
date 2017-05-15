@@ -1,0 +1,44 @@
+@import url( "helpers.less" );
+
+// the threshold where we start to use the mobile view
+@mobile-width: 640px;
+
+html, body {
+  height: 100%;
+  // prevents page scroll on touch/mousewheel
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0055d8;
+  .noSelect;
+
+  &.loading {
+    background-image: url(../images/graphics/loader.svg);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+  }
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#screenOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: .5em auto;
+  padding: .5em;
+  .boxSize;
+}
+
+@import url( "typography.less" );
+@import url( "screens.less" );
+@import url( "ui.less" );

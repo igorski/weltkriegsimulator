@@ -6,6 +6,8 @@ header {
 
 #menu {
   width: 100%;
+  padding-top: .5em;
+  .boxSize;
 
   button {
     width: 50%;
@@ -13,6 +15,8 @@ header {
     padding: 1em;
     margin: .5em auto;
     cursor: pointer;
+    background-color: #FFF;
+    border-radius: 0;
     .boxSize;
   }
 }
@@ -64,6 +68,9 @@ footer {
 
 @media screen and ( max-width: @mobile-width )
 {
+  #menu button {
+    width: 85%;
+  }
   #text {
     width: 100%;
   }

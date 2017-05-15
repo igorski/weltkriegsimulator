@@ -5,7 +5,7 @@ module.exports =
     concat : function( outputFile, outputAssets, callback )
     {
         var opts = {
-            entry    : 'src/assets/css/layout.less',
+            entry    : 'src/assets/css/_root.less',
             output   : outputFile,
             compress : true/*,
             assets: {
