@@ -37,7 +37,7 @@ module.exports = class Ship extends Actor {
      * @param {number} xSpeed
      * @param {number} ySpeed
      * @param {number} energy
-     * @param {number} weapon
+     * @param {number} weapon enumerated from Weapons.js
      */
     constructor( game, x, y, xSpeed, ySpeed, energy, weapon ) {
 
@@ -65,6 +65,18 @@ module.exports = class Ship extends Actor {
          */
         this.weapon = weapon;
 
+        /**
+         * @public
+         * @type {boolean}
+         */
+        this.firing = false;
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.fireSpeed = 5;
+
         /* initialization */
 
         this.width  = this.orgWidth  = ShipRenderer.TILE_SIZE.width;
@@ -72,6 +84,19 @@ module.exports = class Ship extends Actor {
     }
 
     /* public methods */
+
+    /**
+     * @public
+     * @param {number=} switchSpeed
+     */
+    switchLayer( switchSpeed = 1 ) {
+
+        if ( this.switching )
+            return;
+
+        super.switchLayer( switchSpeed );
+        this.game.initiateActorLayerSwitch( this );
+    }
 
     /**
      * @override

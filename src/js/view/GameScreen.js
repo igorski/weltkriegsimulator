@@ -85,7 +85,7 @@ module.exports = {
             // subscribe to messaging system
 
             [
-                Messages.SHOW_MUSIC,
+                Messages.SHOW_MESSAGE,
                 Messages.UPDATE_SCORE,
                 Messages.UPDATE_ENERGY
 
@@ -111,10 +111,9 @@ module.exports = {
 function handleBroadcast( msg, payload ) {
 
     switch ( msg ) {
-        case Messages.SHOW_MUSIC:
-            messageTitleUI.innerHTML = "Now playing:";
-            messageBodyUI.innerHTML  = `"${payload.title}" by ${payload.author}`;
-
+        case Messages.SHOW_MESSAGE:
+            messageTitleUI.innerHTML = payload.title;
+            messageBodyUI.innerHTML  = payload.body;
             animateMessage();
             break;
 
@@ -133,7 +132,7 @@ function updateEnergy( player ) {
 }
 
 function updateScore( score ) {
-    scoreUI.innerHTML = score + "pts.";
+    scoreUI.innerHTML = score + "PTS.";
 }
 
 function animateMessage() {

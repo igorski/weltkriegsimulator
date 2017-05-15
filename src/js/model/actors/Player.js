@@ -62,18 +62,6 @@ module.exports = class Player extends Ship {
         this.name = "";
 
         /**
-         * @public
-         * @type {boolean}
-         */
-        this.firing = false;
-
-        /**
-         * @public
-         * @type {number}
-         */
-        this.fireSpeed = 5;
-
-        /**
          * @private
          * @type {number}
          */
@@ -96,7 +84,8 @@ module.exports = class Player extends Ship {
     }
 
     stopFiring() {
-        this.firing = false;
+        this.firing     = false;
+        this._fireCount = 0;
         cancelAnimationFrame( this.fireRAF );
     }
 
@@ -182,6 +171,9 @@ module.exports = class Player extends Ship {
         // start centered horizontally at the bottom of the screen
         this.x = this.game.world.width / 2 - this.width / 2;
         this.y = this.game.world.height - ( this.height * 1.5 );
+
+        this.xSpeed = 0;
+        this.ySpeed = 0;
 
         if ( this.renderer )
             this.renderer.switchAnimation( ShipRenderer.ANIMATION.PLAYER_IDLE );

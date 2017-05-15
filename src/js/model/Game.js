@@ -22,15 +22,17 @@
  */
 "use strict";
 
-const Pubsub   = require( "pubsub-js" );
-const Messages = require( "../definitions/Messages" );
-const Actions  = require( "../actions/Actions" );
-const Actor    = require( "./actors/Actor" );
-const Ship     = require( "./actors/Ship" );
-const Player   = require( "./actors/Player" );
-const Enemy    = require( "./actors/Enemy" );
-const Bullet   = require( "./actors/Bullet" );
-const Powerup  = require( "./actors/Powerup" );
+const Pubsub        = require( "pubsub-js" );
+const Copy          = require( "../definitions/Copy" );
+const Messages      = require( "../definitions/Messages" );
+const Actor         = require( "./actors/Actor" );
+const Ship          = require( "./actors/Ship" );
+const Player        = require( "./actors/Player" );
+const Enemy         = require( "./actors/Enemy" );
+const Bullet        = require( "./actors/Bullet" );
+const Powerup       = require( "./actors/Powerup" );
+const ActionFactory = require( "../factory/ActionFactory" );
+const WeaponFactory = require( "../factory/WeaponFactory" );
 
 const Game = module.exports = {
 
@@ -86,7 +88,7 @@ const Game = module.exports = {
         bullet.dispose(); // Bullets disappear on impact
 
         if ( bullet.owner === Game.player ) {
-            Actions.awardPoints( Game.player, /** @type {Enemy} */ ( ship ));
+            ActionFactory.awardPoints( Game.player, /** @type {Enemy} */ ( ship ));
             Pubsub.publish( Messages.UPDATE_SCORE, Game.player.score );
         }
     },
@@ -117,17 +119,22 @@ const Game = module.exports = {
             case 0:
                 player.energy = Math.min( player.energy + powerupValue, player.maxEnergy );
                 Pubsub.publish( Messages.UPDATE_ENERGY, player );
+                Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "ENERGY" ));
                 break;
 
             // weapon
             case 1:
-                player.weapon = powerupValue;
+                WeaponFactory.applyToActor( powerupValue, player );
+                Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "WEAPON",
+                    Copy.WEAPONS[ powerupValue ])
+                );
                 break;
 
             // score
             case 2:
                 player.score += powerupValue;
                 Pubsub.publish( Messages.UPDATE_SCORE, player.score );
+                Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "BONUS", powerupValue ));
                 break;
         }
     },
@@ -172,9 +179,9 @@ const Game = module.exports = {
             Game.addActor( enemy );
             enemy.reset();
             enemy.energy    = optEnergy;
-            enemy.weapon    = optWeapon;
             enemy.type      = optType;
             enemy.behaviour = optBehaviour;
+            WeaponFactory.applyToActor( optWeapon, enemy );
         }
     },
 
@@ -344,7 +351,7 @@ const Game = module.exports = {
 
 Game.player = new Player( Game );
 
-const bulletPool  = new Array( 100 );
+const bulletPool  = new Array( 150 );
 const enemyPool   = new Array( 20 );
 const powerupPool = new Array( 5 );
 
@@ -403,7 +410,8 @@ function createBulletForActor( actor ) {
 
         default:
         case 0:
-            // single Bullet fire
+        case 2:
+            // single Bullet fire/laser
             const y = ( actor instanceof Player ) ? actor.y + actor.offsetY - 10 : actor.y + actor.offsetY + actor.height;
             bullet = getActorFromPool(
                 bulletPool,

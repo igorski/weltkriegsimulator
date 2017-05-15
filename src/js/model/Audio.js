@@ -24,6 +24,7 @@
 
 const Config       = require( "../config/Config" );
 const Assets       = require( "../definitions/Assets" );
+const Copy         = require( "../definitions/Copy" );
 const AudioTracks  = require( "../definitions/AudioTracks" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
@@ -37,6 +38,8 @@ let handler       = new EventHandler();
 let explosion, laser;
 
 const Audio = module.exports = {
+
+    // mute Audio when in development mode
 
     muted: window.location.href.indexOf( "localhost" ) > -1,
 
@@ -192,10 +195,9 @@ function _startPlayingEnqueuedTrack() {
     // get track META
     SC.get( "/tracks/" + queuedTrackId, ( track ) => {
         if ( track && track.user ) {
-            Pubsub.publish( Messages.SHOW_MUSIC, {
-                title: track.title,
-                author: track.user.username
-            });
+            Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "MUSIC", [
+                track.title, track.user.username
+            ]));
         }
     });
 }

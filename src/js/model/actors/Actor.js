@@ -228,8 +228,6 @@ module.exports = class Actor {
         self.switching    = true;
         const targetLayer = ( self.layer === 0 ) ? 1 : 0;
 
-        this.game.initiateActorLayerSwitch( this );
-
         // during animation layer is floating point
         // we multiply by .5 as a lower layer Actor is displayed at half size
 

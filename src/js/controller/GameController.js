@@ -22,10 +22,10 @@
  */
 "use strict";
 
-const Messages = require( "../definitions/Messages" );
-const Pubsub   = require( "pubsub-js" );
-const Actions  = require( "../actions/Actions" );
-const Assets   = require( "../definitions/Assets" );
+const Messages      = require( "../definitions/Messages" );
+const Pubsub        = require( "pubsub-js" );
+const ActionFactory = require( "../factory/ActionFactory" );
+const Assets        = require( "../definitions/Assets" );
 
 let audioModel, gameModel;
 let actionTimeout;
@@ -57,7 +57,7 @@ function handleBroadcast( type, payload ) {
             // start the music
             audioModel.playEnqueuedTrack();
             // start the game actions queue
-            startActions( Actions.reset() );
+            startActions( ActionFactory.reset() );
             break;
 
         case Messages.GAME_OVER:
@@ -80,7 +80,7 @@ function startActions( timeout ) {
 
 function executeAction() {
     // execute and enqueue next action
-    startActions( Actions.execute( gameModel ));
+    startActions( ActionFactory.execute( gameModel ));
 }
 
 function stopActions() {

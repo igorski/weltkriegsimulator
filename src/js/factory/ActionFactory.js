@@ -22,7 +22,8 @@
  */
 "use strict";
 
-const Random = require( "../util/Random" );
+const Random        = require( "../util/Random" );
+const WeaponFactory = require( "./WeaponFactory" );
 
 /**
  * list of actions
@@ -80,7 +81,8 @@ module.exports = {
     awardPoints( player, enemy ) {
         // award points per defeated enemy type, their weapon and behaviour
         // (a way to calculate the "class" of the Enemy)
-        player.score += ((( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.behaviour * 500 ));
+        const points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.behaviour * 500 );
+        player.score += points;
     },
 
     /**
@@ -165,11 +167,11 @@ function createPowerup( gameModel ) {
             break;
         // weapon
         case 1:
-            powerupValue = 1;
+            powerupValue = WeaponFactory.createRandomWeapon( 1 );
             break;
         // score
         case 2:
-            powerupValue = Random.range( 5000, 5000 + ( level * 5000 ));
+            powerupValue = 5000 + ( level * 5000 );
             break;
     }
 

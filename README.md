@@ -34,19 +34,20 @@ Project outline
 ---------------
 
 WKS uses no framework but was written in vanilla JS. The only used libraries besides the aforementioned _zCanvas_
-are Greenscoks _TweenMax_, _Handlebars_ (for HTML templating) and _pubsub-js_ (for messaging).
+are _TweenMax_ (easing functions), _Handlebars_ (for HTML templating) and _pubsub-js_ (for messaging).
 
 All source code resides in the _./src/js_-directory. The main application logic is split
 up into:
 
  * controllers
+ * factory
  * model
  * view
  
 The _controllers_ are responsible for managing changes in the model and updating the appropriate views. These
 controllers are:
 
- * _GameController_ sets up the game, changes game world properties, delegates changes in game state (through _GameActions.js_)
+ * _GameController_ sets up the game, changes game world properties, delegates changes in game state (through _ActionFactory.js_)
  * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
  * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen
  * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
@@ -54,13 +55,16 @@ controllers are:
 The _views_ represent each of the screens used in the game. They are managed by their appropriate controllers.
 Note: for the game elements (the Actors) these are represented by _renderers_ (see _zCanvas in WKS_ below).
 
-Finally, the _models_ contain all data and properties. For the game's model (_Game.js_) this is where the
+The _models_ contain all data and properties. For the game's model (_Game.js_) this is where the
 state and contents of the game's "world" are held. Apart from generic world properties determining the
 game's behaviour and progress, this model also references the _Actors_. The Actors are instances of all
 Objects in the game (for instance: the player, bullets, powerups, enemy ships). These share common properties
 such as coordinates, speed, but have their own custom properties (e.g. energy, weapon damage, etc.). These
 Actors are defined as ES6 classes as the Object Oriented Pattern works well for inheritance purposes. The
 remainder of the applications business logic follows the Functional Programming pattern.
+
+Finally, the _factories_ are used to generate data to populate the models. _ActionFactory_ is of interest as
+it generates the enemy waves and the powerups.
 
 Communication between these models, views and controllers is done using the publish-subscribe pattern where
 messages are broadcast to subscribed listeners to act upon. As such, different players might be interested in
