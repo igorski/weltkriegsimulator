@@ -50,7 +50,7 @@ module.exports = {
 
             // grab references to HTML Elements
             energyUI       = wrapper.querySelector( "#energy" );
-            scoreUI        = wrapper.querySelector( "#score" );
+            scoreUI        = wrapper.querySelector( "#score .counter" );
             messagePanel   = wrapper.querySelector( "#messages" );
             messageTitleUI = messagePanel.querySelector( ".title" );
             messageBodyUI  = messagePanel.querySelector( ".body" );
@@ -132,7 +132,7 @@ function updateEnergy( player ) {
 }
 
 function updateScore( score ) {
-    scoreUI.innerHTML = score + "PTS.";
+    scoreUI.innerHTML = score;
 }
 
 function animateMessage() {

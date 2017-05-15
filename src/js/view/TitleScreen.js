@@ -26,7 +26,6 @@ const Config       = require( "../config/Config" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
-const Bowser       = require( "bowser" );
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
@@ -55,16 +54,16 @@ module.exports = {
 
             handler = new EventHandler();
 
-            handler.listen( howToPlayButton,  "click", handleHowToPlayClick );
-            handler.listen( highScoresButton, "click", handleHighScoresClick );
-            handler.listen( aboutButton,      "click", handleAboutClick );
+            handler.listen( howToPlayButton,  "click",   handleHowToPlayClick );
+            handler.listen( highScoresButton, "click",   handleHighScoresClick );
+            handler.listen( aboutButton,      "click",   handleAboutClick );
+            handler.listen( startButton,      "mouseup", handleStartClick );
 
-            // we deliberately listen to mouse and touch events (instead of "click")
+            // we deliberately listen to touch events on the document
             // as we can determine whether we need to show on-screen game controls
 
-            handler.listen( startButton, "mouseup",     handleStartClick );
-            handler.listen( startButton, "touchcancel", handleStartClick );
-            handler.listen( startButton, "touchend",    handleStartClick );
+            handler.listen( document, "touchcancel", handleTouch );
+            handler.listen( document, "touchend",    handleTouch );
         });
     },
 
@@ -82,16 +81,15 @@ function handleStartClick( event ) {
     // will otherwise fire multiple times on touch screen (due to multiple handlers for different event types)
     event.preventDefault();
 
-    // in case a touch event was fired, store this in the config
-
-    if ( event.type.indexOf( "touch" ) >= 0 || Bowser.tablet || Bowser.mobile ) {
-        Config.HAS_TOUCH_CONTROLS = true;
-    }
-
     animateOut(() => {
         // start this game!
         Pubsub.publish( Messages.GAME_START );
     });
+}
+
+function handleTouch( event ) {
+    // in case a touch event was fired, store this in the config
+    Config.HAS_TOUCH_CONTROLS = true;
 }
 
 function handleHighScoresClick( event ) {
