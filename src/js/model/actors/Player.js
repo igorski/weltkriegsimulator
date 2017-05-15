@@ -61,12 +61,53 @@ module.exports = class Player extends Ship {
          */
         this.name = "";
 
-        // Player is re-used through appication lifetime
+        /**
+         * @public
+         * @type {boolean}
+         */
+        this.firing = false;
+
+        /**
+         * @public
+         * @type {number}
+         */
+        this.fireSpeed = 5;
+
+        /**
+         * @private
+         * @type {number}
+         */
+        this._fireCount = 0;
+
+        /* initialization */
+
+        // Player is re-used through application lifetime
 
         this.pooled = true;
     }
 
     /* public methods */
+
+    startFiring() {
+        // as firing bullets triggers an expensive calculation, we proxy this onto
+        // the next animationFrame so we calculate this only once per screen render
+        this.firing  = true;
+        this.fireRAF = requestAnimationFrame( this._fire.bind( this ));
+    }
+
+    stopFiring() {
+        this.firing = false;
+        cancelAnimationFrame( this.fireRAF );
+    }
+
+    _fire() {
+        if ( ++this._fireCount === this.fireSpeed ) {
+            this.game.fireBullet( this );
+            this._fireCount = 0;
+        }
+        if ( this.firing )
+            this.startFiring();
+    }
 
     /**
      * @override
@@ -122,10 +163,17 @@ module.exports = class Player extends Ship {
         }
     }
 
+    die() {
+        this.stopFiring();
+        super.die();
+    }
+
     /**
      * @public
      */
     reset() {
+        this.stopFiring();
+
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
         this.score      = 0;

@@ -30,7 +30,7 @@ const InputController = require( "../controller/InputController" );
 
 let energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
-let handler, tokens = [];
+let handler, tokens = [], player;
 
 let eventOffsetX, eventOffsetY;
 const MOVE_RAMP_UP_DURATION = .1;
@@ -40,6 +40,7 @@ module.exports = {
     render( wrapper, templateService, wks ) {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
+        player = wks.gameModel.player;
 
         templateService.render( "Screen_Game", wrapper, {
 
@@ -69,6 +70,8 @@ module.exports = {
                 // button handlers
 
                 handler.listen( btnFire,  "touchstart",  handleFire );
+                handler.listen( btnFire,  "touchend",    cancelFire );
+                handler.listen( btnFire,  "touchcancel", cancelFire );
                 handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
                 handler.listen( dPad,     "touchmove",   handleDPad );
                 handler.listen( dPad,     "touchend",    handleDPad );
@@ -184,12 +187,18 @@ function handleDPad( event ) {
 
 function handleFire( event ) {
     event.preventDefault(); // prevent document zoom on double tap
-    InputController.fire();
+    if ( !player.firing )
+        player.startFiring();
+}
+
+function cancelFire( event ) {
+    player.stopFiring();
 }
 
 function handleLayerSwitch( event ) {
     event.preventDefault(); // prevent document zoom on double tap
-    InputController.switchLayer();
+    if ( !player.switching )
+        player.switchLayer();
 }
 
 function handleResize( event ) {

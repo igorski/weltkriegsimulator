@@ -29,9 +29,7 @@ const Bullet       = require( "../model/actors/Bullet" );
 const EventHandler = require( "../util/EventHandler" );
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
-let isFiring = false,
-    blockDefaults = true,
-    handler;
+let blockDefaults = true, handler;
 
 const activeMovement = {
     up: false,
@@ -57,23 +55,6 @@ const InputController = module.exports = {
     },
 
     // player controls
-
-    fire() {
-        // as firing bullets triggers an expensive calculation, we proxy this onto
-        // the next animationFrame so we calculate this only once per screen render
-        if ( !isFiring ) {
-            isFiring = true;
-            Pubsub.publish( Messages.FIRE_BULLET, player );
-            requestAnimationFrame( unsetFire );
-        }
-    },
-
-    switchLayer() {
-        if ( !player.switching ) {
-            player.switchLayer();
-            Pubsub.publish( Messages.ACTOR_LAYER_SWITCH_START, player );
-        }
-    },
 
     left( speed = .5, killExisting = false ) {
         if ( !activeMovement.left ) {
@@ -172,7 +153,8 @@ function handleKeyDown( aEvent ) {
         switch ( keyCode ) {
 
             case 32: // spacebar
-                InputController.fire();
+                if ( !player.firing )
+                    player.startFiring();
                 break;
 
             case 38: // up
@@ -192,7 +174,8 @@ function handleKeyDown( aEvent ) {
                 break;
 
             case 13: // enter
-                InputController.switchLayer();
+                if ( !player.switching )
+                    player.switchLayer();
                 break;
         }
    }
@@ -210,13 +193,9 @@ function handleKeyUp( aEvent ) {
         case 37: // left
             InputController.cancelHorizontal();
             break;
+
+        case 32: // spacebar
+            player.stopFiring();
+            break;
     }
-}
-
-function preventDefault( event ) {
-    event.preventDefault();
-}
-
-function unsetFire() {
-    isFiring = false;
 }

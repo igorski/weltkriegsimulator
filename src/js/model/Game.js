@@ -227,15 +227,27 @@ const Game = module.exports = {
     },
 
     /**
+     * invoked whenever an Actor is about
+     * to start switching layers
+     *
+     * @param {Actor} actor
+     */
+    initiateActorLayerSwitch( actor ) {
+        Pubsub.publish(
+            Messages.ACTOR_LAYER_SWITCH_START, actor
+        );
+    },
+
+    /**
      * invoked whenever an Actor has switched
      * and completed its layer switch
      *
      * @param {Actor} actor
      */
-    updateActorLayer( actor ) {
+    completeActorLayerSwitch( actor ) {
         Pubsub.publish(
             Messages.ACTOR_LAYER_SWITCH_COMPLETE, actor
-        )
+        );
     },
 
     /**

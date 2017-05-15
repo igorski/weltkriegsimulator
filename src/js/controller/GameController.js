@@ -41,8 +41,7 @@ module.exports = {
 
         [
             Messages.GAME_START,
-            Messages.GAME_OVER,
-            Messages.FIRE_BULLET
+            Messages.GAME_OVER
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
     }
@@ -67,11 +66,6 @@ function handleBroadcast( type, payload ) {
             WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
             // enqueue next track
             audioModel.enqueueTrack();
-            break;
-
-        case Messages.FIRE_BULLET:
-            gameModel.fireBullet( payload );
-            WKS.audioModel.playSoundFX( Assets.AUDIO.AU_LASER );
             break;
     }
 }
