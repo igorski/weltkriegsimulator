@@ -52,19 +52,20 @@ const Copy = module.exports = {
 
         // create a deep copy of primitive values
 
-        let data = ( isPrimitive ) ? text : text.title;
+        let titleData = ( isPrimitive ) ? text : text.title;
+        let bodyData  = ( isPrimitive ) ? null : text.body;
 
         if ( Array.isArray( optDataReplacement )) {
             optDataReplacement.forEach(( replacement, index ) => {
-                data = data.replace( `{${index}}`, replacement );
+                bodyData = bodyData.replace( `{${index}}`, replacement );
             });
         }
         else if ( typeof optDataReplacement === "string" || typeof optDataReplacement === "number" ) {
-            data = data.replace( `{0}`, optDataReplacement );
+            titleData = titleData.replace( `{0}`, optDataReplacement );
         }
         return {
-            title: data,
-            body : ( !isPrimitive ) ? text.body : null
+            title: titleData,
+            body : bodyData
         };
     }
 };
