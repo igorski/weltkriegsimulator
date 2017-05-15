@@ -30,7 +30,7 @@ const InputController = require( "../controller/InputController" );
 
 let energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
-let handler, tokens = [], player;
+let handler, tokens = [], dPadPointerId, player;
 
 let eventOffsetX, eventOffsetY;
 const MOVE_RAMP_UP_DURATION = .1;
@@ -70,9 +70,10 @@ module.exports = {
                 // button handlers
 
                 handler.listen( btnFire,  "touchstart",  handleFire );
-                handler.listen( btnFire,  "touchend",    cancelFire );
-                handler.listen( btnFire,  "touchcancel", cancelFire );
+                handler.listen( btnFire,  "touchend",    handleFire );
+                handler.listen( btnFire,  "touchcancel", handleFire );
                 handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
+                handler.listen( dPad,     "touchstart",  handleDPad );
                 handler.listen( dPad,     "touchmove",   handleDPad );
                 handler.listen( dPad,     "touchend",    handleDPad );
                 handler.listen( dPad,     "touchcancel", handleDPad );
@@ -147,34 +148,43 @@ function handleDPad( event ) {
     // prevent document scrolling
     event.preventDefault();
 
+    const touches = ( event.changedTouches.length > 0 ) ? event.changedTouches : event.touches;
+
     switch ( event.type ) {
+
+        case "touchstart":
+            // store which pointer is touching the dPad (avoids collisions w/ other pointer events)
+            dPadPointerId = touches[ 0 ].identifier;
+            break;
 
         case "touchmove":
 
-            const touches = ( event.touches.length > 0 ) ? event.touches : event.changedTouches;
-
-            if ( touches.length > 0 ) {
-
-                // calculate in which direction(s) the Player should move
-                // by determining where in the D pad the pointer is
-
-                eventOffsetX = touches[ 0 ].pageX - DPAD_OFFSET.left;
-                eventOffsetY = touches[ 0 ].pageY - DPAD_OFFSET.top;
-
-                if ( eventOffsetX < DPAD_LEFT )
-                    InputController.left( MOVE_RAMP_UP_DURATION, true );
-                else if ( eventOffsetX > DPAD_RIGHT )
-                    InputController.right( MOVE_RAMP_UP_DURATION, true );
-                else
-                    InputController.cancelHorizontal();
-
-                if ( eventOffsetY < DPAD_TOP )
-                    InputController.up( MOVE_RAMP_UP_DURATION, true );
-                else if ( eventOffsetY > DPAD_BOTTOM )
-                    InputController.down( MOVE_RAMP_UP_DURATION, true );
-                else
-                    InputController.cancelVertical();
+            let touch;
+            for ( let i = 0; i < touches.length; ++i ) {
+                touch = touches[ i ];
+                if ( touch.identifier === dPadPointerId )
+                    break;
             }
+
+            // calculate in which direction(s) the Player should move
+            // by determining where in the D pad the pointer is
+
+            eventOffsetX = touch.pageX - DPAD_OFFSET.left;
+            eventOffsetY = touch.pageY - DPAD_OFFSET.top;
+
+            if ( eventOffsetX < DPAD_LEFT )
+                InputController.left( MOVE_RAMP_UP_DURATION, true );
+            else if ( eventOffsetX > DPAD_RIGHT )
+                InputController.right( MOVE_RAMP_UP_DURATION, true );
+            else
+                InputController.cancelHorizontal();
+
+            if ( eventOffsetY < DPAD_TOP )
+                InputController.up( MOVE_RAMP_UP_DURATION, true );
+            else if ( eventOffsetY > DPAD_BOTTOM )
+                InputController.down( MOVE_RAMP_UP_DURATION, true );
+            else
+                InputController.cancelVertical();
             break;
 
         case "touchcancel":
@@ -187,12 +197,18 @@ function handleDPad( event ) {
 
 function handleFire( event ) {
     event.preventDefault(); // prevent document zoom on double tap
-    if ( !player.firing )
-        player.startFiring();
-}
 
-function cancelFire( event ) {
-    player.stopFiring();
+    switch ( event.type ) {
+        case "touchstart":
+            if ( !player.firing )
+                player.startFiring();
+            break;
+
+        case "touchcancel":
+        case "touchend":
+            player.stopFiring();
+            break;
+    }
 }
 
 function handleLayerSwitch( event ) {
