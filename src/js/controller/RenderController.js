@@ -54,6 +54,11 @@ let BOTTOM_DECORATION_LAYER = 2;
 let TOP_ACTOR_LAYER         = 3;
 let TOP_DECORATION_LAYER    = 4;
 
+const COLORS = {
+    TOP: "#0055d8",
+    BOTTOM: "#990000"
+};
+
 // pool of renderers that show effects like transitions or explosions
 const FXRenderers = new Array( 25 );
 
@@ -71,7 +76,7 @@ const RenderController = module.exports = {
             onUpdate: wks.gameModel.update
         });
         canvas.preventEventBubbling( true );
-        canvas.setBackgroundColor( "#0055d8" );
+        canvas.setBackgroundColor( COLORS.TOP );
         canvas.insertInPage( container );
 
         setupGame( wks.gameModel );
@@ -315,6 +320,8 @@ function showLayerSwitchAnimation( actor ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.CLOUD );
         addRendererToAppropriateLayer( actor.layer, renderer );
     }
+    if ( actor === player.actor )
+        animateBackgroundColor();
 }
 
 function handleResize() {
@@ -323,4 +330,9 @@ function handleResize() {
     gameModel.world.width  = canvas.getWidth();
     gameModel.world.height = canvas.getHeight();
     gameModel.player.cacheBounds();
+}
+
+function animateBackgroundColor() {
+    TweenMax.killTweensOf( canvas );
+    TweenMax.to( canvas, 2, { _bgColor: ( player.actor.layer === 0 ) ? COLORS.TOP : COLORS.BOTTOM });
 }
