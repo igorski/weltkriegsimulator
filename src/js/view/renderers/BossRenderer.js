@@ -22,23 +22,40 @@
  */
 "use strict";
 
-const Config    = require( "../config/Config" );
-const assetRoot = Config.getBaseURL() + "assets/";
+const Config        = require( "../../config/Config" );
+const Boss          = require( "../../model/actors/Boss" );
+const ActorRenderer = require( "./ActorRenderer" );
+const Assets        = require( "../../definitions/Assets" );
 
-const Assets = module.exports = {
+module.exports = BossRenderer;
 
-    GRAPHICS: {
-        POWERUP      : `${assetRoot}images/sprites/spritesheet_powerups.png`,
-        SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,
-        BOSS         : `${assetRoot}images/sprites/spritesheet_boss.png`,
-        FX           : `${assetRoot}images/sprites/spritesheet_fx.png`,
-        SKY          : `${assetRoot}images/sprites/clouds.png`,
-        BULLET       : `${assetRoot}images/sprites/bullet.png`,
-        TILE         : `${assetRoot}images/sprites/tile.png`
-    },
+/**
+ * a renderer that represents the Ship actor on screen
+ *
+ * @constructor
+ * @param {Boss} boss
+ * @param {RenderController} renderController
+ */
+function BossRenderer( boss, renderController ) {
 
-    AUDIO: {
-        AU_EXPLOSION : `${assetRoot}sounds/explosion.mp3`,
-        AU_LASER     : `${assetRoot}sounds/laser.mp3`
-    }
-};
+    BossRenderer.super( this, "constructor", boss, renderController );
+
+    this.setBitmap( Assets.GRAPHICS.BOSS );
+    this.setSheet([
+
+            // Boss sprite (facing down)
+            { row: 0, col: 0, fpt: 1, amount: 1 }
+        ],
+        BossRenderer.TILE_SIZE.width,
+        BossRenderer.TILE_SIZE.height
+    );
+}
+ActorRenderer.extend( BossRenderer );
+
+/**
+ * dimensions of each tile in the spritesheet
+ *
+ * @public
+ * @type {{width: number, height: number}}
+ */
+BossRenderer.TILE_SIZE = { width: 128, height: 128 };

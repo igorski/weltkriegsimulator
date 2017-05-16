@@ -81,7 +81,7 @@ module.exports = {
     awardPoints( player, enemy ) {
         // award points per defeated enemy type, their weapon and behaviour
         // (a way to calculate the "class" of the Enemy)
-        const points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.behaviour * 500 );
+        const points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.pattern * 500 );
         player.score += points;
     },
 
@@ -132,6 +132,7 @@ function generateVerticalWave1( gameModel ) {
         gameModel.createEnemy( x, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
     }
 }
+
 function generateVerticalWave2( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
@@ -148,6 +149,17 @@ function generateVerticalWave2( gameModel ) {
 
         gameModel.createEnemy( 0, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
     }
+}
+
+function generateBoss( gameModel ) {
+    const MIN_ENERGY = 500;
+    const energy     = MIN_ENERGY + ( level * MIN_ENERGY );
+    const layer      = 1;
+
+    gameModel.createBoss(
+        gameModel.world.width / 2 - 64, -128,
+        0, .5, layer, energy
+    );
 }
 
 function progressLevel() {
@@ -180,3 +192,7 @@ function createPowerup( gameModel ) {
         0, 1, targetLayer, powerupType, powerupValue
     );
 }
+
+// QQQ: TODO: remove this
+
+window.boss = () => generateBoss( window.WKS.gameModel );

@@ -23,12 +23,12 @@
 "use strict";
 
 const Ship         = require( "./Ship" );
+const Patterns     = require( "../../definitions/Patterns" );
+const Weapons      = require( "../../definitions/Weapons" );
 const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
 
 const DEFAULT_ENERGY = 1;
-const DEFAULT_WEAPON = 0;
-
-const SHOOT_INTERVAL = 1500;
+const DEFAULT_WEAPON = Weapons.DEFAULT;
 
 module.exports = class Enemy extends Ship {
 
@@ -60,10 +60,19 @@ module.exports = class Enemy extends Ship {
         this.type = type;
 
         /**
+         * the interval (in milliseconds) at which an
+         * Enemy will fire its weapon
+         *
+         * @protected
+         * @type {number}
+         */
+        this._shootInterval = 1500;
+
+        /**
          * @public
          * @type {number}
          */
-        this.behaviour = 0;
+        this.pattern = Patterns.VERTICAL_ONLY;
     }
 
     /* public methods */
@@ -84,12 +93,12 @@ module.exports = class Enemy extends Ship {
 
         // fire a shot in case the shoot interval has passed
 
-        if ( this.lastShot < ( aTimestamp - SHOOT_INTERVAL )) {
+        if ( this.lastShot < ( aTimestamp - this._shootInterval )) {
             this.lastShot = Date.now();
             this.game.fireBullet( this );
         }
 
-        if ( this.behaviour === 0 )
+        if ( this.pattern === 0 )
             return super.update( aTimestamp );
 
         if ( !this.trajectoryCalculated )
@@ -107,23 +116,23 @@ module.exports = class Enemy extends Ship {
 
         const speedMultiplier = ( this.layer === 0 ) ? 1.33 : 1;
         let targetX, speed, ease;
-        switch ( this.behaviour ) {
+        switch ( this.pattern ) {
             default:
-            case 1:
+            case Patterns.WIDE_SINE:
                 this.x  = this.game.world.width * .25;
                 targetX = this.game.world.width * .75;
                 speed   = 1;
                 ease    = Sine.easeInOut;
                 break;
 
-            case 2:
+            case Patterns.SIDEWAYS_CUBE:
                 targetX = this.game.world.width - this.width;
                 speed   = 3;
                 ease    = Cubic.easeInOut;
                 break;
         }
 
-        // use TweenMax to provide the math functions and updates for the behaviour
+        // use TweenMax to provide the math functions and updates for the flight pattern
 
         this.trajectoryTween = TweenMax.to( this, speed * speedMultiplier, {
             x: targetX, repeat: Infinity, yoyo: true, ease: ease

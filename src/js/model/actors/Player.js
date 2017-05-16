@@ -165,7 +165,7 @@ module.exports = class Player extends Ship {
 
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
-        this.fireSpeed  = 5;
+        this.firSpeed =
         this.score      = 0;
         this.collidable = true;
 

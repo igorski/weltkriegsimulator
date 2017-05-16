@@ -29,6 +29,7 @@ const Actor         = require( "./actors/Actor" );
 const Ship          = require( "./actors/Ship" );
 const Player        = require( "./actors/Player" );
 const Enemy         = require( "./actors/Enemy" );
+const Boss          = require( "./actors/Boss" );
 const Bullet        = require( "./actors/Bullet" );
 const Powerup       = require( "./actors/Powerup" );
 const ActionFactory = require( "../factory/ActionFactory" );
@@ -171,17 +172,36 @@ const Game = module.exports = {
      * @param {number=} optEnergy
      * @param {number=} optWeapon
      * @param {number=} optType
-     * @param {number=} optBehaviour
+     * @param {number=} optPattern
      */
-    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = 0, optBehaviour = 0 ) {
+    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = 0, optPattern = 0 ) {
         const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
         if ( enemy ) {
             Game.addActor( enemy );
             enemy.reset();
-            enemy.energy    = optEnergy;
-            enemy.type      = optType;
-            enemy.behaviour = optBehaviour;
+            enemy.energy  = optEnergy;
+            enemy.type    = optType;
+            enemy.pattern = optPattern;
             WeaponFactory.applyToActor( optWeapon, enemy );
+        }
+    },
+
+    /**
+     * create a Boss
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} xSpeed
+     * @param {number} ySpeed
+     * @param {number} layer
+     * @param {number=} optEnergy
+     */
+    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1 ) {
+        const boss = getActorFromPool( bossPool, x, y, xSpeed, ySpeed, layer );
+        if ( boss ) {
+            Game.addActor( boss );
+            boss.reset();
+            boss.energy = optEnergy;
         }
     },
 
@@ -224,6 +244,9 @@ const Game = module.exports = {
 
         else if ( actor instanceof Powerup )
             powerupPool.push( actor );
+
+        else if ( actor instanceof Boss )
+            bossPool.push( actor );
 
         else if ( actor instanceof Enemy )
             enemyPool.push( actor );
@@ -353,9 +376,10 @@ Game.player = new Player( Game );
 
 const bulletPool  = new Array( 150 );
 const enemyPool   = new Array( 20 );
+const bossPool    = new Array( 5 );
 const powerupPool = new Array( 5 );
 
-[[ bulletPool, Bullet ], [ powerupPool, Powerup ], [ enemyPool, Enemy ]].forEach(( poolObject ) => {
+[[ bulletPool, Bullet ], [ enemyPool, Enemy ], [ bossPool, Boss ], [ powerupPool, Powerup ]].forEach(( poolObject ) => {
 
     const pool = poolObject[ 0 ], ActorType = poolObject[ 1 ];
     for ( let i = 0; i < pool.length; ++i ) {

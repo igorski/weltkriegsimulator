@@ -77,6 +77,14 @@ module.exports = class Ship extends Actor {
          */
         this.fireSpeed = 5;
 
+        /**
+         * whether this Ship can crash into others and die in the process :)
+         *
+         * @public
+         * @type {boolean}
+         */
+        this.crashable = true;
+
         /* initialization */
 
         this.width  = this.orgWidth  = ShipRenderer.TILE_SIZE.width;
@@ -109,15 +117,17 @@ module.exports = class Ship extends Actor {
         if ( !this.collidable )
             return;
 
+        // hit by a Bullet ?
         if ( actor instanceof Bullet ) {
             // colliding with others' Bullets
             if ( actor.owner !== this )
                 this.game.onBulletHit( actor, this );
         }
-        else if ( actor && actor.collidable ) {
-            // colliding with another Object, ouch!
+        else if ( this.crashable && actor && actor.collidable ) {
+            // crashed into another Object
             this.energy = 0;
-            if ( actor instanceof Ship ) {
+            // crashing into another chrashable Ship ?? -> destroy it too
+            if ( actor instanceof Ship && actor.crashable ) {
                 actor.energy = 0;
                 actor.die();
             }

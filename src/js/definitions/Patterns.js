@@ -22,23 +22,11 @@
  */
 "use strict";
 
-const Config    = require( "../config/Config" );
-const assetRoot = Config.getBaseURL() + "assets/";
-
-const Assets = module.exports = {
-
-    GRAPHICS: {
-        POWERUP      : `${assetRoot}images/sprites/spritesheet_powerups.png`,
-        SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,
-        BOSS         : `${assetRoot}images/sprites/spritesheet_boss.png`,
-        FX           : `${assetRoot}images/sprites/spritesheet_fx.png`,
-        SKY          : `${assetRoot}images/sprites/clouds.png`,
-        BULLET       : `${assetRoot}images/sprites/bullet.png`,
-        TILE         : `${assetRoot}images/sprites/tile.png`
-    },
-
-    AUDIO: {
-        AU_EXPLOSION : `${assetRoot}sounds/explosion.mp3`,
-        AU_LASER     : `${assetRoot}sounds/laser.mp3`
-    }
+/**
+ * Enemy flight patterns
+ */
+module.exports = {
+    VERTICAL_ONLY : 0,
+    WIDE_SINE     : 1,
+    SIDEWAYS_CUBE : 2
 };
