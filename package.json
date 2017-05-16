@@ -25,6 +25,6 @@
     "handlebars": "^3.0.3",
     "pubsub-js": "^1.5.0",
     "workerify": "^0.3.0",
-    "zcanvas": "^3.0.10"
+    "zcanvas": "^3.0.11"
   }
 }
