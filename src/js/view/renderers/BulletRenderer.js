@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,8 +22,9 @@
  */
 "use strict";
 
-const Bullet        = require( "../../model/actors/Bullet" );
 const ActorRenderer = require( "./ActorRenderer" );
+const Bullet        = require( "../../model/actors/Bullet" );
+const Assets        = require( "../../definitions/Assets" );
 
 module.exports = BulletRenderer;
 
@@ -36,6 +37,7 @@ module.exports = BulletRenderer;
  */
 function BulletRenderer( bullet, renderController ) {
     BulletRenderer.super( this, "constructor", bullet, renderController );
+    this.setBitmap( Assets.GRAPHICS.BULLET );
 }
 ActorRenderer.extend( BulletRenderer );
 
@@ -50,13 +52,28 @@ BulletRenderer.prototype.draw = function( aCanvasContext ) {
 
     this.sync(); // sync with model state
 
-    const actor      = this.actor,
-          bulletSize = ( actor.layer === 1 ) ? actor.orgWidth : actor.orgWidth * .5;
+    if ( !this._bitmapReady )
+        return;
 
-    aCanvasContext.fillStyle = "white";
-    aCanvasContext.fillRect(
-        this._bounds.left,
-        this._bounds.top,
-        bulletSize, bulletSize
-    );
+    // you could consider fillRect w/ fillStyle white but profiling shows
+    // that drawImage is orders of magnitude faster !!
+
+    switch ( this.actor.layer ) {
+        default:
+            aCanvasContext.drawImage(
+                this._bitmap,
+                .5 + this._bounds.left << 0,
+                .5 + this._bounds.top << 0
+            );
+            break;
+
+        case 0:
+            aCanvasContext.drawImage(
+                this._bitmap,
+                .5 + this._bounds.left << 0,
+                .5 + this._bounds.top  << 0,
+                5, 5
+            );
+            break;
+    }
 };

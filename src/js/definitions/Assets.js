@@ -22,21 +22,22 @@
  */
 "use strict";
 
-const Config  = require( "../config/Config" );
-const baseURL = Config.getBaseURL() + "assets/";
+const Config    = require( "../config/Config" );
+const assetRoot = Config.getBaseURL() + "assets/";
 
 const Assets = module.exports = {
 
     GRAPHICS: {
-        POWERUP : baseURL + "images/sprites/spritesheet_powerups.png",
-        SHIP    : baseURL + "images/sprites/spritesheet_ship.png",
-        FX      : baseURL + "images/sprites/spritesheet_fx.png",
-        SKY     : baseURL + "images/sprites/clouds.png",
-        TILE    : baseURL + "images/sprites/tile.png"
+        POWERUP      : `${assetRoot}images/sprites/spritesheet_powerups.png`,
+        SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,
+        FX           : `${assetRoot}images/sprites/spritesheet_fx.png`,
+        SKY          : `${assetRoot}images/sprites/clouds.png`,
+        BULLET       : `${assetRoot}images/sprites/bullet.png`,
+        TILE         : `${assetRoot}images/sprites/tile.png`
     },
 
     AUDIO: {
-        AU_EXPLOSION : baseURL + "sounds/explosion.mp3",
-        AU_LASER     : baseURL + "sounds/laser.mp3"
+        AU_EXPLOSION : `${assetRoot}sounds/explosion.mp3`,
+        AU_LASER     : `${assetRoot}sounds/laser.mp3`
     }
 };
