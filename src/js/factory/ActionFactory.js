@@ -92,7 +92,13 @@ module.exports = {
     awardPoints( player, enemy ) {
         // award points per defeated enemy type, their weapon and behaviour
         // (a way to calculate the "class" of the Enemy)
-        const points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.pattern * 500 );
+        let points;
+
+        if ( enemy instanceof Boss )
+            points = 25000 + ( 25000 * level );
+        else
+            points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.pattern * 500 );
+
         player.score += points;
     },
 

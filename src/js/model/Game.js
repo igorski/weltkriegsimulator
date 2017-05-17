@@ -88,7 +88,9 @@ const Game = module.exports = {
         ship.energy = Math.max( 0, ship.energy - bullet.damage );
         bullet.dispose(); // Bullets disappear on impact
 
-        if ( bullet.owner === Game.player ) {
+        // if Bullet came from Player and Ship has died, award points :)
+
+        if ( bullet.owner === Game.player && ship.energy === 0 ) {
             ActionFactory.awardPoints( Game.player, /** @type {Enemy} */ ( ship ));
             Pubsub.publish( Messages.UPDATE_SCORE, Game.player.score );
         }
