@@ -31,24 +31,24 @@ const Boss          = require( "../model/actors/Boss" );
  * bosses as well as other incrementally increasing magic
  *
  * "fn" describes the function to execute
- * "timeout" describes the timeout in milliseconds until
+ * "timeout" describes the timeout in seconds until
  * the next action in the list should be called
  *
  * @type {Array.<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
-    { fn: generateHorizontalWave, timeout: 5000 },
-    { fn: generateHorizontalWave, timeout: 8000 },
-    { fn: generateVerticalWave1,  timeout: 7500 },
-    { fn: createPowerup,          timeout: 3000 },
-    { fn: generateVerticalWave2,  timeout: 5000 },
-    { fn: generateVerticalWave1,  timeout: 5000 },
-    { fn: createPowerup,          timeout: 3000 },
-    { fn: generateHorizontalWave, timeout: 3000 },
-    { fn: generateVerticalWave2,  timeout: 5000 },
-    { fn: generateHorizontalWave, timeout: 3000 },
-    { fn: createEnergyPowerUp,    timeout: 5000 },    // energy before boss
-    { fn: generateBoss,           timeout: 2500 },
+    { fn: generateHorizontalWave, timeout: 5 },
+    { fn: generateHorizontalWave, timeout: 8 },
+    { fn: generateVerticalWave1,  timeout: 7.5 },
+    { fn: createPowerup,          timeout: 3 },
+    { fn: generateVerticalWave2,  timeout: 5 },
+    { fn: generateVerticalWave1,  timeout: 5 },
+    { fn: createPowerup,          timeout: 3 },
+    { fn: generateHorizontalWave, timeout: 3 },
+    { fn: generateVerticalWave2,  timeout: 5 },
+    { fn: generateHorizontalWave, timeout: 3 },
+    { fn: createEnergyPowerUp,    timeout: 5 },    // energy before boss
+    { fn: generateBoss,           timeout: 2.5 },
     { fn: () => true }            // when Boss is killed GameController will reset the action queue
 ];
 let queuedAction;
@@ -200,7 +200,7 @@ function createPowerup( gameModel, optType ) {
             break;
         // score
         case 2:
-            powerupValue = Random.byLevel( 2500, level, 2500 );
+            powerupValue = 1000 + ( level * 250 );
             break;
     }
 

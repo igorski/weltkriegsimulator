@@ -197,18 +197,17 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_START:
-            showLayerSwitchAnimation( payload );
-            setTimeout(() => checkLayerSwitchCollision( payload ), 500 );
+            showLayerSwitchAnimation( payload.actor, payload.layer );
+            TweenMax.delayedCall( .5, () => checkLayerSwitchCollision( payload.actor, payload.layer ));
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
 
-            const actor = /** @type {Actor} */ ( payload );
-            renderer    = actor.renderer;
+            renderer = payload.actor.renderer;
 
             if ( renderer ) {
                 removeRendererFromDisplayList( renderer );
-                addRendererToAppropriateLayer( actor.layer, renderer );
+                addRendererToAppropriateLayer( payload.layer, renderer );
             }
             break;
 
@@ -292,7 +291,14 @@ function rumble() {
 // TODO: does this belong here ? The tiles aren't actually Actors, but by
 // treating them as collidable objects, we just made them so...
 
-function checkLayerSwitchCollision( actor ) {
+function checkLayerSwitchCollision( actor, targetLayer ) {
+
+    // half way through the layer switch, move the actor to the target
+    // layer for a better visual effect
+
+    removeRendererFromDisplayList( actor.renderer );
+    addRendererToAppropriateLayer( targetLayer, actor.renderer );
+
     // check if the Actor has collided with the scenery during layer switch
     // (e.g. the tiles present on the middle layer)
 
@@ -315,17 +321,16 @@ function showExplodeAnimation( actor ) {
     }
 }
 
-function showLayerSwitchAnimation( actor ) {
+function showLayerSwitchAnimation( actor, targetLayer ) {
     // get FXRenderer from pool
     const renderer = FXRenderers.shift();
     if ( renderer ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.CLOUD );
-        addRendererToAppropriateLayer( actor.layer, renderer );
+        addRendererToAppropriateLayer( targetLayer, renderer );
     }
     if ( actor === player.actor ) {
-        const layer = Math.round( actor.layer );
-        animateBackgroundColor( layer );
-        audioModel.setFrequency(( layer === 0 ) ? 22050 : 880 );
+        animateBackgroundColor( targetLayer );
+        audioModel.setFrequency(( targetLayer === 0 ) ? 22050 : 880 );
     }
 }
 

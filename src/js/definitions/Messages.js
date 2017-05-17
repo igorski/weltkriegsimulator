@@ -37,8 +37,8 @@ module.exports = {
     ACTOR_ADDED                 : "S01", // payload is newly added Actor
     ACTOR_REMOVED               : "S02", // payload is Actor to remove
     ACTOR_EXPLODE               : "S03", // payload is Actor that is about to explode
-    ACTOR_LAYER_SWITCH_START    : "S04", // payload is Actor that is about to switch layer
-    ACTOR_LAYER_SWITCH_COMPLETE : "S05", // payload is Actor that has switched layers
+    ACTOR_LAYER_SWITCH_START    : "S04", // payload is { actor: Actor, layer: number }
+    ACTOR_LAYER_SWITCH_COMPLETE : "S05", // payload is { actor: Actor, layer: number }
     PLAYER_HIT                  : "S06", // payload is { player: Player, object: Actor }
     BOSS_DEFEATED               : "S07", // payload is Boss
     UPDATE_ENERGY               : "S08", // payload is Player

@@ -271,10 +271,11 @@ const Game = module.exports = {
      * to start switching layers
      *
      * @param {Actor} actor
+     * @param {number} targetLayer
      */
-    initiateActorLayerSwitch( actor ) {
+    initiateActorLayerSwitch( actor, targetLayer ) {
         Pubsub.publish(
-            Messages.ACTOR_LAYER_SWITCH_START, actor
+            Messages.ACTOR_LAYER_SWITCH_START, { actor: actor, layer: targetLayer }
         );
     },
 
@@ -283,10 +284,11 @@ const Game = module.exports = {
      * and completed its layer switch
      *
      * @param {Actor} actor
+     * @param {number} targetLayer
      */
-    completeActorLayerSwitch( actor ) {
+    completeActorLayerSwitch( actor, targetLayer ) {
         Pubsub.publish(
-            Messages.ACTOR_LAYER_SWITCH_COMPLETE, actor
+            Messages.ACTOR_LAYER_SWITCH_COMPLETE, { actor: actor, layer: targetLayer }
         );
     },
 
@@ -384,7 +386,7 @@ const Game = module.exports = {
 
 Game.player = new Player( Game );
 
-const bulletPool  = new Array( 150 );
+const bulletPool  = new Array( 200 );
 const enemyPool   = new Array( 20 );
 const bossPool    = new Array( 5 );
 const powerupPool = new Array( 5 );

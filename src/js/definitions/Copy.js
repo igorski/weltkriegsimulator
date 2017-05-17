@@ -29,7 +29,7 @@ const Copy = module.exports = {
      * w/ separate "title" and "body" string (for
      * instance for displaying messages w/ title header)
      */
-    BONUS  : `{0} pts. awarded`,
+    BONUS  : `+{0} pts.`,
     ENERGY : `Energy restored`,
     WEAPONS: [ `Bullet`, `Bullet spray`, `Laser` ],
     WEAPON : `Equipped {0}`,

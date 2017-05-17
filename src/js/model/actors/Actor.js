@@ -252,10 +252,12 @@ module.exports = class Actor {
             ],
             switchSpeed, () => {
                 self.layer = targetLayer; // overcome JS rounding errors
-                self._onLayerSwitch();
+                self._onLayerSwitch( targetLayer );
             },
             Cubic.easeOut, () => self._cacheHitbox()
         );
+        if ( switchSpeed !== 0 )
+            this.game.initiateActorLayerSwitch( this, targetLayer );
     }
 
     /**
@@ -291,10 +293,11 @@ module.exports = class Actor {
      * has completed
      *
      * @protected
+     * @param {number} targetLayer
      */
-    _onLayerSwitch() {
+    _onLayerSwitch( targetLayer ) {
         this.switching = false;
-        this.game.completeActorLayerSwitch( this );
+        this.game.completeActorLayerSwitch( this, targetLayer );
 
         // commit the offset to the final coordinate now
         // that the layer switch animation has completed

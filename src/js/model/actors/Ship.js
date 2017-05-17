@@ -94,19 +94,6 @@ module.exports = class Ship extends Actor {
     /* public methods */
 
     /**
-     * @public
-     * @param {number=} switchSpeed
-     */
-    switchLayer( switchSpeed = 1 ) {
-
-        if ( this.switching )
-            return;
-
-        super.switchLayer( switchSpeed );
-        this.game.initiateActorLayerSwitch( this );
-    }
-
-    /**
      * @override
      * @public
      * @param {Object=} actor optional Actor to collide with, if null

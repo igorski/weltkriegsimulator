@@ -90,8 +90,8 @@ module.exports = class Boss extends Enemy {
      */
     startAttack() {
 
-        clearTimeout( this.attackTimeout );
-        const timeout = 3000;
+        clearAttackTimeout( this );
+        const timeoutInSeconds = 3;
 
         switch ( this._attack ) {
             default:
@@ -122,11 +122,11 @@ module.exports = class Boss extends Enemy {
         if ( ++this._attack > 2 )
             this._attack = 0;
 
-        this.attackTimeout = setTimeout( this.startAttack.bind( this ), timeout );
+        this.attackTimeout = TweenMax.delayedCall( timeoutInSeconds, this.startAttack.bind( this ));
     }
 
     die() {
-        clearTimeout( this.attackTimeout );
+        clearAttackTimeout( this );
         super.die();
         this.game.onBossDeath();
     }
@@ -136,3 +136,12 @@ module.exports = class Boss extends Enemy {
         this._shootInterval = Infinity;
     }
 };
+
+/* internal methods */
+
+function clearAttackTimeout( boss ) {
+    if ( boss.attackTimeout ) {
+        boss.attackTimeout.kill();
+        boss.attackTimeout = null;
+    }
+}

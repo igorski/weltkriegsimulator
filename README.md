@@ -49,7 +49,7 @@ controllers are:
 
  * _GameController_ sets up the game, changes game world properties, delegates changes in game state (through _ActionFactory.js_)
  * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
- * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen
+ * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen as well as manage audio events
  * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
  
 The _views_ represent each of the screens used in the game. They are managed by their appropriate controllers.
@@ -93,6 +93,14 @@ learn about the API.
 
 Note zCanvas is _always_ on-screen, the different screens (e.g. Title, High Scores, etc.) are overlaid on top (see
 _ScreenController.js_).
+
+TweenMax in WKS
+---------------
+
+TweenMax is a powerful animation engine by Greensock. Within WKS it is used to perform easing functions on
+Actors which in turn are visualised as animations. Additionally, TweenMax is also a convenient timing engine, instead
+of relying on _setTimeout()_ (which fires when the browser tab is suspended and can drift), we use _TweenMax.delayedCall()_
+which is rock solid and can pause when the applications tab suspends.
 
 Object pooling
 --------------

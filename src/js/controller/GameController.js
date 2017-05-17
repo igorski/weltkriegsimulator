@@ -82,7 +82,7 @@ function handleBroadcast( type, payload ) {
  */
 function startActions( timeout ) {
     if ( typeof timeout === "number" )
-        actionTimeout = setTimeout( executeAction, timeout );
+        actionTimeout = TweenMax.delayedCall( timeout, executeAction );
 }
 
 function executeAction() {
@@ -91,5 +91,8 @@ function executeAction() {
 }
 
 function stopActions() {
-    clearTimeout( actionTimeout );
+    if ( actionTimeout ) {
+        actionTimeout.kill();
+        actionTimeout = null;
+    }
 }

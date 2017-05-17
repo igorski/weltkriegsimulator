@@ -96,25 +96,35 @@ const InputController = module.exports = {
     /**
      * cancels all horizontal movement
      * (reduces speed gradually to a stand still)
+     *
+     * @param {boolean=} cancelRight whether to cancel right movement when true
+     *                   or to cancel left movement when false
      */
-    cancelHorizontal() {
-        if ( activeMovement.left || activeMovement.right ) {
-            activeMovement.left  =
+    cancelHorizontal( cancelRight = false ) {
+        if ( cancelRight )
             activeMovement.right = false;
+        else
+            activeMovement.left = false;
+
+        if ( !activeMovement.left && !activeMovement.right && player.xSpeed !== 0 )
             ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
-        }
     },
 
     /**
      * cancels all vertical movement
      * (reduces speed gradually to a stand still)
+     *
+     * @param {boolean=} cancelUp whether to cancel up movement when true
+     *                   or to cancel down movement when false
      */
-    cancelVertical() {
-        if ( activeMovement.up || activeMovement.down ) {
-            activeMovement.up   =
+    cancelVertical( cancelUp = false ) {
+        if ( cancelUp )
+            activeMovement.up = false;
+        else
             activeMovement.down = false;
+
+        if ( !activeMovement.up && !activeMovement.down && player.ySpeed !== 0 )
             ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
-        }
     }
 };
 
@@ -186,12 +196,12 @@ function handleKeyUp( aEvent ) {
     switch ( aEvent.keyCode ) {
         case 38: // up
         case 40: // down
-            InputController.cancelVertical();
+            InputController.cancelVertical( aEvent.keyCode === 38 );
             break;
 
         case 39: // right
         case 37: // left
-            InputController.cancelHorizontal();
+            InputController.cancelHorizontal( aEvent.keyCode === 39 );
             break;
 
         case 32: // spacebar

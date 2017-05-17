@@ -130,9 +130,10 @@ module.exports = class Player extends Ship {
     /**
      * @override
      * @protected
+     * @param {number} targetLayer
      */
-    _onLayerSwitch() {
-        super._onLayerSwitch();
+    _onLayerSwitch( targetLayer ) {
+        super._onLayerSwitch( targetLayer );
         this.cacheBounds();
     }
 
