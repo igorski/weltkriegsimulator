@@ -109,7 +109,7 @@ const Game = module.exports = {
     },
 
     /**
-     * when player touches a Powerup
+     * when Player touches a Powerup
      *
      * @param {Powerup} powerup
      */
@@ -138,6 +138,14 @@ const Game = module.exports = {
                 Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "BONUS", powerupValue ));
                 break;
         }
+    },
+
+    /**
+     * when Boss is defeated by Player
+     * @param {Boss} boss
+     */
+    onBossDeath( boss ) {
+        Pubsub.publish( Messages.BOSS_DEFEATED, boss );
     },
 
     /**

@@ -41,7 +41,8 @@ module.exports = {
 
         [
             Messages.GAME_START,
-            Messages.GAME_OVER
+            Messages.GAME_OVER,
+            Messages.BOSS_DEFEATED
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
     }
@@ -60,6 +61,10 @@ function handleBroadcast( type, payload ) {
             startActions( ActionFactory.reset() );
             break;
 
+        case Messages.BOSS_DEFEATED:
+            executeAction();
+            break;
+
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
@@ -75,7 +80,8 @@ function handleBroadcast( type, payload ) {
  * update the game world and its properties
  */
 function startActions( timeout ) {
-    actionTimeout = setTimeout( executeAction, timeout );
+    if ( typeof timeout === "number" )
+        actionTimeout = setTimeout( executeAction, timeout );
 }
 
 function executeAction() {

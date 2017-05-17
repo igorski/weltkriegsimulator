@@ -128,6 +128,7 @@ module.exports = class Boss extends Enemy {
     die() {
         clearTimeout( this.attackTimeout );
         super.die();
+        this.game.onBossDeath();
     }
 
     reset() {

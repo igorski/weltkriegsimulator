@@ -26,7 +26,8 @@ const Random        = require( "../util/Random" );
 const WeaponFactory = require( "./WeaponFactory" );
 
 /**
- * list of actions
+ * list of actions that enqueue the enemy squadrons, powerups,
+ * bosses as well as other incrementally increasing magic
  *
  * "fn" describes the function to execute
  * "timeout" describes the timeout in milliseconds until
@@ -36,12 +37,21 @@ const WeaponFactory = require( "./WeaponFactory" );
  */
 const ACTION_LIST = [
     { fn: generateHorizontalWave, timeout: 5000 },
+    { fn: generateHorizontalWave, timeout: 8000 },
     { fn: generateVerticalWave1,  timeout: 7500 },
     { fn: createPowerup,          timeout: 3000 },
-    { fn: generateVerticalWave2,  timeout: 7500 },
-    { fn: progressLevel,          timeout: 1000 }
+    { fn: generateVerticalWave2,  timeout: 5000 },
+    { fn: generateVerticalWave1,  timeout: 5000 },
+    { fn: createPowerup,          timeout: 3000 },
+    { fn: generateHorizontalWave, timeout: 3000 },
+    { fn: generateVerticalWave2,  timeout: 5000 },
+    { fn: generateHorizontalWave, timeout: 3000 },
+    { fn: createEnergyPowerUp,    timeout: 5000 },    // energy before boss
+    { fn: generateBoss,           timeout: 2500 },
+    { fn: () => true }            // when Boss is killed GameController will reset the action queue
 ];
 let queuedAction;
+
 // as time progresses, we increase the level of the game, we can
 // use this as a multiplier for enemy properties or poewrups
 
@@ -60,14 +70,15 @@ module.exports = {
 
         queuedAction.fn( gameModel );
 
-        // proceed to next action (or first one in list)
-        // TODO when going back to beginning of list, increase
-        // game speed/difficulty ?
+        // proceed to next action
 
         let nextActionIndex = ACTION_LIST.indexOf( queuedAction ) + 1;
-        if ( nextActionIndex >= ACTION_LIST.length )
+        if ( nextActionIndex >= ACTION_LIST.length ) {
+            // or first one in list if we have completed one round
             nextActionIndex = 0;
-
+            // advance level (increments difficulty)
+            progressLevel();
+        }
         queuedAction = ACTION_LIST[ nextActionIndex ];
         return queuedAction.timeout;
     },
@@ -102,7 +113,7 @@ function generateHorizontalWave( gameModel ) {
     // always generate enemy on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
 
-    for ( let i = 0, total = 5; i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 5, level, 2 ); i < total; ++i ) {
 
         // wave 1 is spread horizontally across the screen
         const x      = ( gameModel.world.width / total ) * i;
@@ -121,7 +132,7 @@ function generateVerticalWave1( gameModel ) {
     const behaviour = 1;
     const tileSize  = 64;
 
-    for ( let i = 0, total = Random.range( 2, 10 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 3, level, 2 ); i < total; ++i ) {
 
         const x           = ( gameModel.world.width / 2 ) - tileSize / 2;
         const y           = -( i * ( tileSize * 4 ));
@@ -140,7 +151,7 @@ function generateVerticalWave2( gameModel ) {
     const behaviour = 2;
     const tileSize  = 64;
 
-    for ( let i = 0, total = Random.range( 5, 15 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 4, level, 2 ); i < total; ++i ) {
 
         const y           = -( i * ( tileSize * 3 ));
         const ySpeed      = 1 + ( i * .25 );
@@ -152,9 +163,8 @@ function generateVerticalWave2( gameModel ) {
 }
 
 function generateBoss( gameModel ) {
-    const MIN_ENERGY = 500;
-    const energy     = MIN_ENERGY + ( level * MIN_ENERGY );
-    const layer      = 1;
+    const energy = Random.byLevel( 150, level, 100 );
+    const layer  = 1; // always appears on top (can switch layers during battle)
 
     gameModel.createBoss(
         gameModel.world.width / 2 - 64, -128,
@@ -167,14 +177,14 @@ function progressLevel() {
     ++level;
 }
 
-function createPowerup( gameModel ) {
+function createPowerup( gameModel, optType ) {
     // always generate power up on other layer than the players current layer
     const targetLayer = ( gameModel.player.layer === 1 ) ? 0 : 1;
-    const powerupType = Random.range( 0, 2 );
+    const powerupType = ( typeof optType === "number" ) ? optType : Random.range( 0, 2 );
     let powerupValue;
     switch ( powerupType ) {
         // energy
-        case 0:
+        default:
             powerupValue = Random.range( 2, 2 + ( level ));
             break;
         // weapon
@@ -183,7 +193,7 @@ function createPowerup( gameModel ) {
             break;
         // score
         case 2:
-            powerupValue = 5000 + ( level * 5000 );
+            powerupValue = Random.byLevel( 2500, level, 2500 );
             break;
     }
 
@@ -193,6 +203,6 @@ function createPowerup( gameModel ) {
     );
 }
 
-// QQQ: TODO: remove this
-
-window.boss = () => generateBoss( window.WKS.gameModel );
+function createEnergyPowerUp( gameModel ) {
+    createPowerup( gameModel, 0 );
+}
