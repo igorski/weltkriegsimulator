@@ -62,6 +62,7 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.BOSS_DEFEATED:
+            // restart the action queue for the next "level"
             executeAction();
             break;
 
@@ -69,7 +70,7 @@ function handleBroadcast( type, payload ) {
             gameModel.active = false;
             stopActions();
             WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
-            // enqueue next track
+            // enqueue next music track so we have a different one ready for the next game
             audioModel.enqueueTrack();
             break;
     }

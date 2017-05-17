@@ -24,6 +24,7 @@
 
 const Random        = require( "../util/Random" );
 const WeaponFactory = require( "./WeaponFactory" );
+const Boss          = require( "../model/actors/Boss" );
 
 /**
  * list of actions that enqueue the enemy squadrons, powerups,
