@@ -33,7 +33,7 @@ let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
 let handler, tokens = [], dPadPointerId, player;
 
 let eventOffsetX, eventOffsetY;
-const MOVE_RAMP_UP_DURATION = .2;
+const MOVE_RAMP_UP_DURATION = .3;
 
 module.exports = {
 
