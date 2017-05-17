@@ -59,8 +59,10 @@ const InputController = module.exports = {
     left( speed = .5, killExisting = false ) {
         if ( !activeMovement.left ) {
             activeMovement.left = true;
-            if ( killExisting )
+            if ( killExisting ) {
+                activeMovement.right = false;
                 TweenMax.killTweensOf( player, true, { "xSpeed": true });
+            }
             ActorUtil.setDelayed( player, "xSpeed", -5, speed );
         }
     },
@@ -68,8 +70,10 @@ const InputController = module.exports = {
     right( speed = .5, killExisting = false ) {
         if ( !activeMovement.right ) {
             activeMovement.right = true;
-            if ( killExisting )
+            if ( killExisting ) {
+                activeMovement.left = false;
                 TweenMax.killTweensOf( player, true, { "xSpeed": true });
+            }
             ActorUtil.setDelayed( player, "xSpeed", 5, speed );
         }
     },
@@ -77,9 +81,10 @@ const InputController = module.exports = {
     up( speed = .5, killExisting = false ) {
         if ( !activeMovement.up ) {
             activeMovement.up = true;
-            if ( killExisting )
+            if ( killExisting ) {
+                activeMovement.down = false;
                 TweenMax.killTweensOf( player, true, { "ySpeed": true });
-
+            }
             ActorUtil.setDelayed( player, "ySpeed", -5, speed );
         }
     },
@@ -87,8 +92,10 @@ const InputController = module.exports = {
     down( speed = .5, killExisting = false ) {
         if ( !activeMovement.down ) {
             activeMovement.down = true;
-            if ( killExisting )
+            if ( killExisting ) {
+                activeMovement.up = false;
                 TweenMax.killTweensOf( player, true, { "ySpeed": true });
+            }
             ActorUtil.setDelayed( player, "ySpeed", 5, speed );
         }
     },

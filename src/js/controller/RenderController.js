@@ -330,7 +330,7 @@ function showLayerSwitchAnimation( actor, targetLayer ) {
     }
     if ( actor === player.actor ) {
         animateBackgroundColor( targetLayer );
-        audioModel.setFrequency(( targetLayer === 0 ) ? 22050 : 880 );
+        audioModel.setFrequency(( targetLayer === 1 ) ? 22050 : 990 );
     }
 }
 
@@ -342,7 +342,7 @@ function handleResize() {
     gameModel.player.cacheBounds();
 }
 
-function animateBackgroundColor( layer ) {
+function animateBackgroundColor( targetLayer ) {
     TweenMax.killTweensOf( canvas );
-    TweenMax.to( canvas, 2, { _bgColor: ( layer === 0 ) ? COLORS.TOP : COLORS.BOTTOM });
+    TweenMax.to( canvas, 2, { _bgColor: ( targetLayer === 1 ) ? COLORS.TOP : COLORS.BOTTOM });
 }

@@ -156,7 +156,7 @@ const Audio = module.exports = {
     setFrequency( value = 22050 ) {
         if ( audioContext ) {
             filter.frequency.cancelScheduledValues( audioContext.currentTime );
-            filter.frequency.linearRampToValueAtTime( value, audioContext.currentTime + 1.5 )
+            filter.frequency.linearRampToValueAtTime( value, audioContext.currentTime + 1.25 )
         }
     }
 };
