@@ -31,7 +31,7 @@ const TileRenderer    = require( "../view/renderers/TileRenderer" );
 const FXRenderer      = require( "../view/renderers/FXRenderer" );
 const Powerup         = require( "../model/actors/Powerup" );
 
-let gameModel, canvas, player, background;
+let audioModel, gameModel, canvas, player, background;
 
 // ideal width of the game, this is blown up by CSS
 // for a fullscreen experience, while maintaining the "pixel art" vibe
@@ -66,6 +66,9 @@ const RenderController = module.exports = {
 
     init( wks, container ) {
 
+        audioModel = wks.audioModel;
+        gameModel  = wks.gameModel;
+
         canvas = new zCanvas.canvas({
             width: IDEAL_WIDTH,
             height: IDEAL_WIDTH,
@@ -79,7 +82,7 @@ const RenderController = module.exports = {
         canvas.setBackgroundColor( COLORS.TOP );
         canvas.insertInPage( container );
 
-        setupGame( wks.gameModel );
+        setupGame();
 
         // add listeners for resize/orientation change so we can update the world
         // note: zCanvas will automatically stretch to fit (see its constructor)
@@ -123,9 +126,8 @@ const RenderController = module.exports = {
 
 /* private methods */
 
-function setupGame( aGameModel ) {
+function setupGame() {
 
-    gameModel = aGameModel;
     clearGame();
 
     player = RendererFactory.createRenderer(
@@ -224,9 +226,9 @@ function clearGame() {
         canvas.removeChild( player );
         canvas.removeChild( background );
     }
-    let amountOfActors = actors.length;
-    while ( amountOfActors-- ) {
-        actors[ amountOfActors ].dispose();
+    let i = actors.length;
+    while ( i-- ) {
+        actors[ i ].dispose();
         actors.splice( i, 1 );
     }
     layers.forEach(( layer ) => layer.dispose());
@@ -320,8 +322,11 @@ function showLayerSwitchAnimation( actor ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.CLOUD );
         addRendererToAppropriateLayer( actor.layer, renderer );
     }
-    if ( actor === player.actor )
-        animateBackgroundColor();
+    if ( actor === player.actor ) {
+        const layer = Math.round( actor.layer );
+        animateBackgroundColor( layer );
+        audioModel.setFrequency(( layer === 0 ) ? 22050 : 880 );
+    }
 }
 
 function handleResize() {
@@ -332,7 +337,7 @@ function handleResize() {
     gameModel.player.cacheBounds();
 }
 
-function animateBackgroundColor() {
+function animateBackgroundColor( layer ) {
     TweenMax.killTweensOf( canvas );
-    TweenMax.to( canvas, 2, { _bgColor: ( player.actor.layer === 0 ) ? COLORS.TOP : COLORS.BOTTOM });
+    TweenMax.to( canvas, 2, { _bgColor: ( layer === 0 ) ? COLORS.TOP : COLORS.BOTTOM });
 }

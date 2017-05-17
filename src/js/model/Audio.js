@@ -33,15 +33,17 @@ const EventHandler = require( "../util/EventHandler" );
 let inited        = false;
 let playing       = false;
 let sound         = null; // HTML <audio> element
+let acSound       = null; // WebAudio wrapper for sound Element
 let queuedTrackId = null;
-let handler       = new EventHandler();
-let explosion, laser;
+const handler     = new EventHandler();
+
+let audioContext, filter, masterBus, explosion, laser;
 
 const Audio = module.exports = {
 
     // mute Audio when in development mode
 
-    muted: window.location.href.indexOf( "localhost" ) > -1,
+    muted: false,//window.location.href.indexOf( "localhost" ) > -1,
 
     /**
      * @public
@@ -56,6 +58,9 @@ const Audio = module.exports = {
         });
         inited = true;
 
+        setupWebAudioAPI();
+
+        // prepare the sound effects
         explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
         laser     = createAudioElement( Assets.AUDIO.AU_LASER );
 
@@ -137,11 +142,22 @@ const Audio = module.exports = {
      */
     stop() {
         if ( sound ) {
+            if ( audioContext ) {
+                acSound.disconnect();
+                acSound = null;
+            }
             sound.pause();
             sound = null;
         }
         handler.dispose();
         playing = false;
+    },
+
+    setFrequency( value = 22050 ) {
+        if ( audioContext ) {
+            filter.frequency.cancelScheduledValues( audioContext.currentTime );
+            filter.frequency.linearRampToValueAtTime( value, audioContext.currentTime + 1.5 )
+        }
     }
 };
 
@@ -204,8 +220,14 @@ function _startPlayingEnqueuedTrack() {
 
 function createAudioElement( source ) {
     const element = document.createElement( "audio" );
+    element.crossOrigin = "anonymous";
     element.setAttribute( "src", source );
 
+    // connect sound to AudioContext when supported
+    if ( audioContext ) {
+        acSound = audioContext.createMediaElementSource( element );
+        acSound.connect( masterBus );
+    }
     return element;
 }
 
@@ -218,4 +240,24 @@ function nextTrack() {
 function playSoundFX( audioElement ) {
     audioElement.currentTime = 0;
     audioElement.play();
+}
+
+// modern browsers with WebAudio API can enjoy filtering effects on the audio
+// we use this to dull out the sound when switching layers
+
+function setupWebAudioAPI() {
+    const acConstructor = window.AudioContext || window.webkitAudioContext;
+    if ( typeof acConstructor !== "undefined" ) {
+        audioContext = new acConstructor();
+        // a "channel strip" to connect all audio nodes to
+        masterBus = audioContext.createGain();
+        // a low-pass filter to apply onto the master bus
+        filter = audioContext.createBiquadFilter();
+        filter.type = "lowpass";
+        masterBus.connect( filter );
+        // filter connects to the output so we can actually hear stuff
+        filter.connect( audioContext.destination );
+        // set default frequency of filter
+        Audio.setFrequency();
+    }
 }
