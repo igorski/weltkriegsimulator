@@ -117,14 +117,17 @@ module.exports = class Enemy extends Ship {
         const speedMultiplier = ( this.layer === 0 ) ? 1.33 : 1;
         let targetX, speed, ease;
         switch ( this.pattern ) {
+            // center sine movement
             default:
             case Patterns.WIDE_SINE:
-                this.x  = this.game.world.width * .25;
-                targetX = this.game.world.width * .75;
+                const size = Math.min( this.game.world.width, this.game.world.height ) * .5;
+                this.x  = this.game.world.width * .5 - size * .5;
+                targetX = this.game.world.width * .5 + size * .5;
                 speed   = 1;
                 ease    = Sine.easeInOut;
                 break;
 
+            // move between edges of screen
             case Patterns.SIDEWAYS_CUBE:
                 targetX = this.game.world.width - this.width;
                 speed   = 3;
