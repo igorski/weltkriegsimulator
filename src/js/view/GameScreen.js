@@ -189,9 +189,7 @@ function handleDPad( event ) {
 
         case "touchcancel":
         case "touchend":
-            InputController.cancelHorizontal( true );
             InputController.cancelHorizontal();
-            InputController.cancelVertical( true );
             InputController.cancelVertical();
             break;
     }

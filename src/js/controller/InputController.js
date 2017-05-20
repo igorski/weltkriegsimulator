@@ -103,35 +103,53 @@ const InputController = module.exports = {
     /**
      * cancels all horizontal movement
      * (reduces speed gradually to a stand still)
-     *
-     * @param {boolean=} cancelRight whether to cancel right movement when true
-     *                   or to cancel left movement when false
      */
-    cancelHorizontal( cancelRight = false ) {
-        if ( cancelRight )
-            activeMovement.right = false;
-        else
-            activeMovement.left = false;
+    cancelHorizontal() {
+        activeMovement.left  =
+        activeMovement.right = false;
 
-        if ( !activeMovement.left && !activeMovement.right && player.xSpeed !== 0 )
+        if ( player.xSpeed !== 0 ) {
+            TweenMax.killTweensOf( player, true, { "xSpeed": true });
             ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
+        }
     },
 
     /**
      * cancels all vertical movement
      * (reduces speed gradually to a stand still)
-     *
-     * @param {boolean=} cancelUp whether to cancel up movement when true
-     *                   or to cancel down movement when false
      */
-    cancelVertical( cancelUp = false ) {
-        if ( cancelUp )
-            activeMovement.up = false;
-        else
-            activeMovement.down = false;
+    cancelVertical() {
+        activeMovement.up   =
+        activeMovement.down = false;
 
-        if ( !activeMovement.up && !activeMovement.down && player.ySpeed !== 0 )
+        if ( player.ySpeed !== 0 ) {
+            TweenMax.killTweensOf( player, true, { "ySpeed": true });
             ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
+        }
+    },
+
+    cancelLeft() {
+        activeMovement.left = false;
+        if ( !activeMovement.right )
+            InputController.cancelHorizontal();
+    },
+
+    cancelRight() {
+        activeMovement.right = false;
+        if ( !activeMovement.left )
+            InputController.cancelHorizontal();
+    },
+
+    cancelUp() {
+        activeMovement.up = false;
+        if ( !activeMovement.down )
+            InputController.cancelVertical();
+    },
+
+    cancelDown() {
+        activeMovement.down = false;
+        if ( !activeMovement.up )
+            InputController.cancelVertical();
     }
 };
 
@@ -174,23 +192,27 @@ function handleKeyDown( aEvent ) {
                     player.startFiring();
                 break;
 
+            case 87: // W
             case 38: // up
                 InputController.up();
                 break;
 
+            case 83: // S
             case 40: // down
                 InputController.down();
                 break;
 
-            case 39: // right
-                InputController.right();
-                break;
-
+            case 65: // A
             case 37: // left
                 InputController.left();
                 break;
 
-            case 13: // enter
+            case 68: // D
+            case 39: // right
+                InputController.right();
+                break;
+
+            case 90: // Z
                 if ( !player.switching )
                     player.switchLayer();
                 break;
@@ -201,14 +223,24 @@ function handleKeyDown( aEvent ) {
 function handleKeyUp( aEvent ) {
 
     switch ( aEvent.keyCode ) {
+        case 87: // W
         case 38: // up
-        case 40: // down
-            InputController.cancelVertical( aEvent.keyCode === 38 );
+            InputController.cancelUp();
             break;
 
-        case 39: // right
+        case 83: // S
+        case 40: // down
+            InputController.cancelDown();
+            break;
+
+        case 65: // A
         case 37: // left
-            InputController.cancelHorizontal( aEvent.keyCode === 39 );
+            InputController.cancelLeft();
+            break;
+
+        case 68: // D
+        case 39: // right
+            InputController.cancelRight();
             break;
 
         case 32: // spacebar
