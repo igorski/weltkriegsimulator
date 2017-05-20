@@ -43,9 +43,11 @@ module.exports = {
     BOSS_DEFEATED               : "S07", // payload is Boss
     UPDATE_ENERGY               : "S08", // payload is Player
     UPDATE_SCORE                : "S09", // payload is numerical value of new score
-    SHOW_MESSAGE                : "S10", // payload is { title: string, body: string }
-    SHOW_TITLE_SCREEN           : "S11",
-    SHOW_ABOUT                  : "S12",
-    SHOW_HOW_TO_PLAY            : "S13",
-    SHOW_HIGHSCORES             : "S14"
+    SHOW_INSTRUCTIONS           : "S10",
+    INSTRUCTIONS_COMPLETE       : "S11",
+    SHOW_MESSAGE                : "S12", // payload is { title: string, body: string }
+    SHOW_TITLE_SCREEN           : "S13",
+    SHOW_ABOUT                  : "S14",
+    SHOW_HOW_TO_PLAY            : "S15",
+    SHOW_HIGHSCORES             : "S16"
 };

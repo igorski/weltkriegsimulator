@@ -64,7 +64,7 @@ const Settings = module.exports = {
      * @param {string} property
      * @param {*} value
      */
-    save( property, value ) {
+    set( property, value ) {
         configuration[ property ] = value;
         save();
     }
@@ -88,6 +88,7 @@ function save() {
         return true;
     }
     catch ( e ) {}
+    return false;
 }
 
 function createDefaultConfiguration() {

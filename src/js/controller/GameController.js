@@ -27,22 +27,24 @@ const Pubsub        = require( "pubsub-js" );
 const ActionFactory = require( "../factory/ActionFactory" );
 const Assets        = require( "../definitions/Assets" );
 
-let audioModel, gameModel;
+let audioModel, gameModel, settingsModel;
 let actionTimeout;
 
 module.exports = {
 
     init( wks ) {
 
-        audioModel = wks.audioModel;
-        gameModel  = wks.gameModel;
+        audioModel    = wks.audioModel;
+        gameModel     = wks.gameModel;
+        settingsModel = wks.settingsModel;
 
         // subscribe to pubsub system to receive and broadcast messages
 
         [
             Messages.GAME_START,
             Messages.GAME_OVER,
-            Messages.BOSS_DEFEATED
+            Messages.BOSS_DEFEATED,
+            Messages.INSTRUCTIONS_COMPLETE
 
         ].forEach(( msg ) => Pubsub.subscribe( msg, handleBroadcast ));
     }
@@ -57,13 +59,14 @@ function handleBroadcast( type, payload ) {
             gameModel.reset();
             // start the music
             audioModel.playEnqueuedTrack();
-            // start the game actions queue
-            startActions( ActionFactory.reset() );
-            break;
 
-        case Messages.BOSS_DEFEATED:
-            // restart the action queue for the next "level"
-            executeAction();
+            if ( !settingsModel.get( settingsModel.PROPS.HAS_PLAYED )) {
+                // show instructions first
+                TweenMax.delayedCall( .5, () => Pubsub.publish( Messages.SHOW_INSTRUCTIONS ));
+            }
+            else {
+                startActionQueue();
+            }
             break;
 
         case Messages.GAME_OVER:
@@ -72,8 +75,24 @@ function handleBroadcast( type, payload ) {
             WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
             // enqueue next music track so we have a different one ready for the next game
             audioModel.enqueueTrack();
+            // store the flag stating the player has played at least one game
+            settingsModel.set( settingsModel.PROPS.HAS_PLAYED, true );
+            break;
+
+        case Messages.BOSS_DEFEATED:
+            // restart the action queue for the next "level"
+            executeAction();
+            break;
+
+        case Messages.INSTRUCTIONS_COMPLETE:
+            startActionQueue();
             break;
     }
+}
+
+function startActionQueue() {
+    // start the game actions queue
+    startActions( ActionFactory.reset() );
 }
 
 /**

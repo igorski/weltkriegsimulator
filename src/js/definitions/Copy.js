@@ -36,14 +36,14 @@ const Copy = module.exports = {
 
     TUTORIAL: {
         KEYBOARD: [
-            `Move your ship using the arrow keys (or WASD)`,
-            `Press fire to shoot`,
-            `Use the Z key to change vertical plane`
+            { text: `Move your ship using the arrow keys (or WASD)`, timeout: 0 },
+            { text: `Press the spacebar to shoot`,                   timeout: 5 },
+            { text: `Use the Z key to change vertical plane`,        timeout: 4 }
         ],
         TOUCH: [
-            `Steer your ship using the control stick on the bottom left`,
-            `Press the right button to fire`,
-            `Press the left button to change vertical plane`
+            { text: `Steer your ship using the control stick on the bottom left`, timeout: 0 },
+            { text: `Press the right button to fire`,                             timeout: 5 },
+            { text: `Press the left button to change vertical plane`,             timeout: 4 }
         ]
     },
 

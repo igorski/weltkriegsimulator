@@ -23,6 +23,7 @@
 "use strict";
 
 const Config          = require( "../config/Config" );
+const Copy            = require( "../definitions/Copy" );
 const Messages        = require( "../definitions/Messages" );
 const Pubsub          = require( "pubsub-js" );
 const EventHandler    = require( "../util/EventHandler" );
@@ -85,6 +86,7 @@ module.exports = {
             // subscribe to messaging system
 
             [
+                Messages.SHOW_INSTRUCTIONS,
                 Messages.SHOW_MESSAGE,
                 Messages.UPDATE_SCORE,
                 Messages.UPDATE_ENERGY
@@ -111,6 +113,10 @@ module.exports = {
 function handleBroadcast( msg, payload ) {
 
     switch ( msg ) {
+        case Messages.SHOW_INSTRUCTIONS:
+            showInstructions();
+            break;
+
         case Messages.SHOW_MESSAGE:
             messageTitleUI.innerHTML = payload.title;
             messageBodyUI.innerHTML  = payload.body;
@@ -235,4 +241,27 @@ function handleResize( event ) {
     DPAD_RIGHT  = hCenter + horizontalDelta;
     DPAD_TOP    = vCenter - verticalDelta;
     DPAD_BOTTOM = vCenter + verticalDelta;
+}
+
+function showInstructions() {
+    const docs = Config.HAS_TOUCH_CONTROLS ? Copy.TUTORIAL.TOUCH : Copy.TUTORIAL.KEYBOARD;
+
+    const el = document.createElement( "div" );
+    el.setAttribute( "id", "instructions" );
+    document.body.appendChild( el );
+
+    const tl = new TimelineMax();
+    tl.add( TweenMax.delayedCall( 1, () => true ));
+
+    let lastDisplayedDoc = -1;
+    for ( let i = 0, l = docs.length; i < l; ++i ) {
+        tl.add( TweenMax.delayedCall( docs[ i ].timeout, () => {
+            el.innerHTML = docs[ ++lastDisplayedDoc ].text;
+        }));
+    }
+    // all done, start the game actions queue
+    tl.add( TweenMax.delayedCall( 4, () => {
+        document.body.removeChild( el );
+        Pubsub.publish( Messages.INSTRUCTIONS_COMPLETE );
+    }));
 }
