@@ -41,9 +41,7 @@ let audioContext, filter, masterBus, explosion, laser;
 
 const Audio = module.exports = {
 
-    // mute Audio when in development mode
-
-    muted: window.location.href.indexOf( "localhost" ) > -1,
+    muted: false,
 
     /**
      * @public

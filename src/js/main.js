@@ -43,6 +43,7 @@ const WKS = window.WKS = {
     screenController : require( "./controller/ScreenController" ),
     audioModel       : require( "./model/Audio" ),
     gameModel        : require( "./model/Game" ),
+    settingsModel    : require( "./model/Settings" ),
     highScoresModel  : require( "./model/HighScores" ),
     pubSub           : PubSub
 };
@@ -66,13 +67,22 @@ AssetService.prepare().
             });
     });
 
-// initialize models and controllers, this starts the app
+// start the application
 
 function init() {
 
     document.body.classList.remove( "loading" );
 
+    // initialize models
+
+    WKS.settingsModel.init();
     WKS.highScoresModel.init();
+
+    // apply stored settings
+
+    WKS.audioModel.muted = !WKS.settingsModel.get( WKS.settingsModel.PROPS.MUSIC_ON );
+
+    // initialize controllers
 
     WKS.gameController.init( WKS );
     WKS.inputController.init( WKS );

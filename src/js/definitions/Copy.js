@@ -34,6 +34,19 @@ const Copy = module.exports = {
     WEAPONS: [ `Bullet`, `Bullet spray`, `Laser` ],
     WEAPON : `Equipped {0}`,
 
+    TUTORIAL: {
+        KEYBOARD: [
+            `Move your ship using the arrow keys (or WASD)`,
+            `Press fire to shoot`,
+            `Use the Z key to change vertical plane`
+        ],
+        TOUCH: [
+            `Steer your ship using the control stick on the bottom left`,
+            `Press the right button to fire`,
+            `Press the left button to change vertical plane`
+        ]
+    },
+
     MUSIC: {
         title: `Now playing:`,
         body : `{0} by {1}`
