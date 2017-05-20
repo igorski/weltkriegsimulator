@@ -301,14 +301,14 @@ function checkLayerSwitchCollision( actor, targetLayer ) {
 
     // check if the Actor has collided with the scenery during layer switch
     // (e.g. the tiles present on the middle layer)
+    // pixel transparency check to ensure we're not moving through holes in the tiles
 
-    if ( actor === gameModel.player &&
-         // pixel transparency check to ensure we're not moving through holes in the tiles
-         zCanvas.collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
-
+    if ( zCanvas.collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
         actor.layer = 1;
         actor.die();
-        gameModel.onPlayerHit( null );
+
+        if ( actor === gameModel.player )
+            gameModel.onPlayerHit( null );
     }
 }
 

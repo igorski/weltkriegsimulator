@@ -97,7 +97,7 @@ module.exports = class Boss extends Enemy {
             default:
                 // start spraying bullets
                 this.pattern = Patterns.SIDEWAYS_CUBE;
-                this.weapon = Weapons.SPRAY;
+                this.weapon  = Weapons.SPRAY;
                 this._shootInterval = 250;
                 break;
 
@@ -131,7 +131,13 @@ module.exports = class Boss extends Enemy {
         this.game.onBossDeath();
     }
 
+    dispose() {
+        clearAttackTimeout( this );
+        super.dispose();
+    }
+
     reset() {
+        clearAttackTimeout( this );
         super.reset();
         this._shootInterval = Infinity;
     }

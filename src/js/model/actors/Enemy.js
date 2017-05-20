@@ -138,10 +138,31 @@ module.exports = class Enemy extends Ship {
         // use TweenMax to provide the math functions and updates for the flight pattern
 
         this.trajectoryTween = TweenMax.to( this, speed * speedMultiplier, {
-            x: targetX, repeat: Infinity, yoyo: true, ease: ease
+            x: targetX, repeat: Infinity, yoyo: true, ease: ease, onRepeat: () => {
+
+                // enemies moving in a pattern are allowed to switch layer
+                // to target the Player
+
+                if ( this.game.player.layer !== this.layer )
+                    this.switchLayer();
+            }
         });
 
         this.trajectoryCalculated = true;
+    }
+
+    /**
+     * @override
+     * @public
+     */
+    die() {
+        killTrajectory( this );
+        super.die();
+    }
+
+    dispose() {
+        killTrajectory( this );
+        super.die();
     }
 
     /**
@@ -152,13 +173,17 @@ module.exports = class Enemy extends Ship {
         this.weapon     = DEFAULT_WEAPON;
         this.collidable = true;
 
-        if ( this.trajectoryTween ) {
-            this.trajectoryTween.kill();
-            this.trajectoryTween = null;
-        }
-        this.trajectoryCalculated = false;
+        killTrajectory( this );
 
         if ( this.renderer )
             this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_1_IDLE );
     }
 };
+
+function killTrajectory( enemy ) {
+    if ( enemy.trajectoryTween ) {
+        enemy.trajectoryTween.kill();
+        enemy.trajectoryTween = null;
+    }
+    enemy.trajectoryCalculated = false;
+}

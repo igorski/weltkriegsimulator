@@ -123,20 +123,29 @@ module.exports = class Ship extends Actor {
             this.die();
     }
 
-    die() {
-        // reset layer switching state in case
-        // this Ship died during a layer switch operation
+    dispose() {
+        killLayerSwitch( this );
+        super.dispose();
+    }
 
-        if ( this.switching ) {
-            TweenMax.killTweensOf( this );
-            this.switching = false;
-            this.layer     = 1;
-            this.width     = this.orgWidth;
-            this.height    = this.orgHeight;
-        }
+    die() {
+        killLayerSwitch( this );
         this.energy     = 0;
         this.collidable = false;
 
         this.game.removeActor( this, true );
     }
 };
+
+// reset layer switching state in case
+// this Ship died during a layer switch operation
+
+function killLayerSwitch( ship ) {
+    if ( ship.switching ) {
+        TweenMax.killTweensOf( ship );
+        ship.switching = false;
+        ship.layer     = 1;
+        ship.width     = ship.orgWidth;
+        ship.height    = ship.orgHeight;
+    }
+}

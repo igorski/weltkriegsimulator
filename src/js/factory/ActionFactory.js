@@ -23,6 +23,7 @@
 "use strict";
 
 const Random        = require( "../util/Random" );
+const Patterns      = require( "../definitions/Patterns" );
 const WeaponFactory = require( "./WeaponFactory" );
 const Boss          = require( "../model/actors/Boss" );
 
@@ -39,13 +40,13 @@ const Boss          = require( "../model/actors/Boss" );
 const ACTION_LIST = [
     { fn: generateHorizontalWave, timeout: 5 },
     { fn: generateHorizontalWave, timeout: 8 },
-    { fn: generateVerticalWave1,  timeout: 7.5 },
+    { fn: generateWideSineSquadron,  timeout: 7.5 },
     { fn: createPowerup,          timeout: 3 },
-    { fn: generateVerticalWave2,  timeout: 5 },
-    { fn: generateVerticalWave1,  timeout: 5 },
+    { fn: generateSidewaysSquadron,  timeout: 5 },
+    { fn: generateWideSineSquadron,  timeout: 5 },
     { fn: createPowerup,          timeout: 3 },
     { fn: generateHorizontalWave, timeout: 3 },
-    { fn: generateVerticalWave2,  timeout: 5 },
+    { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateHorizontalWave, timeout: 3 },
     { fn: createEnergyPowerUp,    timeout: 5 },    // energy before boss
     { fn: generateBoss,           timeout: 2.5 },
@@ -132,12 +133,12 @@ function generateHorizontalWave( gameModel ) {
     }
 }
 
-function generateVerticalWave1( gameModel ) {
+function generateWideSineSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
-    const type      = Random.range( 1, 3 );
-    const behaviour = 1;
-    const tileSize  = 64;
+    const type     = Random.range( 1, 3 );
+    const pattern  = Patterns.WIDE_SINE;
+    const tileSize = 64;
 
     for ( let i = 0, total = Random.byLevel( 3, level, 2 ); i < total; ++i ) {
 
@@ -147,16 +148,16 @@ function generateVerticalWave1( gameModel ) {
         const targetLayer = Random.bool() ? 1 : 0;
         const energy      = Random.bool() ? 1 : 2;
 
-        gameModel.createEnemy( x, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
+        gameModel.createEnemy( x, y, 0, ySpeed, targetLayer, energy, 0, type, pattern );
     }
 }
 
-function generateVerticalWave2( gameModel ) {
+function generateSidewaysSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
-    const type      = Random.range( 1, 3 );
-    const behaviour = 2;
-    const tileSize  = 64;
+    const type     = Random.range( 1, 3 );
+    const pattern  = Patterns.SIDEWAYS_CUBE;
+    const tileSize = 64;
 
     for ( let i = 0, total = Random.byLevel( 4, level, 2 ); i < total; ++i ) {
 
@@ -165,7 +166,7 @@ function generateVerticalWave2( gameModel ) {
         const targetLayer = Random.bool() ? 1 : 0;
         const energy      = Random.bool() ? 1 : 2;
 
-        gameModel.createEnemy( 0, y, 0, ySpeed, targetLayer, energy, 0, type, behaviour );
+        gameModel.createEnemy( 0, y, 0, ySpeed, targetLayer, energy, 0, type, pattern );
     }
 }
 
