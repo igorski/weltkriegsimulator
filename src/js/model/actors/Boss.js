@@ -109,7 +109,6 @@ module.exports = class Boss extends Enemy {
 
             case 2:
                 // start firing laser
-                this._attack = 0;
                 this._shootInterval = 17;
                 break;
         }
