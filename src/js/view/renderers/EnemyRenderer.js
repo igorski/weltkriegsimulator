@@ -61,6 +61,9 @@ EnemyRenderer.prototype.setSheetForEnemy = function() {
         case 3:
             animation = ShipRenderer.ANIMATION.ENEMY_3_IDLE;
             break;
+        case 4:
+            animation = ShipRenderer.ANIMATION.MINE;
+            break;
     }
     this.switchAnimation( animation );
 };

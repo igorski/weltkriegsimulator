@@ -24,6 +24,7 @@
 
 const Random        = require( "../util/Random" );
 const Patterns      = require( "../definitions/Patterns" );
+const Weapons       = require( "../definitions/Weapons" );
 const WeaponFactory = require( "./WeaponFactory" );
 const Boss          = require( "../model/actors/Boss" );
 
@@ -44,10 +45,12 @@ const ACTION_LIST = [
     { fn: createPowerup,             timeout: 3 },
     { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateWideSineSquadron,  timeout: 5 },
+    { fn: generateMine,              timeout: 2 },
     { fn: createWeapon,              timeout: 3 },
     { fn: generateHorizontalWave,    timeout: 3 },
     { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateHorizontalWave,    timeout: 3 },
+    { fn: generateMine,              timeout: 2 },
     { fn: createEnergyPowerUp,       timeout: 5 },    // energy before boss
     { fn: generateBoss,              timeout: 2.5 },
     { fn: () => true }            // when Boss is killed GameController will reset the action queue
@@ -152,6 +155,23 @@ function generateWideSineSquadron( gameModel ) {
     }
 }
 
+function generateMine( gameModel ) {
+    // always generate mines on same layer as the players current layer
+    const targetLayer = gameModel.player.layer;
+    const mineType    = 4;
+
+    for ( let i = 0, total = Random.byLevel( 2, level, 1 ); i < total; ++i ) {
+
+        // wave 1 is spread horizontally across the screen
+        const x      = ( gameModel.world.width / total ) * i;
+        const y      = -( 100 + i * 100 );
+        const xSpeed = 0;
+        const ySpeed = 1;
+
+        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, 1, Weapons.SPRAY, mineType );
+    }
+}
+
 function generateSidewaysSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
@@ -171,14 +191,18 @@ function generateSidewaysSquadron( gameModel ) {
 }
 
 function generateBoss( gameModel ) {
-    const energy = Random.byLevel( 150, level, 100 );
+    const energy = Random.byLevel( 75, level, 100 );
     const layer  = 1; // always appears on top (can switch layers during battle)
+    const type   = level % 2; // 2 types available in total (see spritesheet)
 
     gameModel.createBoss(
         gameModel.world.width / 2 - 64, -128,
-        0, .5, layer, energy
+        0, .5, layer, energy, type
     );
 }
+
+// QQQ
+window.boss = () => generateBoss( WKS.gameModel );
 
 function progressLevel() {
     // increase the level of the game

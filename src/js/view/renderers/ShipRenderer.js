@@ -49,7 +49,10 @@ function ShipRenderer( ship, renderController ) {
             // Enemy ships (facing down)
             { row: 0, col: 1, fpt: 1, amount: 1 },
             { row: 1, col: 0, fpt: 1, amount: 1 },
-            { row: 1, col: 1, fpt: 1, amount: 1 }
+            { row: 1, col: 1, fpt: 1, amount: 1 },
+
+            // Mine
+            { row: 0, col: 2, fpt: 1, amount: 1 }
         ],
         ShipRenderer.TILE_SIZE.width,
         ShipRenderer.TILE_SIZE.height
@@ -78,5 +81,6 @@ ShipRenderer.ANIMATION = {
     PLAYER_IDLE  : 0,
     ENEMY_1_IDLE : 1,
     ENEMY_2_IDLE : 2,
-    ENEMY_3_IDLE : 3
+    ENEMY_3_IDLE : 3,
+    MINE         : 4
 };

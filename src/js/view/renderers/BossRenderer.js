@@ -42,9 +42,9 @@ function BossRenderer( boss, renderController ) {
 
     this.setBitmap( Assets.GRAPHICS.BOSS );
     this.setSheet([
-
-            // Boss sprite (facing down)
-            { row: 0, col: 0, fpt: 1, amount: 1 }
+            // Boss sprites (facing down)
+            { row: 0, col: 0, fpt: 1, amount: 1 },
+            { row: 0, col: 1, fpt: 1, amount: 1 }
         ],
         BossRenderer.TILE_SIZE.width,
         BossRenderer.TILE_SIZE.height
@@ -59,3 +59,52 @@ ActorRenderer.extend( BossRenderer );
  * @type {{width: number, height: number}}
  */
 BossRenderer.TILE_SIZE = { width: 128, height: 128 };
+
+/* public methods */
+
+/**
+ * @override
+ * @public
+ * @param {CanvasRenderingContext2D} aCanvasContext
+ */
+BossRenderer.prototype.draw = function( aCanvasContext ) {
+
+    this.sync(); // sync with model state
+
+    if ( !this.canvas )
+        return;
+
+    if ( this._bitmapReady ) {
+
+        // we override the draw method as we have different size sprites within the tile sheet
+        // TODO: is this something we want to be able to solve from zCanvas itself ? ;)
+
+        const bounds   = this._bounds,
+              aniProps = this._animation;
+
+        // spritesheet defined, draw tile
+
+        const width  = ( aniProps.tileWidth )  ? aniProps.tileWidth  : ( .5 + bounds.width )  << 0;
+        const height = ( aniProps.tileHeight ) ? aniProps.tileHeight : ( .5 + bounds.height ) << 0;
+
+        aCanvasContext.drawImage(
+            this._bitmap,
+            aniProps.col      * width,  // tile x offset
+            aniProps.type.row * height, // tile y offset
+            ( aniProps.col === 0 ) ? width : width * 2,
+            height,
+            ( .5 + bounds.left )   << 0,
+            ( .5 + bounds.top )    << 0,
+            ( .5 + ( ( aniProps.col === 0 ) ? bounds.width : bounds.width * 2 ))  << 0,
+            ( .5 + bounds.height ) << 0
+        );
+    }
+};
+
+/**
+ * @public
+ */
+BossRenderer.prototype.setSheetForBoss = function() {
+    // type has 1:1 relation ship to the sheet for the Boss
+    this.switchAnimation( this.actor.type );
+};

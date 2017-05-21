@@ -179,6 +179,7 @@ function handleBroadcast( type, payload ) {
             renderer = RendererFactory.createRenderer(
                 payload, RenderController
             );
+            RendererFactory.setSheetForRenderer( payload, renderer );
             addRendererToAppropriateLayer( /** @type {Actor} */ ( payload ).layer, renderer );
             actors.push( payload );
             break;

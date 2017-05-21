@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Igor Zinken 2016 - http://www.igorski.nl
+ * Igor Zinken 2016-2017 - http://www.igorski.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -44,23 +44,16 @@ module.exports = {
      * create the renderer to represent given Actor on-screen
      *
      * @public
-     * @param {Object} actor
+     * @param {Actor} actor
      * @param {RenderController} renderController
-     * @return {zSprite}
+     * @return {Sprite}
      */
     createRenderer( actor, renderController ) {
 
         // return pooled renderer if one already existed
 
-        if ( actor.pooled && actor.renderer ) {
-            if ( actor instanceof Enemy )
-                actor.renderer.setSheetForEnemy();
-
-            if ( actor instanceof Powerup )
-                actor.renderer.setSheetForPowerup();
-
+        if ( actor.pooled && actor.renderer )
             return actor.renderer;
-        }
 
         if ( actor instanceof Bullet ) {
             return new BulletRenderer( /** @type {Bullet} */ ( actor ), renderController );
@@ -78,5 +71,24 @@ module.exports = {
             return new ShipRenderer( /** @type {Ship} */ ( actor ), renderController );
         }
         throw new Error( "could not create renderer for " + actor );
+    },
+
+    /**
+     * ensure the appropriate spritesheet is used for given renderer
+     *
+     * @public
+     * @param {Actor} actor
+     * @param {Sprite} renderer
+     */
+    setSheetForRenderer( actor, renderer ) {
+
+        if ( actor instanceof Boss )
+            renderer.setSheetForBoss();
+
+        else if ( actor instanceof Enemy )
+            renderer.setSheetForEnemy();
+
+        else if ( actor instanceof Powerup )
+            renderer.setSheetForPowerup();
     }
 };

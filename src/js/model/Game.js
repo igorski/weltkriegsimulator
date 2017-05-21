@@ -188,12 +188,12 @@ const Game = module.exports = {
     createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = 0, optPattern = 0 ) {
         const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
         if ( enemy ) {
-            Game.addActor( enemy );
             enemy.reset();
-            enemy.energy  = optEnergy;
             enemy.type    = optType;
+            enemy.energy  = optEnergy;
             enemy.pattern = optPattern;
             WeaponFactory.applyToActor( optWeapon, enemy );
+            Game.addActor( enemy );
         }
     },
 
@@ -206,13 +206,15 @@ const Game = module.exports = {
      * @param {number} ySpeed
      * @param {number} layer
      * @param {number=} optEnergy
+     * @param {number=} optType
      */
-    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1 ) {
+    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optType = 0 ) {
         const boss = getActorFromPool( bossPool, x, y, xSpeed, ySpeed, layer );
         if ( boss ) {
-            Game.addActor( boss );
             boss.reset();
             boss.energy = optEnergy;
+            boss.type   = optType;
+            Game.addActor( boss );
         }
     },
 
