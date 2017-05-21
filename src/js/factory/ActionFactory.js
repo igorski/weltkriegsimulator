@@ -32,24 +32,24 @@ const Boss          = require( "../model/actors/Boss" );
  * bosses as well as other incrementally increasing magic
  *
  * "fn" describes the function to execute
- * "timeout" describes the timeout in seconds until
+ * "timeout" describes the timeout (in seconds) until
  * the next action in the list should be called
  *
  * @type {Array.<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
-    { fn: generateHorizontalWave, timeout: 5 },
-    { fn: generateHorizontalWave, timeout: 8 },
+    { fn: generateHorizontalWave,    timeout: 5 },
+    { fn: generateHorizontalWave,    timeout: 8 },
     { fn: generateWideSineSquadron,  timeout: 7.5 },
-    { fn: createPowerup,          timeout: 3 },
+    { fn: createPowerup,             timeout: 3 },
     { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateWideSineSquadron,  timeout: 5 },
-    { fn: createPowerup,          timeout: 3 },
-    { fn: generateHorizontalWave, timeout: 3 },
+    { fn: createWeapon,              timeout: 3 },
+    { fn: generateHorizontalWave,    timeout: 3 },
     { fn: generateSidewaysSquadron,  timeout: 5 },
-    { fn: generateHorizontalWave, timeout: 3 },
-    { fn: createEnergyPowerUp,    timeout: 5 },    // energy before boss
-    { fn: generateBoss,           timeout: 2.5 },
+    { fn: generateHorizontalWave,    timeout: 3 },
+    { fn: createEnergyPowerUp,       timeout: 5 },    // energy before boss
+    { fn: generateBoss,              timeout: 2.5 },
     { fn: () => true }            // when Boss is killed GameController will reset the action queue
 ];
 let queuedAction;
@@ -209,6 +209,10 @@ function createPowerup( gameModel, optType ) {
         Math.round( Math.random() * gameModel.world.width ), -50,
         0, 1, targetLayer, powerupType, powerupValue
     );
+}
+
+function createWeapon( gameModel ) {
+    createPowerup( gameModel, 1 );
 }
 
 function createEnergyPowerUp( gameModel ) {

@@ -22,9 +22,11 @@
  */
 "use strict";
 
-const Ship         = require( "./Ship" );
-const Powerup      = require( "./Powerup" );
-const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
+const Ship          = require( "./Ship" );
+const Powerup       = require( "./Powerup" );
+const ShipRenderer  = require( "../../view/renderers/ShipRenderer" );
+const Weapons       = require( "../../definitions/Weapons" );
+const WeaponFactory = require( "../../factory/WeaponFactory" );
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;
@@ -138,6 +140,25 @@ module.exports = class Player extends Ship {
     }
 
     /**
+     * some weapons are so awesome, we don't grant you the pleasure
+     * of having them forever, when this timer expires, normal weapon
+     * is used
+     */
+    setWeaponTimer() {
+        this.killWeaponTimer();
+        this._weaponTimer = TweenMax.delayedCall( 15, () => {
+            WeaponFactory.applyToActor( Weapons.DEFAULT, this );
+        });
+    }
+
+    killWeaponTimer() {
+        if ( this._weaponTimer ) {
+            this._weaponTimer.kill();
+            this._weaponTimer = null;
+        }
+    }
+
+    /**
      * @override
      * @public
      * @param {Object=} actor
@@ -153,6 +174,10 @@ module.exports = class Player extends Ship {
         }
     }
 
+    /**
+     * @override
+     * @public
+     */
     die() {
         this.stopFiring();
         super.die();
@@ -163,10 +188,11 @@ module.exports = class Player extends Ship {
      */
     reset() {
         this.stopFiring();
+        this.killWeaponTimer();
 
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
-        this.firSpeed =
+        this.fireSpeed  = 5;
         this.score      = 0;
         this.collidable = true;
 

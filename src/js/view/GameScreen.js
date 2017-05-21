@@ -29,7 +29,7 @@ const Pubsub          = require( "pubsub-js" );
 const EventHandler    = require( "../util/EventHandler" );
 const InputController = require( "../controller/InputController" );
 
-let energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
+let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
 let handler, tokens = [], dPadPointerId, player;
 
@@ -42,6 +42,7 @@ module.exports = {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
         player = wks.gameModel.player;
+        container = wrapper;
 
         templateService.render( "Screen_Game", wrapper, {
 
@@ -248,7 +249,7 @@ function showInstructions() {
 
     const el = document.createElement( "div" );
     el.setAttribute( "id", "instructions" );
-    document.body.appendChild( el );
+    container.appendChild( el );
 
     const tl = new TimelineMax();
     tl.add( TweenMax.delayedCall( 1, () => true ));
@@ -261,7 +262,10 @@ function showInstructions() {
     }
     // all done, start the game actions queue
     tl.add( TweenMax.delayedCall( 4, () => {
-        document.body.removeChild( el );
+        // null check as the player can die during the instructions ;)
+        // (leads to this screen to have been removed)
+        if ( el )
+            container.removeChild( el );
         Pubsub.publish( Messages.INSTRUCTIONS_COMPLETE );
     }));
 }

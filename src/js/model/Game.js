@@ -128,6 +128,7 @@ const Game = module.exports = {
             // weapon
             case 1:
                 WeaponFactory.applyToActor( powerupValue, player );
+                player.setWeaponTimer(); // nothing lasts forever :)
                 Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "WEAPON",
                     Copy.WEAPONS[ powerupValue ])
                 );
