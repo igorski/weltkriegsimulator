@@ -15,12 +15,13 @@ managed via NPM and the build scripts are written in Grunt.
 The only requirement on your system is to have Node.js installed. With Node installed, you can resolve all
 dependencies via command line using:
 
-    npm install
-    
-You can start the dev mode by running:
+`npm install`
 
-    grunt dev
-    
+You can start the dev mode by running Grunt. If you don't have Grunt CLI installed globally, you can
+reference the binary in the node modules folder, .e.g.: _ ./node_modules/grunt-cli/bin/grunt_
+
+`grunt dev`
+
 This mode will launch a local server allowing you to debug the application from your browser through the
 local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
 register the changes, rebuild the application and refresh the browser so you can see the effect of your
@@ -28,7 +29,7 @@ changes directly.
 
 You can create a production ready package by running:
 
-    grunt build
+`grunt build`
 
 Project outline
 ---------------
@@ -43,7 +44,7 @@ up into:
  * factory
  * model
  * view
- 
+
 The _controllers_ are responsible for managing changes in the model and updating the appropriate views. These
 controllers are:
 
@@ -51,7 +52,7 @@ controllers are:
  * _InputController_ listens to keyboard/touch input and delegates these actions onto the Player
  * _RenderController_ maintains the zCanvas that will render all of the game's Actors on the screen as well as manage audio events
  * _ScreenController_ overlays different screens (e.g. title screen, game UI, high scores list)
- 
+
 The _views_ represent each of the screens used in the game. They are managed by their appropriate controllers.
 Note: for the game elements (the Actors) these are represented by _renderers_ (see _zCanvas in WKS_ below).
 
@@ -70,8 +71,8 @@ Communication between these models, views and controllers is done using the publ
 messages are broadcast to subscribed listeners to act upon. As such, different players might be interested in
 the same message for the same purpose (for instance: a message of GAME_OVER might trigger the _GameController_ to
 stop the action queue and freeze the game loop, while at the same time the _InputController_ decides to stop
-listening to input events and the _ScreenController_ to open the high score input screen. "Separate the concerns"! 
- 
+listening to input events and the _ScreenController_ to open the high score input screen. "Separate the concerns"!
+
 zCanvas in WKS
 --------------
 
