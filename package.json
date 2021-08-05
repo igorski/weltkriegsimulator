@@ -22,7 +22,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-text-replace": "^0.4.0",
     "gsap": "^1.17.0",
-    "handlebars": "^3.0.3",
+    "handlebars": "^4.7.7",
     "pubsub-js": "^1.5.0",
     "workerify": "^0.3.0",
     "zcanvas": "^3.0.11"
