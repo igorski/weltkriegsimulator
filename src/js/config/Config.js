@@ -30,11 +30,11 @@ module.exports = {
 
     /**
      * API clientId for SoundCloud, you can request one at
-     * soundcloud.com/you/apps
+     * https://soundcloud.com/you/apps
      *
      * @type {string}
      */
-    SOUNDCLOUD_CLIENT_ID: ( typeof window.scClientId === "string" ) ? window.scClientId : "iQnPKZVqsdsu5GbRJrjnVVIAYKuiXdm6",
+    SOUNDCLOUD_CLIENT_ID: "" || window.soundCloudApiKey,
 
     /**
      * @return {string}
