@@ -20,7 +20,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-module.exports = EventHandler;
 
 /**
  * an EventHandler provides an interface to attach event listeners
@@ -38,6 +37,7 @@ function EventHandler() {
      */
     this._mappedEvents = [];
 }
+export default EventHandler;
 
 /* public methods */
 

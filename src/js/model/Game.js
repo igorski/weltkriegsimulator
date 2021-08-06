@@ -20,23 +20,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Pubsub        from "pubsub-js";
+import Copy          from "../definitions/Copy";
+import Messages      from "../definitions/Messages";
+import Actor         from "./actors/Actor";
+import Ship          from "./actors/Ship";
+import Player        from "./actors/Player";
+import Enemy         from "./actors/Enemy";
+import Boss          from "./actors/Boss";
+import Bullet        from "./actors/Bullet";
+import Powerup       from "./actors/Powerup";
+import ActionFactory from "../factory/ActionFactory";
+import WeaponFactory from "../factory/WeaponFactory";
+import { TweenMax }  from "gsap";
 
-const Pubsub        = require( "pubsub-js" );
-const Copy          = require( "../definitions/Copy" );
-const Messages      = require( "../definitions/Messages" );
-const Actor         = require( "./actors/Actor" );
-const Ship          = require( "./actors/Ship" );
-const Player        = require( "./actors/Player" );
-const Enemy         = require( "./actors/Enemy" );
-const Boss          = require( "./actors/Boss" );
-const Bullet        = require( "./actors/Bullet" );
-const Powerup       = require( "./actors/Powerup" );
-const ActionFactory = require( "../factory/ActionFactory" );
-const WeaponFactory = require( "../factory/WeaponFactory" );
-const { TweenMax }  = require( "gsap" );
-
-const Game = module.exports = {
+const Game = {
 
     /**
      * @public
@@ -385,6 +383,7 @@ const Game = module.exports = {
         Game.active = true;
     }
 };
+export default Game;
 
 /* initialize Pools for commonly (re)used Actors */
 

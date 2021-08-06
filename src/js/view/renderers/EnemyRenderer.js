@@ -20,50 +20,48 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Config       from "../../config/Config";
+import Enemy        from "../../model/actors/Enemy";
+import ShipRenderer from "./ShipRenderer";
+import Assets       from "../../definitions/Assets";
 
-const Config       = require( "../../config/Config" );
-const Enemy        = require( "../../model/actors/Enemy" );
-const ShipRenderer = require( "./ShipRenderer" );
-const Assets       = require( "../../definitions/Assets" );
-
-module.exports = EnemyRenderer;
-
-/**
- * a renderer that represents the Ship actor on screen
- *
- * @constructor
- * @param {Enemy} enemy
- * @param {RenderController} renderController
- */
-function EnemyRenderer( enemy, renderController ) {
-
-    EnemyRenderer.super( this, "constructor", enemy, renderController );
-    this.setSheetForEnemy();
-    this.canRumble = false;
-}
-ShipRenderer.extend( EnemyRenderer );
-
-/* public methods */
-
-/**
- * @public
- */
-EnemyRenderer.prototype.setSheetForEnemy = function() {
-    let animation = ShipRenderer.ANIMATION.ENEMY_1_IDLE;
-
-    switch ( /** @type {Enemy} */ ( this.actor ).type ) {
-        default:
-            break;
-        case 2:
-            animation = ShipRenderer.ANIMATION.ENEMY_2_IDLE;
-            break;
-        case 3:
-            animation = ShipRenderer.ANIMATION.ENEMY_3_IDLE;
-            break;
-        case 4:
-            animation = ShipRenderer.ANIMATION.MINE;
-            break;
+export default class EnemyRenderer extends ShipRenderer
+{
+    /**
+     * a renderer that represents the Ship actor on screen
+     *
+     * @constructor
+     * @param {Enemy} enemy
+     * @param {RenderController} renderController
+     */
+    constructor( enemy, renderController ) {
+        super( enemy, renderController );
+        this.setSheetForEnemy();
+        this.canRumble = false;
     }
-    this.switchAnimation( animation );
-};
+
+
+    /* public methods */
+
+    /**
+     * @public
+     */
+    setSheetForEnemy() {
+        let animation = ShipRenderer.ANIMATION.ENEMY_1_IDLE;
+
+        switch ( /** @type {Enemy} */ ( this.actor ).type ) {
+            default:
+                break;
+            case 2:
+                animation = ShipRenderer.ANIMATION.ENEMY_2_IDLE;
+                break;
+            case 3:
+                animation = ShipRenderer.ANIMATION.ENEMY_3_IDLE;
+                break;
+            case 4:
+                animation = ShipRenderer.ANIMATION.MINE;
+                break;
+        }
+        this.switchAnimation( animation );
+    }
+}

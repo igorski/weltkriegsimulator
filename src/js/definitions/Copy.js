@@ -20,9 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Copy = module.exports = {
+const Copy = {
 
     /**
      * copy can be either string, Array.<string> or an Object
@@ -82,3 +80,4 @@ const Copy = module.exports = {
         };
     }
 };
+export default Copy;

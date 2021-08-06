@@ -20,25 +20,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Messages         from "../definitions/Messages";
+import Pubsub           from "pubsub-js";
+import TitleScreen      from "../view/TitleScreen";
+import GameScreen       from "../view/GameScreen";
+import GameOverScreen   from "../view/GameOverScreen";
+import HighScoresScreen from "../view/HighScoresScreen";
+import AboutScreen      from "../view/AboutScreen";
+import HowToPlayScreen  from "../view/HowToPlayScreen";
 
-const Messages         = require( "../definitions/Messages" );
-const Pubsub           = require( "pubsub-js" );
-const TemplateService  = new ( require( "../services/TemplateService" ))();
-const TitleScreen      = require( "../view/TitleScreen" );
-const GameScreen       = require( "../view/GameScreen" );
-const GameOverScreen   = require( "../view/GameOverScreen" );
-const HighScoresScreen = require( "../view/HighScoresScreen" );
-const AboutScreen      = require( "../view/AboutScreen" );
-const HowToPlayScreen  = require( "../view/HowToPlayScreen" );
+let wrapper, currentScreen;
 
-let wks, wrapper, currentScreen;
+export default {
 
-module.exports = {
-
-    init( wksRef, container ) {
-
-        wks = wksRef;
+    init( container ) {
 
         wrapper = document.createElement( "div" );
         wrapper.setAttribute( "id", "screenOverlay" );
@@ -97,6 +92,6 @@ function renderScreen( screen ) {
         currentScreen.dispose();
         wrapper.innerHTML = "";
     }
-    screen.render( wrapper, TemplateService, wks );
+    screen.render( wrapper );
     currentScreen = screen;
 }

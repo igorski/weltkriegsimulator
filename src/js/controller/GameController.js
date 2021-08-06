@@ -20,25 +20,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages      = require( "../definitions/Messages" );
-const Pubsub        = require( "pubsub-js" );
-const ActionFactory = require( "../factory/ActionFactory" );
-const Assets        = require( "../definitions/Assets" );
-
-const { TweenMax } = require( "gsap");
+import Messages      from "../definitions/Messages";
+import Pubsub        from "pubsub-js";
+import ActionFactory from "../factory/ActionFactory";
+import Assets        from "../definitions/Assets";
+import { TweenMax }  from "gsap";
 
 let audioModel, gameModel, settingsModel;
 let actionTimeout;
 
-module.exports = {
+export default {
 
-    init( wks ) {
+    init( gameModelRef, audioModelRef, settingsModelRef ) {
 
-        audioModel    = wks.audioModel;
-        gameModel     = wks.gameModel;
-        settingsModel = wks.settingsModel;
+        gameModel     = gameModelRef;
+        audioModel    = audioModelRef;
+        settingsModel = settingsModelRef;
 
         // subscribe to pubsub system to receive and broadcast messages
 

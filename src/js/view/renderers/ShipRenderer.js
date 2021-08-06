@@ -20,47 +20,43 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Config        from "../../config/Config";
+import Ship          from "../../model/actors/Ship";
+import ActorRenderer from "./ActorRenderer";
+import Assets        from "../../definitions/Assets";
 
-const Config        = require( "../../config/Config" );
-const Ship          = require( "../../model/actors/Ship" );
-const ActorRenderer = require( "./ActorRenderer" );
-const Assets        = require( "../../definitions/Assets" );
+export default class ShipRenderer extends ActorRenderer
+{
+    /**
+     * a renderer that represents the Ship actor on screen
+     *
+     * @constructor
+     * @param {Ship} ship
+     * @param {RenderController} renderController
+     */
+    constructor( ship, renderController ) {
+        super( ship, renderController );
 
-module.exports = ShipRenderer;
+        this.setBitmap( Assets.GRAPHICS.SHIP );
+        this.setSheet([
 
-/**
- * a renderer that represents the Ship actor on screen
- *
- * @constructor
- * @param {Ship} ship
- * @param {RenderController} renderController
- */
-function ShipRenderer( ship, renderController ) {
+                // Player ship (facing up)
+                { row: 0, col: 0, fpt: 1, amount: 1 },
 
-    ShipRenderer.super( this, "constructor", ship, renderController );
+                // Enemy ships (facing down)
+                { row: 0, col: 1, fpt: 1, amount: 1 },
+                { row: 1, col: 0, fpt: 1, amount: 1 },
+                { row: 1, col: 1, fpt: 1, amount: 1 },
 
-    this.setBitmap( Assets.GRAPHICS.SHIP );
-    this.setSheet([
-
-            // Player ship (facing up)
-            { row: 0, col: 0, fpt: 1, amount: 1 },
-
-            // Enemy ships (facing down)
-            { row: 0, col: 1, fpt: 1, amount: 1 },
-            { row: 1, col: 0, fpt: 1, amount: 1 },
-            { row: 1, col: 1, fpt: 1, amount: 1 },
-
-            // Mine
-            { row: 0, col: 2, fpt: 1, amount: 1 }
-        ],
-        ShipRenderer.TILE_SIZE.width,
-        ShipRenderer.TILE_SIZE.height
-    );
-
-    this.canRumble = true;
+                // Mine
+                { row: 0, col: 2, fpt: 1, amount: 1 }
+            ],
+            ShipRenderer.TILE_SIZE.width,
+            ShipRenderer.TILE_SIZE.height
+        );
+        this.canRumble = true;
+    }
 }
-ActorRenderer.extend( ShipRenderer );
 
 /**
  * dimensions of each tile in the spritesheet

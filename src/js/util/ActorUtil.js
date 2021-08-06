@@ -20,11 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import { TweenMax } from "gsap";
 
-const { TweenMax } = require( "gsap" );
-
-module.exports = {
+export default {
 
     /**
      * change the value of given property of given actor

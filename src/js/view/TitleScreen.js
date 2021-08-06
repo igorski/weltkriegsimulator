@@ -20,22 +20,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config       = require( "../config/Config" );
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Config       from "../config/Config";
+import Messages     from "../definitions/Messages";
+import Pubsub       from "pubsub-js";
+import EventHandler from "../util/EventHandler";
+import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
 
-module.exports = {
+export default {
 
-    render( wrapper, templateService, wks ) {
-
-        templateService.render( "Screen_Title", wrapper, {
+    render( wrapper ) {
+return; // QQQ get Handlebars to do runtime load
+        templateService.render( "title_screen", wrapper, {
 
         }).then(() => {
 

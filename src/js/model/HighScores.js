@@ -20,10 +20,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages = require( "../definitions/Messages" );
-const PubSub   = require( "pubsub-js" );
+import Messages from "../definitions/Messages";
+import PubSub   from "pubsub-js";
 
 const STORAGE_KEY = "wks.highscores";
 let list;
@@ -32,7 +30,7 @@ let list;
  * model that manages the list of
  * high scores within LocalStorage
  */
-const HighScores = module.exports = {
+const HighScores = {
 
     /**
      * fetch the high scores from LocalStorage
@@ -113,6 +111,7 @@ const HighScores = module.exports = {
         }
     }
 };
+export default HighScores;
 
 function retrieve() {
     let scores;

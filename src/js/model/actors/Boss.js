@@ -20,18 +20,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Enemy        = require( "./Enemy" );
-const Patterns     = require( "../../definitions/Patterns" );
-const Weapons      = require( "../../definitions/Weapons" );
-const BossRenderer = require( "../../view/renderers/BossRenderer" );
-const { TweenMax } = require( "gsap" );
+import Enemy        from "./Enemy";
+import Patterns     from "../../definitions/Patterns";
+import Weapons      from "../../definitions/Weapons";
+import BossRenderer from "../../view/renderers/BossRenderer";
+import { TweenMax } from "gsap";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.SPRAY;
 
-module.exports = class Boss extends Enemy {
+class Boss extends Enemy {
 
     /**
      * @constructor
@@ -142,6 +140,7 @@ module.exports = class Boss extends Enemy {
         this._shootInterval = Infinity;
     }
 };
+export default Boss;
 
 /* internal methods */
 

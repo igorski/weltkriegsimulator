@@ -20,17 +20,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Messages     from "../definitions/Messages";
+import Pubsub       from "pubsub-js";
+import EventHandler from "../util/EventHandler";
+import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
 let title, footer;
 
-const GameOverScreen = module.exports = {
+const GameOverScreen = {
 
     render( wrapper, templateService, wks ) {
 
@@ -89,6 +87,7 @@ const GameOverScreen = module.exports = {
             handler.dispose();
     }
 };
+export default GameOverScreen;
 
 /* private methods */
 

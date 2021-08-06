@@ -47,30 +47,30 @@
   color: #FFF;
   font-family: astral_delight_upright;
   text-transform: uppercase;
-  .noSelect;
-  .noEvents;
+  @include noSelect;
+  @include noEvents;
 }
 
 /* touch screen controls */
 
-@dpadRadius: 90px;
-@margin: ( @dpadRadius / 2 );
+$dpadRadius: 90px;
+$margin: ( $dpadRadius / 2 );
 
 #dPad {
   position: absolute;
-  left: @margin;
-  bottom: @margin;
-  width: @dpadRadius;
-  height: @dpadRadius;
+  left: $margin;
+  bottom: $margin;
+  width: $dpadRadius;
+  height: $dpadRadius;
   background: transparent url(../images/graphics/dpad.png) no-repeat 50%;
   background-size: 100%;
-  .noSelect;
+  @include noSelect;
 }
 
 #actionButtons {
   position: absolute;
-  bottom: @margin;
-  right: ( @margin / 2 );
+  bottom: $margin;
+  right: ( $margin / 2 );
 
   button {
     display: inline;
@@ -80,12 +80,12 @@
     background-size: 100%;
     border: none;
     color: #FFF;
-    .noSelect;
+    @include noSelect;
   }
 }
 
 #btnFire {
-  bottom: ( @margin / 2 );
+  bottom: ( $margin / 2 );
   background: transparent url(../images/graphics/btnB.png) no-repeat 50%;
 }
 
@@ -95,12 +95,12 @@
 
 /* mobile view */
 
-@media screen and ( max-width: @mobile-width )
+@media screen and ( max-width: $mobile-width )
 {
   #dPad {
-    left: ( @margin / 3 );
+    left: ( $margin / 3 );
   }
   #actionButtons {
-    right: ( @margin / 4 );
+    right: ( $margin / 4 );
   }
 }

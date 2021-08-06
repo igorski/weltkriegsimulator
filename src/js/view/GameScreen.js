@@ -20,15 +20,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config          = require( "../config/Config" );
-const Copy            = require( "../definitions/Copy" );
-const Messages        = require( "../definitions/Messages" );
-const Pubsub          = require( "pubsub-js" );
-const EventHandler    = require( "../util/EventHandler" );
-const InputController = require( "../controller/InputController" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Config          from "../config/Config";
+import Copy            from "../definitions/Copy";
+import Messages        from "../definitions/Messages";
+import Pubsub          from "pubsub-js";
+import EventHandler    from "../util/EventHandler";
+import InputController from "../controller/InputController";
+import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
@@ -37,7 +35,7 @@ let handler, tokens = [], dPadPointerId, player;
 let eventOffsetX, eventOffsetY;
 const MOVE_RAMP_UP_DURATION = .3;
 
-module.exports = {
+export default {
 
     render( wrapper, templateService, wks ) {
 

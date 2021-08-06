@@ -20,25 +20,24 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
 
 /* actors */
 
-const Bullet  = require( "../model/actors/Bullet" );
-const Powerup = require( "../model/actors/Powerup" );
-const Ship    = require( "../model/actors/Ship" );
-const Enemy   = require( "../model/actors/Enemy" );
-const Boss    = require( "../model/actors/Boss" );
+import Bullet  from "../model/actors/Bullet";
+import Powerup from "../model/actors/Powerup";
+import Ship    from "../model/actors/Ship";
+import Enemy   from "../model/actors/Enemy";
+import Boss    from "../model/actors/Boss";
 
 /* renderers */
 
-const BulletRenderer  = require( "../view/renderers/BulletRenderer" );
-const PowerupRenderer = require( "../view/renderers/PowerupRenderer" );
-const ShipRenderer    = require( "../view/renderers/ShipRenderer" );
-const EnemyRenderer   = require( "../view/renderers/EnemyRenderer" );
-const BossRenderer    = require( "../view/renderers/BossRenderer" );
+import BulletRenderer  from "../view/renderers/BulletRenderer";
+import PowerupRenderer from "../view/renderers/PowerupRenderer";
+import ShipRenderer    from "../view/renderers/ShipRenderer";
+import EnemyRenderer   from "../view/renderers/EnemyRenderer";
+import BossRenderer    from "../view/renderers/BossRenderer";
 
-module.exports = {
+export default {
 
     /**
      * create the renderer to represent given Actor on-screen

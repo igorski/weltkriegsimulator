@@ -20,18 +20,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Ship         = require( "./Ship" );
-const Patterns     = require( "../../definitions/Patterns" );
-const Weapons      = require( "../../definitions/Weapons" );
-const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
-const { TweenMax, Sine, Cubic } = require( "gsap" );
+import Ship         from "./Ship";
+import Patterns     from "../../definitions/Patterns";
+import Weapons      from "../../definitions/Weapons";
+import ShipRenderer from "../../view/renderers/ShipRenderer";
+import { TweenMax, Sine, Cubic } from "gsap";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;
 
-module.exports = class Enemy extends Ship {
+class Enemy extends Ship {
 
     /**
      * @constructor
@@ -180,6 +178,7 @@ module.exports = class Enemy extends Ship {
             this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_1_IDLE );
     }
 };
+export default Enemy;
 
 function killTrajectory( enemy ) {
     if ( enemy.trajectoryTween ) {

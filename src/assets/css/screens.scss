@@ -6,8 +6,8 @@ header {
 
 #menu {
   width: 100%;
-  padding-top: .5em;
-  .boxSize;
+  padding-top: 5em;
+  @include boxSize;
 
   button {
     width: 50%;
@@ -19,7 +19,7 @@ header {
     border: 3px solid #0033ee;
     border-radius: 13px;
     color: #FFF;
-    .boxSize;
+    @include boxSize;
 
     &:hover {
       background-color: #FFF;
@@ -37,7 +37,7 @@ header {
   background-color: #e6e6e6;
   border-radius: 13px;
   border: 3px solid #0033ee;
-  .boxSize;
+  @include boxSize;
 
   button {
     width: 50%;
@@ -62,10 +62,10 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: .5em;
+  padding: 5em;
   text-align: center;
   color: #FFF;
-  .boxSize;
+  @include boxSize;
 
   #menu button {
     display: inline;
@@ -75,7 +75,7 @@ footer {
 
 /* mobile view */
 
-@media screen and ( max-width: @mobile-width )
+@media screen and ( max-width: $mobile-width )
 {
   #menu button {
     width: 85%;

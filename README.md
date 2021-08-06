@@ -109,7 +109,7 @@ You can start the dev mode through the following NPM task:
 `npm run dev`
 
 This mode will launch a local server allowing you to debug the application from your browser through the
-local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
+local URL _http://localhost:8080_. When you make changes / additions to the source files, a watcher will
 register the changes, rebuild the application and refresh the browser so you can see the effect of your
 changes directly.
 

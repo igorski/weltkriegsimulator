@@ -1,7 +1,7 @@
-@import url( "helpers.less" );
+@import "helpers";
 
 // the threshold where we start to use the mobile view
-@mobile-width: 640px;
+$mobile-width: 640px;
 
 html, body {
   height: 100%;
@@ -13,7 +13,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #0055d8;
-  .noSelect;
+  @include noSelect;
 
   &.loading {
     background-image: url(../images/graphics/loader.svg);
@@ -37,10 +37,10 @@ ul {
   right: 0;
   bottom: 0;
   left: 0;
-  padding: .5em;
-  .boxSize;
+  padding: 5em;
+  @include boxSize;
 }
 
-@import url( "typography.less" );
-@import url( "screens.less" );
-@import url( "ui.less" );
+@import "typography";
+@import "screens";
+@import "ui";

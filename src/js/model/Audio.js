@@ -20,15 +20,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config       = require( "../config/Config" );
-const Assets       = require( "../definitions/Assets" );
-const Copy         = require( "../definitions/Copy" );
-const AudioTracks  = require( "../definitions/AudioTracks" );
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
+import Config       from "../config/Config";
+import Assets       from "../definitions/Assets";
+import Copy         from "../definitions/Copy";
+import AudioTracks  from "../definitions/AudioTracks";
+import Messages     from "../definitions/Messages";
+import Pubsub       from "pubsub-js";
+import EventHandler from "../util/EventHandler";
 
 let inited        = false;
 let playing       = false;
@@ -39,7 +37,7 @@ const handler     = new EventHandler();
 
 let audioContext, filter, masterBus, explosion, laser;
 
-const Audio = module.exports = {
+const Audio = {
 
     muted: false,
 
@@ -83,7 +81,7 @@ const Audio = module.exports = {
             }
         }
     },
-    
+
     /**
      * enqueue a track from the available pool for playing
      */
@@ -92,10 +90,10 @@ const Audio = module.exports = {
             return;
 
         const trackId = _getTrackIdFromPool();
-    
+
         if ( queuedTrackId === trackId  )
             return;
-    
+
         queuedTrackId = trackId;
 
         // prepare the stream from SoundCloud, we create an inline <audio> tag instead
@@ -158,6 +156,7 @@ const Audio = module.exports = {
         }
     }
 };
+export default Audio;
 
 /* private methods */
 

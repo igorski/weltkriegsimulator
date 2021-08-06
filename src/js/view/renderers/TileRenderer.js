@@ -20,63 +20,55 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import { sprite } from "zcanvas";
+import Config     from "../../config/Config";
+import TileUtil   from "../../util/TileUtil";
+import Assets     from "../../definitions/Assets";
 
-const Config   = require( "../../config/Config" );
-const zCanvas  = require( "zcanvas" );
-const TileUtil = require( "../../util/TileUtil" );
-const Assets   = require( "../../definitions/Assets" );
+export default class TileRenderer extends sprite
+{
+    /**
+     * a renderer that represents a tiled background on screen
+     *
+     * @constructor
+     * @param {number} x
+     * @param {number} y
+     * @param {number} speed
+     * @param {number=} scale
+     */
+    constructor( x, y, speed, scale ) {
 
-module.exports = TileRenderer;
+        super({ x, y });
 
-/**
- * a renderer that represents a tiled background on screen
- *
- * @constructor
- * @param {number} x
- * @param {number} y
- * @param {number} speed
- * @param {number=} scale
- */
-function TileRenderer( x, y, speed, scale ) {
+        /* instance properties */
 
-    TileRenderer.super( this, "constructor", x, y, 0, 0 );
+        this.speed = speed;
 
-    /* instance properties */
+        /* initialization */
 
-    this.speed = speed;
-
-    /* initialization */
-
-    const self = this;
-
-    TileUtil.createTileMap( Assets.GRAPHICS.TILE, scale ).
-        then(( cvs ) => {
-            self.setBitmap( cvs, cvs.width, cvs.height );
+        TileUtil.createTileMap( Assets.GRAPHICS.TILE, scale ).then( cvs => {
+            this.setBitmap( cvs, cvs.width, cvs.height );
         });
-}
-
-zCanvas.sprite.extend( TileRenderer );
-
-/* public methods */
-
-/**
- * @override
- * @public
- * @param {CanvasRenderingContext2D} aCanvasContext
- */
-TileRenderer.prototype.draw = function( aCanvasContext ) {
-
-    this.sync();
-    TileRenderer.super( this, "draw", aCanvasContext );
-};
-
-TileRenderer.prototype.sync = function() {
-
-    this._bounds.top += this.speed;
-
-    if ( this._bounds.top > this.canvas.getHeight() ) {
-        this._bounds.top = -this._bounds.height;
-        this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
     }
-};
+
+    /* public methods */
+
+    /**
+     * @override
+     * @public
+     * @param {CanvasRenderingContext2D} aCanvasContext
+     */
+    draw( aCanvasContext ) {
+        this.sync();
+        super.draw( aCanvasContext );
+    }
+
+    sync() {
+        this._bounds.top += this.speed;
+
+        if ( this._bounds.top > this.canvas.getHeight() ) {
+            this._bounds.top = -this._bounds.height;
+            this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
+        }
+    }
+}

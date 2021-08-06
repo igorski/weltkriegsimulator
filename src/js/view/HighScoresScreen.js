@@ -20,19 +20,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
-
-const gsap = require( "gsap" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = gsap;
+import Messages     from "../definitions/Messages";
+import Pubsub       from "pubsub-js";
+import EventHandler from "../util/EventHandler";
+import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, text, playButton, homeButton;
 let title, footer;
 
-module.exports = {
+export default {
 
     render( wrapper, templateService, wks ) {
 

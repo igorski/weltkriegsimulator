@@ -20,14 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Pubsub    from "pubsub-js";
+import { Cubic } from "gsap";
+import Messages  from "../../definitions/Messages";
+import ActorUtil from "../../util/ActorUtil";
 
-const Pubsub    = require( "pubsub-js" );
-const Messages  = require( "../../definitions/Messages" );
-const ActorUtil = require( "../../util/ActorUtil" );
-const { Cubic } = require( "gsap" );
-
-module.exports = class Actor {
+class Actor {
 
     /**
      * @constructor
@@ -330,3 +328,4 @@ module.exports = class Actor {
         this.hitBox.bottom = this.y + this.offsetY + ( this.height - margin );
     }
 };
+export default Actor;
