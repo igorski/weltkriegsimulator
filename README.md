@@ -17,10 +17,9 @@ dependencies via command line using:
 
 `npm install`
 
-You can start the dev mode by running Grunt. If you don't have Grunt CLI installed globally, you can
-reference the binary in the node modules folder, .e.g.: _ ./node_modules/grunt-cli/bin/grunt_
+You can start the dev mode through the following NPM task:
 
-`grunt dev`
+`npm run dev`
 
 This mode will launch a local server allowing you to debug the application from your browser through the
 local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
@@ -29,7 +28,7 @@ changes directly.
 
 You can create a production ready package by running:
 
-`grunt build`
+`npm run build`
 
 Project outline
 ---------------
