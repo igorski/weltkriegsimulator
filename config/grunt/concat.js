@@ -1,14 +1,5 @@
 module.exports =
 {
-    vendor: {
-        src : [ "node_modules/gsap/src/minified/TweenMax.min.js",
-                "node_modules/gsap/src/minified/easing/EasePack.min.js",
-                "node_modules/gsap/src/minified/plugins/CSSPlugin.min.js",
-                "node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"
-               ],
-        dest : "<%= config.target.env %>/vendor/vendor.js"
-    },
-
     // copy handlebars runtime and templates
 
     handlebars: {
@@ -23,7 +14,6 @@ module.exports =
 
     prod: {
         src: [
-            "<%= config.target.env %>vendor/vendor.js",
             "<%= config.target.env %><%= pkg.name %>.js"
         ],
         dest: "<%= config.target.env %><%= pkg.name %>.js"

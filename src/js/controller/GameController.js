@@ -27,6 +27,8 @@ const Pubsub        = require( "pubsub-js" );
 const ActionFactory = require( "../factory/ActionFactory" );
 const Assets        = require( "../definitions/Assets" );
 
+const { TweenMax } = require( "gsap");
+
 let audioModel, gameModel, settingsModel;
 let actionTimeout;
 

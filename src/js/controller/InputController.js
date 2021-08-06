@@ -27,6 +27,7 @@ const Pubsub       = require( "pubsub-js" );
 const ActorUtil    = require( "../util/ActorUtil" );
 const Bullet       = require( "../model/actors/Bullet" );
 const EventHandler = require( "../util/EventHandler" );
+const { TweenMax } = require( "gsap" );
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;

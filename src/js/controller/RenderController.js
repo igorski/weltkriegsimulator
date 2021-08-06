@@ -30,6 +30,7 @@ const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
 const TileRenderer    = require( "../view/renderers/TileRenderer" );
 const FXRenderer      = require( "../view/renderers/FXRenderer" );
 const Powerup         = require( "../model/actors/Powerup" );
+const { TweenMax, TimelineMax, Power1 } = require( "gsap" );
 
 let audioModel, gameModel, canvas, player, background;
 

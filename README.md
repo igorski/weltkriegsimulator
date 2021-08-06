@@ -6,35 +6,15 @@ possibilities of creating a game using the open source [zCanvas library](https:/
 
 You can play the game directly in your browser by [navigating here](https://www.igorski.nl/weltkriegsimulator).
 
-Project requirements
---------------------
-
-WKS is a Javascript project (ES6) and uses the CommonJS require/exports-pattern. The dependencies are
-managed via NPM and the build scripts are written in Grunt.
-
-The only requirement on your system is to have Node.js installed. With Node installed, you can resolve all
-dependencies via command line using:
-
-`npm install`
-
-You can start the dev mode through the following NPM task:
-
-`npm run dev`
-
-This mode will launch a local server allowing you to debug the application from your browser through the
-local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
-register the changes, rebuild the application and refresh the browser so you can see the effect of your
-changes directly.
-
-You can create a production ready package by running:
-
-`npm run build`
-
 Project outline
 ---------------
 
-WKS uses no framework but was written in vanilla JS. The only used libraries besides the aforementioned _zCanvas_
-are _TweenMax_ (easing functions), _Handlebars_ (for HTML templating) and _pubsub-js_ (for messaging).
+WKS is a Javascript project and uses the ES6 module-pattern in vanilla JS. It's deliberately designed to work
+without a framework or library just to focus on the game code. React and Vue are great, but reactivity
+is not required when blitting bitmaps from a game loop.
+
+The only used libraries besides the aforementioned _zCanvas_ are _TweenMax_ (easing functions),
+_Handlebars_ (for HTML templating) and _pubsub-js_ (for messaging).
 
 All source code resides in the _./src/js_-directory. The main application logic is split
 up into:
@@ -115,3 +95,24 @@ the appropriate properties (e.g. new position, direction, etc.). This pool is ma
 
 Apart from game Actors pools, there is also a pool for decorative effects (e.g. explosions which are
 triggered by Actors, but not actually an Actor by themselves). These are managed by _RenderController.js_.
+
+Project requirements
+--------------------
+
+The only requirement on your system is to have Node.js installed. With Node installed, you can resolve all
+dependencies via command line using:
+
+`npm install`
+
+You can start the dev mode through the following NPM task:
+
+`npm run dev`
+
+This mode will launch a local server allowing you to debug the application from your browser through the
+local URL _http://localhost:3000_. When you make changes / additions to the source files, a watcher will
+register the changes, rebuild the application and refresh the browser so you can see the effect of your
+changes directly.
+
+You can create a production ready package by running:
+
+`npm run build`

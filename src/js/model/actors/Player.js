@@ -27,6 +27,7 @@ const Powerup       = require( "./Powerup" );
 const ShipRenderer  = require( "../../view/renderers/ShipRenderer" );
 const Weapons       = require( "../../definitions/Weapons" );
 const WeaponFactory = require( "../../factory/WeaponFactory" );
+const { TweenMax }  = require( "gsap" );
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;

@@ -26,6 +26,7 @@ const Enemy        = require( "./Enemy" );
 const Patterns     = require( "../../definitions/Patterns" );
 const Weapons      = require( "../../definitions/Weapons" );
 const BossRenderer = require( "../../view/renderers/BossRenderer" );
+const { TweenMax } = require( "gsap" );
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.SPRAY;

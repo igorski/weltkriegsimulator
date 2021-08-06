@@ -26,6 +26,7 @@ const Config       = require( "../config/Config" );
 const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
+const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;

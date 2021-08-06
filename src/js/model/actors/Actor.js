@@ -25,6 +25,7 @@
 const Pubsub    = require( "pubsub-js" );
 const Messages  = require( "../../definitions/Messages" );
 const ActorUtil = require( "../../util/ActorUtil" );
+const { Cubic } = require( "gsap" );
 
 module.exports = class Actor {
 

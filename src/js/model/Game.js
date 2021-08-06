@@ -34,6 +34,7 @@ const Bullet        = require( "./actors/Bullet" );
 const Powerup       = require( "./actors/Powerup" );
 const ActionFactory = require( "../factory/ActionFactory" );
 const WeaponFactory = require( "../factory/WeaponFactory" );
+const { TweenMax }  = require( "gsap" );
 
 const Game = module.exports = {
 
@@ -309,7 +310,7 @@ const Game = module.exports = {
               active      = Game.active,
               worldRight  = Game.world.width,
               worldBottom = Game.world.height;
-        
+
         let i = actors.length, actor;
 
         while ( i-- ) {

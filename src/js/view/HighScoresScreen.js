@@ -26,6 +26,9 @@ const Messages     = require( "../definitions/Messages" );
 const Pubsub       = require( "pubsub-js" );
 const EventHandler = require( "../util/EventHandler" );
 
+const gsap = require( "gsap" );
+const { TweenMax, TimelineMax, Cubic, Elastic } = gsap;
+
 let handler, text, playButton, homeButton;
 let title, footer;
 

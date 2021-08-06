@@ -17,10 +17,6 @@ module.exports = {
                 from: '{{js.app}}',
                 to: '<%= pkg.name %>.js'
             },
-            {
-                from: '{{js.vendor}}',
-                to: 'vendor/vendor.js'
-            }
         ]
     },
     prod: {

@@ -22,6 +22,8 @@
  */
 "use strict";
 
+const { TweenMax } = require( "gsap" );
+
 module.exports = {
 
     /**

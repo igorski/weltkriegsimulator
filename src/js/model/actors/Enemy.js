@@ -26,6 +26,7 @@ const Ship         = require( "./Ship" );
 const Patterns     = require( "../../definitions/Patterns" );
 const Weapons      = require( "../../definitions/Weapons" );
 const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
+const { TweenMax, Sine, Cubic } = require( "gsap" );
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;

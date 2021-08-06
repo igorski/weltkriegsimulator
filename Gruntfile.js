@@ -44,7 +44,6 @@ module.exports = function( grunt )
             case "dev":
                 grunt.task.run( "clean:dev" );
                 grunt.task.run( "copy" );
-                grunt.task.run( "concat:vendor" );
                 grunt.task.run( "concat:handlebars" );
                 grunt.task.run( "handlebars" );
                 grunt.task.run( "css:dev" );
@@ -55,7 +54,6 @@ module.exports = function( grunt )
             case "prod":
                 grunt.task.run( "clean:prod" );
                 grunt.task.run( "copy" );
-                grunt.task.run( "concat:vendor" );
                 grunt.task.run( "concat:handlebars" );
                 grunt.task.run( "handlebars" );
                 grunt.task.run( "css:prod" );
@@ -64,8 +62,6 @@ module.exports = function( grunt )
                 grunt.task.run( "uglify:prod" );
                 // prod only: concatenate vendor libraries with application code
                 grunt.task.run( "concat:prod" );
-                // remove the vendor libraries now code has been concatenated
-                grunt.task.run( "clean:prodTemp");
                 break;
         }
     });

@@ -25,6 +25,7 @@
 const Actor        = require( "./Actor" );
 const Bullet       = require( "./Bullet" );
 const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
+const { TweenMax } = require( "gsap" );
 
 module.exports = class Ship extends Actor {
 

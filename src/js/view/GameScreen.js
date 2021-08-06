@@ -28,6 +28,7 @@ const Messages        = require( "../definitions/Messages" );
 const Pubsub          = require( "pubsub-js" );
 const EventHandler    = require( "../util/EventHandler" );
 const InputController = require( "../controller/InputController" );
+const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
