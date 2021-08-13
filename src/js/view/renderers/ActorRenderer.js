@@ -118,7 +118,7 @@ export default class ActorRenderer extends sprite
                 this._bounds.top  -= rumbleObject.y;
             }
         }
-        ActorRenderer.super( this, "draw", aCanvasContext );
+        super.draw( aCanvasContext );
 
         //this.debug( aCanvasContext );
     }

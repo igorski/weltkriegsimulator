@@ -29,11 +29,14 @@ import HighScoresScreen from "../view/HighScoresScreen";
 import AboutScreen      from "../view/AboutScreen";
 import HowToPlayScreen  from "../view/HowToPlayScreen";
 
-let wrapper, currentScreen;
+let wrapper, currentScreen, gameModel, highScoresModel;
 
 export default {
 
-    init( container ) {
+    init( container, gameModelRef, highScoresModelRef ) {
+
+        gameModel       = gameModelRef;
+        highScoresModel = highScoresModelRef;
 
         wrapper = document.createElement( "div" );
         wrapper.setAttribute( "id", "screenOverlay" );
@@ -92,6 +95,6 @@ function renderScreen( screen ) {
         currentScreen.dispose();
         wrapper.innerHTML = "";
     }
-    screen.render( wrapper );
+    screen.render( wrapper, gameModel, highScoresModel );
     currentScreen = screen;
 }

@@ -71,7 +71,7 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
-            WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
+            audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
             // enqueue next music track so we have a different one ready for the next game
             audioModel.enqueueTrack();
             // store the flag stating the player has played at least one game

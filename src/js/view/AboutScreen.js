@@ -23,6 +23,7 @@
 import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
 import EventHandler from "../util/EventHandler";
+import HTMLTemplate from "../../templates/about_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, text, playButton, homeButton;
@@ -30,27 +31,23 @@ let title, footer;
 
 export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper ) {
+        wrapper.innerHTML = HTMLTemplate();
 
-        templateService.render( "Screen_About", wrapper, {
+        // grab references to HTML Elements
 
-        }).then(() => {
+        title   = wrapper.querySelector( "h1" );
+        footer  = wrapper.querySelector( "footer" );
+        text    = wrapper.querySelector( "#text" );
 
-            // grab references to HTML Elements
+        playButton = wrapper.querySelector( "#btnPlay" );
+        homeButton = wrapper.querySelector( "#btnHome" );
 
-            title   = wrapper.querySelector( "h1" );
-            footer  = wrapper.querySelector( "footer" );
-            text    = wrapper.querySelector( "#text" );
+        animateIn();
 
-            playButton = wrapper.querySelector( "#btnPlay" );
-            homeButton = wrapper.querySelector( "#btnHome" );
-
-            animateIn();
-
-            handler = new EventHandler();
-            handler.listen( playButton, "click", handlePlayClick );
-            handler.listen( homeButton, "click", handleHomeClick );
-        });
+        handler = new EventHandler();
+        handler.listen( playButton, "click", handlePlayClick );
+        handler.listen( homeButton, "click", handleHomeClick );
     },
 
     dispose() {

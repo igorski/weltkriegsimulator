@@ -24,6 +24,7 @@ import Config       from "../config/Config";
 import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
 import EventHandler from "../util/EventHandler";
+import HTMLTemplate from "../../templates/title_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
@@ -32,38 +33,34 @@ let title, menu, footer, buttons;
 export default {
 
     render( wrapper ) {
-return; // QQQ get Handlebars to do runtime load
-        templateService.render( "title_screen", wrapper, {
+        wrapper.innerHTML = HTMLTemplate();
 
-        }).then(() => {
+        // grab references to HTML Elements
 
-            // grab references to HTML Elements
+        title   = wrapper.querySelector( "h1" );
+        menu    = wrapper.querySelector( "#menu" );
+        footer  = wrapper.querySelector( "footer" );
+        buttons = wrapper.querySelectorAll( "button" );
 
-            title   = wrapper.querySelector( "h1" );
-            menu    = wrapper.querySelector( "#menu" );
-            footer  = wrapper.querySelector( "footer" );
-            buttons = wrapper.querySelectorAll( "button" );
+        startButton      = wrapper.querySelector( "#btnStart" );
+        highScoresButton = wrapper.querySelector( "#btnHighScores" );
+        howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+        aboutButton      = wrapper.querySelector( "#btnAbout" );
 
-            startButton      = wrapper.querySelector( "#btnStart" );
-            highScoresButton = wrapper.querySelector( "#btnHighScores" );
-            howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
-            aboutButton      = wrapper.querySelector( "#btnAbout" );
+        animateIn();
 
-            animateIn();
+        handler = new EventHandler();
 
-            handler = new EventHandler();
+        handler.listen( howToPlayButton,  "click",   handleHowToPlayClick );
+        handler.listen( highScoresButton, "click",   handleHighScoresClick );
+        handler.listen( aboutButton,      "click",   handleAboutClick );
+        handler.listen( startButton,      "mouseup", handleStartClick );
 
-            handler.listen( howToPlayButton,  "click",   handleHowToPlayClick );
-            handler.listen( highScoresButton, "click",   handleHighScoresClick );
-            handler.listen( aboutButton,      "click",   handleAboutClick );
-            handler.listen( startButton,      "mouseup", handleStartClick );
+        // we deliberately listen to touch events on the document
+        // as we can determine whether we need to show on-screen game controls
 
-            // we deliberately listen to touch events on the document
-            // as we can determine whether we need to show on-screen game controls
-
-            handler.listen( document, "touchcancel", handleTouch );
-            handler.listen( document, "touchend",    handleTouch );
-        });
+        handler.listen( document, "touchcancel", handleTouch );
+        handler.listen( document, "touchend",    handleTouch );
     },
 
     dispose() {

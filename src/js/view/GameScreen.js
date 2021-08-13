@@ -26,6 +26,7 @@ import Messages        from "../definitions/Messages";
 import Pubsub          from "pubsub-js";
 import EventHandler    from "../util/EventHandler";
 import InputController from "../controller/InputController";
+import HTMLTemplate    from "../../templates/game_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
@@ -37,64 +38,61 @@ const MOVE_RAMP_UP_DURATION = .3;
 
 export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, gameModelRef ) {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
-        player = wks.gameModel.player;
+        player    = gameModelRef.player;
         container = wrapper;
 
-        templateService.render( "Screen_Game", wrapper, {
-
-            "controls": addControls
-
-        }).then(() => {
-
-            // grab references to HTML Elements
-            energyUI       = wrapper.querySelector( "#energy" );
-            scoreUI        = wrapper.querySelector( "#score .counter" );
-            messagePanel   = wrapper.querySelector( "#messages" );
-            messageTitleUI = messagePanel.querySelector( ".title" );
-            messageBodyUI  = messagePanel.querySelector( ".body" );
-
-            if ( addControls ) {
-                dPad     = wrapper.querySelector( "#dPad" );
-                btnFire  = wrapper.querySelector( "#btnFire" );
-                btnLayer = wrapper.querySelector( "#btnLayer" );
-
-                handler = new EventHandler();
-
-                // listen to window resize/orientation changes
-
-                handler.listen( window, "resize",            handleResize );
-                handler.listen( window, "orientationchange", handleResize );
-
-                // button handlers
-
-                handler.listen( btnFire,  "touchstart",  handleFire );
-                handler.listen( btnFire,  "touchend",    handleFire );
-                handler.listen( btnFire,  "touchcancel", handleFire );
-                handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
-                handler.listen( dPad,     "touchstart",  handleDPad );
-                handler.listen( dPad,     "touchmove",   handleDPad );
-                handler.listen( dPad,     "touchend",    handleDPad );
-                handler.listen( dPad,     "touchcancel", handleDPad );
-
-                // calculates and caches dPad offsets
-                handleResize();
-            }
-
-            // subscribe to messaging system
-
-            [
-                Messages.SHOW_INSTRUCTIONS,
-                Messages.SHOW_MESSAGE,
-                Messages.UPDATE_SCORE,
-                Messages.UPDATE_ENERGY
-
-            ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
-
-            updateScore( 0 );
+        wrapper.innerHTML = HTMLTemplate({
+            controls: addControls
         });
+
+        // grab references to HTML Elements
+        energyUI       = wrapper.querySelector( "#energy" );
+        scoreUI        = wrapper.querySelector( "#score .counter" );
+        messagePanel   = wrapper.querySelector( "#messages" );
+        messageTitleUI = messagePanel.querySelector( ".title" );
+        messageBodyUI  = messagePanel.querySelector( ".body" );
+
+        if ( addControls ) {
+            dPad     = wrapper.querySelector( "#dPad" );
+            btnFire  = wrapper.querySelector( "#btnFire" );
+            btnLayer = wrapper.querySelector( "#btnLayer" );
+
+            handler = new EventHandler();
+
+            // listen to window resize/orientation changes
+
+            handler.listen( window, "resize",            handleResize );
+            handler.listen( window, "orientationchange", handleResize );
+
+            // button handlers
+
+            handler.listen( btnFire,  "touchstart",  handleFire );
+            handler.listen( btnFire,  "touchend",    handleFire );
+            handler.listen( btnFire,  "touchcancel", handleFire );
+            handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
+            handler.listen( dPad,     "touchstart",  handleDPad );
+            handler.listen( dPad,     "touchmove",   handleDPad );
+            handler.listen( dPad,     "touchend",    handleDPad );
+            handler.listen( dPad,     "touchcancel", handleDPad );
+
+            // calculates and caches dPad offsets
+            handleResize();
+        }
+
+        // subscribe to messaging system
+
+        [
+            Messages.SHOW_INSTRUCTIONS,
+            Messages.SHOW_MESSAGE,
+            Messages.UPDATE_SCORE,
+            Messages.UPDATE_ENERGY
+
+        ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
+
+        updateScore( 0 );
     },
 
     dispose() {

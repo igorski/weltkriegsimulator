@@ -32,7 +32,7 @@ import Bullet        from "./actors/Bullet";
 import Powerup       from "./actors/Powerup";
 import ActionFactory from "../factory/ActionFactory";
 import WeaponFactory from "../factory/WeaponFactory";
-import { TweenMax }  from "gsap";
+import { TweenMax, Cubic } from "gsap";
 
 const Game = {
 
@@ -496,9 +496,9 @@ function createBulletForActor( actor ) {
 
                 // the last Tween will dispose all the Bullets (can get stuck on screen
                 // edge during rapid movement / cancellation of pooled Tweens)
-                if ( i === max )
+                if ( i === max ) {
                     opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
-
+                }
                 TweenMax.to( bullet, 1, opts );
             }
             break;

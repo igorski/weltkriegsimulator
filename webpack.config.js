@@ -1,7 +1,6 @@
 const path              = require( "path" );
 const webpack           = require( "webpack" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
-const HandlebarsPlugin  = require( "handlebars-webpack-plugin" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
 // Is the current build a development build
@@ -11,6 +10,7 @@ const dirNode   = "node_modules";
 const dirApp    = path.join( __dirname, "src" );
 const dirAssets = path.join( __dirname, "src/assets" );
 const dirSrc    = path.join( __dirname, "src/js" );
+const dirHtml   = path.join( __dirname, "src/templates" );
 
 /**
  * Webpack Configuration
@@ -31,46 +31,7 @@ module.exports = {
         }),
 
         new HtmlWebpackPlugin({
-
-        }),
-
-        new HandlebarsPlugin({
-            entry  : path.join( process.cwd(), "src", "templates", "*.hbs" ),
-            output : path.join( process.cwd(), "dist", "[name].html" ),
-            data   : {},
-            helpers: {
-                toLowerCase: string => {
-                    if ( typeof string === "string" ) {
-                        return string.toLowerCase();
-                    }
-                    return "";
-                },
-                /**
-                 * use in template like:
-                 * {{loop 10}}
-                 */
-                loop: ( n, block ) => {
-                    let out = "";
-                    for( var i = 0; i < n; ++i ) {
-                        out += block.fn( i );
-                    }
-                    return out;
-                },
-                /**
-                 * comparison functions for templates, use like:
-                 * {{#if (eq variable "value")}} ... {{/if}}
-                 *
-                 * multiple conditionals:
-                 *
-                 * {{#if (and
-                 *           (eq variable "value")
-                 *           (eq variable2 "value"))
-                 * }}
-                 */
-                eq: ( v1, v2 ) => v1 === v2,
-                and: ( v1, v2 ) => v1 && v2,
-                or: ( v1, v2 ) => v1 || v2
-            }
+            // only here to create self serving page in dev mode
         }),
 
         new CopyWebpackPlugin([
@@ -148,6 +109,15 @@ module.exports = {
                         }
                     }
                 ]
+            },
+
+            // HANDLEBARS
+            {
+                test: /\.(handlebars|hbs)$/,
+                loader: "handlebars-loader",
+                options: {
+                    runtime: path.resolve( dirHtml, "runtime/handlebars" )
+                },
             }
         ]
     }

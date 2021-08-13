@@ -23,6 +23,7 @@
 import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
 import EventHandler from "../util/EventHandler";
+import HTMLTemplate from "../../templates/game_over_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
@@ -30,55 +31,53 @@ let title, footer;
 
 const GameOverScreen = {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, gameModelRef, highScoresModelRef ) {
 
-        gameModel       = wks.gameModel;
-        highScoresModel = wks.highScoresModel;
+        gameModel       = gameModelRef;
+        highScoresModel = highScoresModelRef;
 
         const player       = gameModel.player;
         const score        = player.score;
         const hasHighScore = highScoresModel.isNewScore( score );
 
-        templateService.render( "Screen_GameOver", wrapper, {
-
+        wrapper.innerHTML = HTMLTemplate({
             highScore: hasHighScore,
-            score: score
-
-        }).then(() => {
-
-            // grab references to HTML Elements
-
-            title   = wrapper.querySelector( "h1" );
-            footer  = wrapper.querySelector( "footer" );
-            text    = wrapper.querySelector( "#text" );
-
-            nameInput  = wrapper.querySelector( "#nameInput" );
-            saveButton = wrapper.querySelector( "#saveHighScore" );
-            playButton = wrapper.querySelector( "#btnPlay" );
-            homeButton = wrapper.querySelector( "#btnHome" );
-
-            handler = new EventHandler();
-
-            // in case of new high score, show last known player name
-            // as well as option to save this stuff!
-
-            if ( hasHighScore ) {
-                if ( player.name.length > 0 )
-                    nameInput.value = player.name;
-
-                handler.listen( saveButton, "click", handleSaveClick );
-
-                // also save on keyboard enter press
-                handler.listen( window, "keyup", ( e ) => {
-                    if ( e.keyCode === 13 )
-                        handleSaveClick();
-                });
-            }
-            handler.listen( playButton, "click", handlePlayClick );
-            handler.listen( homeButton, "click", handleHomeClick );
-
-            animateIn();
+            score
         });
+
+        // grab references to HTML Elements
+
+        title   = wrapper.querySelector( "h1" );
+        footer  = wrapper.querySelector( "footer" );
+        text    = wrapper.querySelector( "#text" );
+
+        nameInput  = wrapper.querySelector( "#nameInput" );
+        saveButton = wrapper.querySelector( "#saveHighScore" );
+        playButton = wrapper.querySelector( "#btnPlay" );
+        homeButton = wrapper.querySelector( "#btnHome" );
+
+        handler = new EventHandler();
+
+        // in case of new high score, show last known player name
+        // as well as option to save this stuff!
+
+        if ( hasHighScore ) {
+            if ( player.name.length > 0 ) {
+                nameInput.value = player.name;
+            }
+            handler.listen( saveButton, "click", handleSaveClick );
+
+            // also save on keyboard enter press
+            handler.listen( window, "keyup", ( e ) => {
+                if ( e.keyCode === 13 ) {
+                    handleSaveClick();
+                }
+            });
+        }
+        handler.listen( playButton, "click", handlePlayClick );
+        handler.listen( homeButton, "click", handleHomeClick );
+
+        animateIn();
     },
 
     dispose() {

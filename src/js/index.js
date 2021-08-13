@@ -66,21 +66,22 @@ function init() {
     gameController.init( gameModel, audioModel, settingsModel );
     inputController.init( gameModel );
     renderController.init( gameModel, audioModel, container );
-    screenController.init( container );
+    screenController.init( container, gameModel, highScoresModel );
 
     PubSub.publish( Messages.READY );
 }
 
+// load the assets and launch
+
 AssetService.prepare().
-    then(() => {
-        MusicService.prepare().
-            then(() => {
-                audioModel.init();
-                init();
-            }).
-            catch(() => {
-                // failure during loading of SoundCloud SDK, continue
-                // as is (Audio model will not play music)
-                init();
-            });
+    then( async () => {
+        try {
+            await MusicService.prepare();
+            audioModel.init();
+            init();
+        } catch {
+            // failure during loading of SoundCloud SDK, continue
+            // as is (Audio model will not play music)
+            init();
+        }
     });

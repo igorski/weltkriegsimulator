@@ -23,6 +23,7 @@
 import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
 import EventHandler from "../util/EventHandler";
+import HTMLTemplate from "../../templates/high_score_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, text, playButton, homeButton;
@@ -30,29 +31,26 @@ let title, footer;
 
 export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, gameModelRef, highScoresModelRef ) {
 
-        templateService.render( "Screen_HighScores", wrapper, {
-
-            scores: wks.highScoresModel.get()
-
-        }).then(() => {
-
-            // grab references to HTML Elements
-
-            title   = wrapper.querySelector( "h1" );
-            footer  = wrapper.querySelector( "footer" );
-            text    = wrapper.querySelector( "#text" );
-
-            playButton = wrapper.querySelector( "#btnPlay" );
-            homeButton = wrapper.querySelector( "#btnHome" );
-
-            animateIn();
-
-            handler = new EventHandler();
-            handler.listen( playButton, "click", handlePlayClick );
-            handler.listen( homeButton, "click", handleBackClick );
+        wrapper.innerHTML = HTMLTemplate({
+            scores: highScoresModelRef.get()
         });
+
+        // grab references to HTML Elements
+
+        title   = wrapper.querySelector( "h1" );
+        footer  = wrapper.querySelector( "footer" );
+        text    = wrapper.querySelector( "#text" );
+
+        playButton = wrapper.querySelector( "#btnPlay" );
+        homeButton = wrapper.querySelector( "#btnHome" );
+
+        animateIn();
+
+        handler = new EventHandler();
+        handler.listen( playButton, "click", handlePlayClick );
+        handler.listen( homeButton, "click", handleBackClick );
     },
 
     dispose() {
