@@ -20,12 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import { loader } from "zcanvas";
+import Assets     from "../definitions/Assets";
 
-const Assets  = require( "../definitions/Assets" );
-const zCanvas = require( "zcanvas" );
-
-module.exports = {
+export default {
 
     /**
      * @public
@@ -40,16 +38,13 @@ module.exports = {
             graphics.push( Assets.GRAPHICS[ key ] );
         });
 
-        return new Promise(( resolve, reject ) => {
+        return new Promise( async ( resolve, reject ) => {
 
             let pending = graphics.length;
-            graphics.forEach(( graphic ) => {
-                zCanvas.loader.loadImage( graphic, () => {
-                    if ( --pending === 0 ) {
-                        resolve();
-                    }
-                });
-            });
+            for ( let i = 0; i < pending; ++i ) {
+                await loader.loadImage( graphics[ i ]);
+            }
+            resolve();
         });
     }
 };

@@ -20,8 +20,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
 const STORAGE_KEY = "wks.settings";
 let configuration;
 
@@ -29,7 +27,7 @@ let configuration;
  * model that manages the list of
  * high scores within LocalStorage
  */
-const Settings = module.exports = {
+const Settings = {
 
     /**
      * Storable properties
@@ -69,6 +67,7 @@ const Settings = module.exports = {
         save();
     }
 };
+export default Settings;
 
 function retrieve() {
     try {
@@ -93,10 +92,10 @@ function save() {
 
 function createDefaultConfiguration() {
     const out = {};
-
+    
     out[ Settings.PROPS.HAS_PLAYED ] = false;
     // note we mute audio when in local dev mode
-    out[ Settings.PROPS.MUSIC_ON ]   = ( window.location.href.indexOf( "localhost" ) === -1 );
+    out[ Settings.PROPS.MUSIC_ON ]   = process.env.NODE_ENV !== "development";
 
     return out;
 }

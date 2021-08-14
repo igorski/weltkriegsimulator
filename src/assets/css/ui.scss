@@ -1,0 +1,108 @@
+/* game UI */
+
+.wks-ui-score {
+    position: absolute;
+    top: 0;
+    right: 1em;
+    color: #FFF;
+    font-family: astral_delight_upright;
+    font-size: 150%;
+
+    div {
+        display: inline;
+
+        &.unit {
+            font-size: 75%;
+        }
+    }
+}
+
+.wks-ui-energy {
+    position: absolute;
+    top: 3em;
+    right: $spacing-medium;
+    height: 8px;
+    width: 100px;
+    background-color: greenyellow;
+    transition: width 200ms ease-in-out;
+}
+
+.wks-ui-messages {
+    position: absolute;
+    top: 0;
+    left: 1em;
+    color: #FFF;
+
+    h1 {
+        margin-top: 0;
+        padding-top: 0;
+    }
+}
+
+.wks-ui-instructions {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    color: #FFF;
+    font-family: astral_delight_upright;
+    text-transform: uppercase;
+    @include noSelect();
+    @include noEvents();
+}
+
+.wks-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* touch screen controls */
+
+$dpadRadius: 90px;
+$margin: ( $dpadRadius / 2 );
+
+.wks-ui-dpad {
+    position: absolute;
+    left: $margin;
+    bottom: $margin;
+    width: $dpadRadius;
+    height: $dpadRadius;
+    background: transparent url(../images/graphics/dpad.png) no-repeat 50%;
+    background-size: 100%;
+    @include noSelect();
+
+    @include mobile() {
+        left: ( $margin / 3 );
+    }
+}
+
+.wks-ui-buttons {
+    position: absolute;
+    bottom: $margin;
+    right: ( $margin / 2 );
+
+    @include mobile() {
+        right: ( $margin / 4 );
+    }
+
+    button {
+        display: inline;
+        position: relative;
+        width: 55px;
+        height: 55px;
+        background-size: 100%;
+        border: none;
+        color: #FFF;
+        @include noSelect();
+    }
+
+    &__fire {
+        bottom: ( $margin / 2 );
+        background: transparent url(../images/graphics/btnB.png) no-repeat 50%;
+    }
+
+    &__layer {
+        background: transparent url(../images/graphics/btnA.png) no-repeat 50%;
+    }
+}

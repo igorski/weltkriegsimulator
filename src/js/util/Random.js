@@ -20,13 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
 
 /**
  * convenience helper for all things associated
  * with chance and randomizing values :)
  */
-const Random = module.exports = {
+const Random = {
 
     /**
      * random value at least equal to given min, and
@@ -53,7 +52,7 @@ const Random = module.exports = {
 
     /**
      * random value from given Array
-     * @param {Array.<*>} array
+     * @param {Array<*>} array
      * @return {*}
      */
     from( array ) {
@@ -68,3 +67,4 @@ const Random = module.exports = {
         return Math.random() > .5;
     }
 };
+export default Random;

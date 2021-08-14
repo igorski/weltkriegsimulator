@@ -20,15 +20,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config          = require( "../config/Config" );
-const Copy            = require( "../definitions/Copy" );
-const Messages        = require( "../definitions/Messages" );
-const Pubsub          = require( "pubsub-js" );
-const EventHandler    = require( "../util/EventHandler" );
-const InputController = require( "../controller/InputController" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Pubsub          from "pubsub-js";
+import Config          from "@/config/Config";
+import Copy            from "@/definitions/Copy";
+import Messages        from "@/definitions/Messages";
+import EventHandler    from "@/util/EventHandler";
+import InputController from "@/controller/InputController";
+import HTMLTemplate    from "Templates/game_screen.hbs";
+import gsap, { Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
@@ -37,66 +36,63 @@ let handler, tokens = [], dPadPointerId, player;
 let eventOffsetX, eventOffsetY;
 const MOVE_RAMP_UP_DURATION = .3;
 
-module.exports = {
+export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, models ) {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
-        player = wks.gameModel.player;
+        player    = models.gameModel.player;
         container = wrapper;
 
-        templateService.render( "Screen_Game", wrapper, {
-
-            "controls": addControls
-
-        }).then(() => {
-
-            // grab references to HTML Elements
-            energyUI       = wrapper.querySelector( "#energy" );
-            scoreUI        = wrapper.querySelector( "#score .counter" );
-            messagePanel   = wrapper.querySelector( "#messages" );
-            messageTitleUI = messagePanel.querySelector( ".title" );
-            messageBodyUI  = messagePanel.querySelector( ".body" );
-
-            if ( addControls ) {
-                dPad     = wrapper.querySelector( "#dPad" );
-                btnFire  = wrapper.querySelector( "#btnFire" );
-                btnLayer = wrapper.querySelector( "#btnLayer" );
-
-                handler = new EventHandler();
-
-                // listen to window resize/orientation changes
-
-                handler.listen( window, "resize",            handleResize );
-                handler.listen( window, "orientationchange", handleResize );
-
-                // button handlers
-
-                handler.listen( btnFire,  "touchstart",  handleFire );
-                handler.listen( btnFire,  "touchend",    handleFire );
-                handler.listen( btnFire,  "touchcancel", handleFire );
-                handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
-                handler.listen( dPad,     "touchstart",  handleDPad );
-                handler.listen( dPad,     "touchmove",   handleDPad );
-                handler.listen( dPad,     "touchend",    handleDPad );
-                handler.listen( dPad,     "touchcancel", handleDPad );
-
-                // calculates and caches dPad offsets
-                handleResize();
-            }
-
-            // subscribe to messaging system
-
-            [
-                Messages.SHOW_INSTRUCTIONS,
-                Messages.SHOW_MESSAGE,
-                Messages.UPDATE_SCORE,
-                Messages.UPDATE_ENERGY
-
-            ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
-
-            updateScore( 0 );
+        wrapper.innerHTML = HTMLTemplate({
+            controls: addControls
         });
+
+        // grab references to HTML Elements
+        energyUI       = wrapper.querySelector( ".wks-ui-energy" );
+        scoreUI        = wrapper.querySelector( ".wks-ui-score__counter" );
+        messagePanel   = wrapper.querySelector( ".wks-ui-messages" );
+        messageTitleUI = messagePanel.querySelector( ".wks-ui-messages__title" );
+        messageBodyUI  = messagePanel.querySelector( ".wks-ui-messages__text" );
+
+        if ( addControls ) {
+            dPad     = wrapper.querySelector( ".wks-ui-dpad" );
+            btnFire  = wrapper.querySelector( ".wks-ui-buttons__fire" );
+            btnLayer = wrapper.querySelector( ".wks-ui-buttons__layer" );
+
+            handler = new EventHandler();
+
+            // listen to window resize/orientation changes
+
+            handler.listen( window, "resize",            handleResize );
+            handler.listen( window, "orientationchange", handleResize );
+
+            // button handlers
+
+            handler.listen( btnFire,  "touchstart",  handleFire );
+            handler.listen( btnFire,  "touchend",    handleFire );
+            handler.listen( btnFire,  "touchcancel", handleFire );
+            handler.listen( btnLayer, "touchstart",  handleLayerSwitch );
+            handler.listen( dPad,     "touchstart",  handleDPad );
+            handler.listen( dPad,     "touchmove",   handleDPad );
+            handler.listen( dPad,     "touchend",    handleDPad );
+            handler.listen( dPad,     "touchcancel", handleDPad );
+
+            // calculates and caches dPad offsets
+            handleResize();
+        }
+
+        // subscribe to messaging system
+
+        [
+            Messages.SHOW_INSTRUCTIONS,
+            Messages.SHOW_MESSAGE,
+            Messages.UPDATE_SCORE,
+            Messages.UPDATE_ENERGY
+
+        ].forEach(( msg ) => tokens.push( Pubsub.subscribe( msg, handleBroadcast )));
+
+        updateScore( 0 );
     },
 
     dispose() {
@@ -144,11 +140,11 @@ function updateScore( score ) {
 }
 
 function animateMessage() {
-    TweenMax.killTweensOf( messagePanel );
+    gsap.killTweensOf( messagePanel );
     // fade message in
-    TweenMax.fromTo( messagePanel, .5, { css: { autoAlpha: 0 }}, { css: { autoAlpha: 1 }});
+    gsap.fromTo( messagePanel, .5, { css: { autoAlpha: 0 }}, { css: { autoAlpha: 1 }});
     // and remove it after a short period
-    TweenMax.to( messagePanel, .5, { css: { autoAlpha: 0 }, delay: 5 });
+    gsap.to( messagePanel, .5, { css: { autoAlpha: 0 }, delay: 5 });
 }
 
 function handleDPad( event ) {
@@ -252,21 +248,22 @@ function showInstructions() {
     el.setAttribute( "id", "instructions" );
     container.appendChild( el );
 
-    const tl = new TimelineMax();
-    tl.add( TweenMax.delayedCall( 1, () => true ));
+    const tl = gsap.timeline();
+    tl.add( gsap.delayedCall( 1, () => true ));
 
     let lastDisplayedDoc = -1;
     for ( let i = 0, l = docs.length; i < l; ++i ) {
-        tl.add( TweenMax.delayedCall( docs[ i ].timeout, () => {
+        tl.add( gsap.delayedCall( docs[ i ].timeout, () => {
             el.innerHTML = docs[ ++lastDisplayedDoc ].text;
         }));
     }
     // all done, start the game actions queue
-    tl.add( TweenMax.delayedCall( 4, () => {
+    tl.add( gsap.delayedCall( 4, () => {
         // null check as the player can die during the instructions ;)
         // (leads to this screen to have been removed)
-        if ( el )
+        if ( el ) {
             container.removeChild( el );
+        }
         Pubsub.publish( Messages.INSTRUCTIONS_COMPLETE );
     }));
 }

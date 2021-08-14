@@ -20,62 +20,55 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import { sprite } from "zcanvas";
+import Config     from "../../config/Config";
+import Assets     from "../../definitions/Assets";
 
-const Config  = require( "../../config/Config" );
-const zCanvas = require( "zcanvas" );
-const Assets  = require( "../../definitions/Assets" );
+export default class SkyRenderer extends sprite
+{
+    /**
+     * a renderer that draws some pretty nice lookin' sky details
+     * there is no Actor for this renderer, it's merely decorative !
+     *
+     * @constructor
+     * @param {number} x
+     * @param {number} y
+     * @param {number=} speed
+     * @param {number=} scale
+     */
+    constructor( x, y, speed, scale ) {
 
-module.exports = SkyRenderer;
+        scale = ( typeof scale === "number" ) ? scale : 1;
 
-/**
- * a renderer that draws some pretty nice lookin' sky details
- * there is no Actor for this renderer, it's merely decorative !
- *
- * @constructor
- * @param {number} x
- * @param {number} y
- * @param {number=} speed
- * @param {number=} scale
- */
-function SkyRenderer( x, y, speed, scale ) {
+        super({ x, y, width: 300 * scale, height: 508 * scale, bitmap: Assets.GRAPHICS.SKY });
 
-    scale = ( typeof scale === "number" ) ? scale : 1;
+        /* instance properties */
 
-    SkyRenderer.super(
-        this, "constructor", x, y, 300 * scale, 508 * scale,
-        Assets.GRAPHICS.SKY
-    );
+        /**
+         * @public
+         * @type {number}
+         */
+        this.speed = ( typeof speed === "number" ) ? speed : 1;
+    }
 
-    /* instance properties */
+    /* public methods */
 
     /**
+     * @override
      * @public
-     * @type {number}
+     * @param {CanvasRenderingContext2D} aCanvasContext
      */
-    this.speed = ( typeof speed === "number" ) ? speed : 1;
-}
-zCanvas.sprite.extend( SkyRenderer );
-
-/* public methods */
-
-/**
- * @override
- * @public
- * @param {CanvasRenderingContext2D} aCanvasContext
- */
-SkyRenderer.prototype.draw = function( aCanvasContext ) {
-
-    this.sync();
-    SkyRenderer.super( this, "draw", aCanvasContext );
-};
-
-SkyRenderer.prototype.sync = function() {
-
-    this._bounds.top += this.speed;
-
-    if ( this._bounds.top > this.canvas.getHeight() ) {
-        this._bounds.top = -this._bounds.height;
-        this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
+    draw( aCanvasContext ) {
+        this.sync();
+        super.draw( aCanvasContext );
     }
-};
+
+    sync() {
+        this._bounds.top += this.speed;
+
+        if ( this._bounds.top > this.canvas.getHeight() ) {
+            this._bounds.top = -this._bounds.height;
+            this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
+        }
+    }
+}

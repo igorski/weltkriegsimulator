@@ -20,60 +20,59 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import ActorRenderer from "./ActorRenderer";
+import Bullet        from "../../model/actors/Bullet";
+import Assets        from "../../definitions/Assets";
 
-const ActorRenderer = require( "./ActorRenderer" );
-const Bullet        = require( "../../model/actors/Bullet" );
-const Assets        = require( "../../definitions/Assets" );
-
-module.exports = BulletRenderer;
-
-/**
- * a renderer that represents the Ship actor on screen
- *
- * @constructor
- * @param {Ship} bullet
- * @param {RenderController} renderController
- */
-function BulletRenderer( bullet, renderController ) {
-    BulletRenderer.super( this, "constructor", bullet, renderController );
-    this.setBitmap( Assets.GRAPHICS.BULLET );
-}
-ActorRenderer.extend( BulletRenderer );
-
-/* public methods */
-
-/**
- * @override
- * @public
- * @param {CanvasRenderingContext2D} aCanvasContext
- */
-BulletRenderer.prototype.draw = function( aCanvasContext ) {
-
-    this.sync(); // sync with model state
-
-    if ( !this._bitmapReady )
-        return;
-
-    // you could consider fillRect w/ fillStyle white but profiling shows
-    // that drawImage is orders of magnitude faster !!
-
-    switch ( this.actor.layer ) {
-        default:
-            aCanvasContext.drawImage(
-                this._bitmap,
-                .5 + this._bounds.left << 0,
-                .5 + this._bounds.top << 0
-            );
-            break;
-
-        case 0:
-            aCanvasContext.drawImage(
-                this._bitmap,
-                .5 + this._bounds.left << 0,
-                .5 + this._bounds.top  << 0,
-                5, 5
-            );
-            break;
+export default class BulletRenderer extends ActorRenderer
+{
+    /**
+     * a renderer that represents the Ship actor on screen
+     *
+     * @constructor
+     * @param {Ship} bullet
+     * @param {RenderController} renderController
+     */
+    constructor( bullet, renderController ) {
+        super( bullet, renderController );
+        this.setBitmap( Assets.GRAPHICS.BULLET );
     }
-};
+
+
+    /* public methods */
+
+    /**
+     * @override
+     * @public
+     * @param {CanvasRenderingContext2D} aCanvasContext
+     */
+    draw( aCanvasContext ) {
+
+        this.sync(); // sync with model state
+
+        if ( !this._bitmapReady )
+            return;
+
+        // you could consider fillRect w/ fillStyle white but profiling shows
+        // that drawImage is orders of magnitude faster !!
+
+        switch ( this.actor.layer ) {
+            default:
+                aCanvasContext.drawImage(
+                    this._bitmap,
+                    .5 + this._bounds.left << 0,
+                    .5 + this._bounds.top << 0
+                );
+                break;
+
+            case 0:
+                aCanvasContext.drawImage(
+                    this._bitmap,
+                    .5 + this._bounds.left << 0,
+                    .5 + this._bounds.top  << 0,
+                    5, 5
+                );
+                break;
+        }
+    }
+}

@@ -20,12 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
 
 /**
  * Enemy flight patterns
  */
-module.exports = {
+export default {
     VERTICAL_ONLY : 0,
     WIDE_SINE     : 1,
     SIDEWAYS_CUBE : 2

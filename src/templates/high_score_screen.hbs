@@ -1,0 +1,16 @@
+<header class="wks-header">
+    <h1 class="wks-title">High scores</h1>
+</header>
+<section class="wks-text">
+    <ol>
+    {{#each scores}}
+        <li>{{name}} - {{score}}</li>
+    {{/each}}
+    </ol>
+</section>
+<footer class="wks-footer">
+    <section class="wks-menu">
+        <button class="wks-button wks-menu__play-button">Play</button>
+        <button class="wks-button wks-menu__home-button">Home</button>
+    </section>
+</footer>

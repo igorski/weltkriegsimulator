@@ -20,9 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-module.exports = {
+export default {
     /**
      * @type {boolean}
      */
@@ -34,12 +32,5 @@ module.exports = {
      *
      * @type {string}
      */
-    SOUNDCLOUD_CLIENT_ID: "" || window.soundCloudApiKey,
-
-    /**
-     * @return {string}
-     */
-    getBaseURL() {
-        return ( typeof window.assetPath === "string" ) ? window.assetPath : window.location.origin + window.location.pathname;
-    }
+    SOUNDCLOUD_CLIENT_ID: "" || window.soundCloudApiKey || localStorage?.getItem( "soundCloudApiKey" ),
 };

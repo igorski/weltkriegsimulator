@@ -20,14 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Actor        from "./Actor";
+import Bullet       from "./Bullet";
+import ShipRenderer from "@/view/renderers/ShipRenderer";
+import gsap         from "gsap";
 
-const Actor        = require( "./Actor" );
-const Bullet       = require( "./Bullet" );
-const ShipRenderer = require( "../../view/renderers/ShipRenderer" );
-const { TweenMax } = require( "gsap" );
-
-module.exports = class Ship extends Actor {
+class Ship extends Actor {
 
     /**
      * @constructor
@@ -137,13 +135,14 @@ module.exports = class Ship extends Actor {
         this.game.removeActor( this, true );
     }
 };
+export default Ship;
 
 // reset layer switching state in case
 // this Ship died during a layer switch operation
 
 function killLayerSwitch( ship ) {
     if ( ship.switching ) {
-        TweenMax.killTweensOf( ship );
+        gsap.killTweensOf( ship );
         ship.switching = false;
         ship.layer     = 1;
         ship.width     = ship.orgWidth;

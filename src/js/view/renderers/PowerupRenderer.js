@@ -20,57 +20,56 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Config        from "../../config/Config";
+import Powerup       from "../../model/actors/Powerup";
+import ActorRenderer from "./ActorRenderer";
+import Assets        from "../../definitions/Assets";
 
-const Config        = require( "../../config/Config" );
-const Powerup       = require( "../../model/actors/Powerup" );
-const ActorRenderer = require( "./ActorRenderer" );
-const Assets        = require( "../../definitions/Assets" );
+export default class PowerupRenderer extends ActorRenderer
+{
+    /**
+     * a renderer that represents the Powerup actor on screen
+     *
+     * @constructor
+     * @param {Powerup} powerup
+     * @param {RenderController} renderController
+     */
+    constructor( powerup, renderController ) {
+        super( powerup, renderController );
 
-module.exports = PowerupRenderer;
-
-/**
- * a renderer that represents the Powerup actor on screen
- *
- * @constructor
- * @param {Powerup} powerup
- * @param {RenderController} renderController
- */
-function PowerupRenderer( powerup, renderController ) {
-    PowerupRenderer.super( this, "constructor", powerup, renderController );
-
-    this.setBitmap( Assets.GRAPHICS.POWERUP );
-    this.setSheet([
-            // energy
-            { row: 0, col: 0, fpt: 1, amount: 1 },
-            // bullet spray
-            { row: 0, col: 1, fpt: 1, amount: 1 },
-            // score
-            { row: 0, col: 2, fpt: 1, amount: 1 }
-        ],
-        64, 64
-    );
-    this.setSheetForPowerup();
-}
-ActorRenderer.extend( PowerupRenderer );
-
-/* public methods */
-
-/**
- * @public
- */
-PowerupRenderer.prototype.setSheetForPowerup = function() {
-    let animation = 0;
-
-    switch ( /** @type {Powerup} */ ( this.actor ).type ) {
-        default:
-            break;
-        case 1:
-            animation = 1;
-            break;
-        case 2:
-            animation = 2;
-            break;
+        this.setBitmap( Assets.GRAPHICS.POWERUP );
+        this.setSheet([
+                // energy
+                { row: 0, col: 0, fpt: 1, amount: 1 },
+                // bullet spray
+                { row: 0, col: 1, fpt: 1, amount: 1 },
+                // score
+                { row: 0, col: 2, fpt: 1, amount: 1 }
+            ],
+            64, 64
+        );
+        this.setSheetForPowerup();
     }
-    this.switchAnimation( animation );
-};
+
+
+    /* public methods */
+
+    /**
+     * @public
+     */
+    setSheetForPowerup() {
+        let animation = 0;
+
+        switch ( /** @type {Powerup} */ ( this.actor ).type ) {
+            default:
+                break;
+            case 1:
+                animation = 1;
+                break;
+            case 2:
+                animation = 2;
+                break;
+        }
+        this.switchAnimation( animation );
+    }
+}

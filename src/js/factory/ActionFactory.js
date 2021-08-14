@@ -20,13 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Random        = require( "../util/Random" );
-const Patterns      = require( "../definitions/Patterns" );
-const Weapons       = require( "../definitions/Weapons" );
-const WeaponFactory = require( "./WeaponFactory" );
-const Boss          = require( "../model/actors/Boss" );
+import Random        from "../util/Random";
+import Patterns      from "../definitions/Patterns";
+import Weapons       from "../definitions/Weapons";
+import WeaponFactory from "./WeaponFactory";
+import Boss          from "../model/actors/Boss";
 
 /**
  * list of actions that enqueue the enemy squadrons, powerups,
@@ -36,7 +34,7 @@ const Boss          = require( "../model/actors/Boss" );
  * "timeout" describes the timeout (in seconds) until
  * the next action in the list should be called
  *
- * @type {Array.<{fn: Function, timeout: number}>}
+ * @type {Array<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
     { fn: generateHorizontalWave,    timeout: 5 },
@@ -62,7 +60,7 @@ let queuedAction;
 
 let level = 0;
 
-module.exports = {
+export default {
 
     /**
      * execute the enqueued action

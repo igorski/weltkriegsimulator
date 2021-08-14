@@ -20,39 +20,37 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Pubsub       from "pubsub-js";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
+import HTMLTemplate from "Templates/high_score_screen.hbs";
+import gsap, { Cubic, Elastic } from "gsap";
 
 let handler, text, playButton, homeButton;
 let title, footer;
 
-module.exports = {
+export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, models ) {
 
-        templateService.render( "Screen_About", wrapper, {
-
-        }).then(() => {
-
-            // grab references to HTML Elements
-
-            title   = wrapper.querySelector( "h1" );
-            footer  = wrapper.querySelector( "footer" );
-            text    = wrapper.querySelector( "#text" );
-
-            playButton = wrapper.querySelector( "#btnPlay" );
-            homeButton = wrapper.querySelector( "#btnHome" );
-
-            animateIn();
-
-            handler = new EventHandler();
-            handler.listen( playButton, "click", handlePlayClick );
-            handler.listen( homeButton, "click", handleHomeClick );
+        wrapper.innerHTML = HTMLTemplate({
+            scores: models.highScoresModel.get()
         });
+
+        // grab references to HTML Elements
+
+        title   = wrapper.querySelector( ".wks-title" );
+        footer  = wrapper.querySelector( ".wks-footer" );
+        text    = wrapper.querySelector( ".wks-text" );
+
+        playButton = wrapper.querySelector( ".wks-menu__play-button" );
+        homeButton = wrapper.querySelector( ".wks-menu__home-button" );
+
+        animateIn();
+
+        handler = new EventHandler();
+        handler.listen( playButton, "click", handlePlayClick );
+        handler.listen( homeButton, "click", handleBackClick );
     },
 
     dispose() {
@@ -71,7 +69,7 @@ function handlePlayClick( event ) {
     });
 }
 
-function handleHomeClick( event ) {
+function handleBackClick( event ) {
 
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_TITLE_SCREEN );
@@ -79,20 +77,20 @@ function handleHomeClick( event ) {
 }
 
 function animateIn() {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.to( text, 0, { css: { autoAlpha: 0 }} ));
-    tl.add( TweenMax.fromTo( title, 2,
+    const tl = gsap.timeline();
+    tl.add( gsap.to( text, 0, { css: { autoAlpha: 0 }} ));
+    tl.add( gsap.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 1 }}));
-    tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+    tl.add( gsap.to( text, 1, { css: { autoAlpha: 1 }}));
+    tl.add( gsap.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
 }
 
 function animateOut( callback ) {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.to( text, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-        TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-        TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
+    const tl = gsap.timeline();
+    tl.add( gsap.to( text, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+        gsap.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
+        gsap.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
     }}));
 }

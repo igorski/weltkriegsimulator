@@ -20,11 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Actor from "./Actor";
 
-const Actor = require( "./Actor" );
-
-module.exports = class Powerup extends Actor {
+class Powerup extends Actor {
 
     /**
      * @constructor
@@ -63,3 +61,4 @@ module.exports = class Powerup extends Actor {
         this.height = this.orgHeight = 30;
     }
 };
+export default Powerup;

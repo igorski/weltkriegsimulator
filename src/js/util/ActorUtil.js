@@ -20,19 +20,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import gsap from "gsap";
 
-const { TweenMax } = require( "gsap" );
-
-module.exports = {
+export default {
 
     /**
      * change the value of given property of given actor
      * to targetValue over a time of delayTime seconds
      *
      * @param {Ship} actor
-     * @param {string|Array.<string>} property single String or Array of Strings
-     * @param {number|Array.<number>} targetValue single number or Array of numbers
+     * @param {string|Array<string>} property single String or Array of Strings
+     * @param {number|Array<number>} targetValue single number or Array of numbers
      * @param {number} delayTime in seconds
      * @param {Function=} optCallback optional callback to execute when ready
      * @param {Function=} optEase optional easing function to use
@@ -49,8 +47,9 @@ module.exports = {
             vars.onUpdate = optUpdate;
 
         if ( Array.isArray( property )) {
-            for ( let i = 0, l = property.length; i < l; ++i )
+            for ( let i = 0, l = property.length; i < l; ++i ) {
                 vars[ property[ i ]] = targetValue[ i ];
+            }
         }
         else {
             vars[ property ] = targetValue;
@@ -59,7 +58,7 @@ module.exports = {
             vars[ "ease" ] = optEase;
         }
 
-        TweenMax.to(
+        gsap.to(
             actor, delayTime, vars
         );
     }

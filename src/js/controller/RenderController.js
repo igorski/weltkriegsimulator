@@ -20,19 +20,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Pubsub          from "pubsub-js";
+import { canvas, sprite, collision } from "zcanvas";
+import Messages        from "../definitions/Messages";
+import RendererFactory from "../factory/RendererFactory";
+import SkyRenderer     from "../view/renderers/SkyRenderer";
+import TileRenderer    from "../view/renderers/TileRenderer";
+import FXRenderer      from "../view/renderers/FXRenderer";
+import Powerup         from "../model/actors/Powerup";
+import gsap, { TweenMax, Power1 } from "gsap";
 
-const Pubsub          = require( "pubsub-js" );
-const Messages        = require( "../definitions/Messages" );
-const zCanvas         = require( "zcanvas" );
-const RendererFactory = require( "../factory/RendererFactory" );
-const SkyRenderer     = require( "../view/renderers/SkyRenderer" );
-const TileRenderer    = require( "../view/renderers/TileRenderer" );
-const FXRenderer      = require( "../view/renderers/FXRenderer" );
-const Powerup         = require( "../model/actors/Powerup" );
-const { TweenMax, TimelineMax, Power1 } = require( "gsap" );
-
-let audioModel, gameModel, canvas, player, background;
+let audioModel, gameModel, zCanvas, player;
 
 // ideal width of the game, this is blown up by CSS
 // for a fullscreen experience, while maintaining the "pixel art" vibe
@@ -56,32 +54,31 @@ let TOP_ACTOR_LAYER         = 3;
 let TOP_DECORATION_LAYER    = 4;
 
 const COLORS = {
-    TOP: "#0055d8",
-    BOTTOM: "#990000"
+    TOP     : "#0055d8",
+    BOTTOM  : "#990000"
 };
 
 // pool of renderers that show effects like transitions or explosions
 const FXRenderers = new Array( 25 );
 
-const RenderController = module.exports = {
+const RenderController = {
 
-    init( wks, container ) {
+    init( container, models ) {
 
-        audioModel = wks.audioModel;
-        gameModel  = wks.gameModel;
+        ({ gameModel, audioModel } = models );
 
-        canvas = new zCanvas.canvas({
-            width: IDEAL_WIDTH,
-            height: IDEAL_WIDTH,
-            animate: true,
-            smoothing: false,
+        zCanvas = new canvas({
+            width       : IDEAL_WIDTH,
+            height      : IDEAL_WIDTH,
+            animate     : true,
+            smoothing   : false,
             stretchToFit: true,
-            fps: 60,
-            onUpdate: wks.gameModel.update
+            fps         : 60,
+            onUpdate    : gameModel.update
         });
-        canvas.preventEventBubbling( true );
-        canvas.setBackgroundColor( COLORS.TOP );
-        canvas.insertInPage( container );
+        zCanvas.preventEventBubbling( true );
+        zCanvas.setBackgroundColor( COLORS.TOP );
+        zCanvas.insertInPage( container );
 
         setupGame();
 
@@ -124,6 +121,7 @@ const RenderController = module.exports = {
      */
     rumbling: { active: false, x: 0, y: 0 }
 };
+export default RenderController;
 
 /* private methods */
 
@@ -136,8 +134,8 @@ function setupGame() {
     );
 
     for ( let i = 0; i < layers.length; ++i ) {
-        const layer = new zCanvas.sprite({ width: 0, height: 0 });
-        canvas.addChild( layer );
+        const layer = new sprite();//{ width: 0, height: 0 });
+        zCanvas.addChild( layer );
         layers[ i ] = layer;
     }
 
@@ -156,12 +154,13 @@ function setupGame() {
     GROUND_LAYER.addChild( new TileRenderer( 0, 0, 1, .5 ) );
     BOTTOM_DECORATION_LAYER.addChild( new SkyRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
-    TOP_DECORATION_LAYER.addChild( new SkyRenderer( canvas.getWidth() - 100, -100, 1 ) );
+    TOP_DECORATION_LAYER.addChild( new SkyRenderer( zCanvas.getWidth() - 100, -100, 1 ) );
 
     // create Pool of top level renderers
 
-    for ( let i = 0; i < FXRenderers.length; ++i )
+    for ( let i = 0; i < FXRenderers.length; ++i ) {
         FXRenderers[ i ] = new FXRenderer( RenderController );
+    }
 
     // ensures optimal size
     handleResize();
@@ -200,7 +199,7 @@ function handleBroadcast( type, payload ) {
 
         case Messages.ACTOR_LAYER_SWITCH_START:
             showLayerSwitchAnimation( payload.actor, payload.layer );
-            TweenMax.delayedCall( .5, () => checkLayerSwitchCollision( payload.actor, payload.layer ));
+            gsap.delayedCall( .5, () => checkLayerSwitchCollision( payload.actor, payload.layer ));
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
@@ -222,10 +221,8 @@ function handleBroadcast( type, payload ) {
 }
 
 function clearGame() {
-
     if ( player ) {
-        canvas.removeChild( player );
-        canvas.removeChild( background );
+        zCanvas.removeChild( player );
     }
     let i = actors.length;
     while ( i-- ) {
@@ -270,12 +267,12 @@ function removeRendererFromDisplayList( renderer ) {
  */
 function rumble() {
 
-    if ( RenderController.rumbling.active )
+    if ( RenderController.rumbling.active ) {
         return;
-
+    }
     RenderController.rumbling.active = true;
 
-    const tl = new TimelineMax({ repeat: 5, onComplete: () => {
+    const tl = gsap.timeline({ repeat: 5, onComplete: () => {
         RenderController.rumbling.active = false;
     }});
     tl.add( new TweenMax(
@@ -305,12 +302,13 @@ function checkLayerSwitchCollision( actor, targetLayer ) {
     // (e.g. the tiles present on the middle layer)
     // pixel transparency check to ensure we're not moving through holes in the tiles
 
-    if ( zCanvas.collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
+    if ( collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
         actor.layer = 1;
         actor.die();
 
-        if ( actor === gameModel.player )
+        if ( actor === gameModel.player ) {
             gameModel.onPlayerHit( null );
+        }
     }
 }
 
@@ -339,12 +337,12 @@ function showLayerSwitchAnimation( actor, targetLayer ) {
 function handleResize() {
     // update the world viewport size in the GameModel
     // as this is used to determine boundaries for Actors
-    gameModel.world.width  = canvas.getWidth();
-    gameModel.world.height = canvas.getHeight();
+    gameModel.world.width  = zCanvas.getWidth();
+    gameModel.world.height = zCanvas.getHeight();
     gameModel.player.cacheBounds();
 }
 
 function animateBackgroundColor( targetLayer ) {
-    TweenMax.killTweensOf( canvas );
-    TweenMax.to( canvas, 2, { _bgColor: ( targetLayer === 1 ) ? COLORS.TOP : COLORS.BOTTOM });
+    gsap.killTweensOf( zCanvas );
+    gsap.to( zCanvas, 2, { _bgColor: ( targetLayer === 1 ) ? COLORS.TOP : COLORS.BOTTOM });
 }

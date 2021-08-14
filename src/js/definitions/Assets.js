@@ -20,13 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+const assetRoot = "./assets/";
 
-const Config    = require( "../config/Config" );
-const assetRoot = Config.getBaseURL() + "assets/";
-
-const Assets = module.exports = {
-
+export default {
     GRAPHICS: {
         POWERUP      : `${assetRoot}images/sprites/spritesheet_powerups.png`,
         SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,

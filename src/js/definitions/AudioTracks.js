@@ -20,9 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const AudioTracks = module.exports =
+const AudioTracks =
 {
     /**
      * Track ids of music on SoundCloud
@@ -38,7 +36,7 @@ const AudioTracks = module.exports =
      * listed in this Object
      *
      * @public
-     * @return {Array.<string>}
+     * @return {Array<string>}
      */
     getAll() {
         const out = [];
@@ -49,3 +47,4 @@ const AudioTracks = module.exports =
         return out;
     }
 };
+export default AudioTracks;

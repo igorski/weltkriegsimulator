@@ -20,13 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config  = require( "../../config/Config" );
-const zCanvas = require( "zcanvas" );
-const Assets  = require( "../../definitions/Assets" );
-
-module.exports = FXRenderer;
+import { sprite } from "zcanvas";
+import Config     from "../../config/Config";
+import Assets     from "../../definitions/Assets";
 
 /**
  * a renderer that renders different animations
@@ -36,32 +32,67 @@ module.exports = FXRenderer;
  * @constructor
  * @param {RenderController} renderController
  */
-function FXRenderer( renderController ) {
-
-    FXRenderer.super(
-        this, "constructor", {
+export default class FXRenderer extends sprite
+{
+    constructor( renderController ) {
+        super({
             x: 0, y: 0,
             width:  FXRenderer.TILE_SIZE.width,
             height: FXRenderer.TILE_SIZE.height
-        }
-    );
+        });
 
-    const animationCompleteHandler = renderController.onFXComplete.bind( renderController, this );
+        const animationCompleteHandler = renderController.onFXComplete.bind( renderController, this );
 
-    this.setBitmap( Assets.GRAPHICS.FX );
-    this.setSheet([
+        this.setBitmap( Assets.GRAPHICS.FX );
+        this.setSheet([
 
-            // Animation when Actor is switching layer
-            { row: 0, col: 0, fpt: 2, amount: 8, onComplete: animationCompleteHandler },
+                // Animation when Actor is switching layer
+                { row: 0, col: 0, fpt: 2, amount: 8, onComplete: animationCompleteHandler },
 
-            // Explosion
-            { row: 1, col: 0, fpt: 3, amount: 16, onComplete: animationCompleteHandler }
-        ],
-        FXRenderer.TILE_SIZE.width,
-        FXRenderer.TILE_SIZE.height
-    );
+                // Explosion
+                { row: 1, col: 0, fpt: 3, amount: 16, onComplete: animationCompleteHandler }
+            ],
+            FXRenderer.TILE_SIZE.width,
+            FXRenderer.TILE_SIZE.height
+        );
+    }
+
+    /* public methods */
+
+    /**
+     * @public
+     * @param {Actor} actor
+     * @param {number} animationIndex
+     */
+    showAnimation( actor, animationIndex ) {
+
+        // animation gets equal width/height and coordinates of given actor
+
+        this.setWidth ( actor.width );
+        this.setHeight( actor.height );
+
+        this.setX( actor.x + actor.offsetX );
+        this.setY( actor.y + actor.offsetY );
+
+        this.switchAnimation( animationIndex );
+    };
+
+    /**
+     * @override
+     * @public
+     * @param {CanvasRenderingContext2D} aCanvasContext
+     */
+    draw( aCanvasContext ) {
+        // need to manually trigger update (zCanvas has been
+        // initialized to use an external update handler, which is
+        // the gameloop in Game. The FXRenderer is not part
+        // of the game loop as it has no associated Actor (TODO: is this logical?)
+
+        this.update();
+
+        super.draw( aCanvasContext );
+    }
 }
-zCanvas.sprite.extend( FXRenderer );
 
 /**
  * dimensions of each tile in the spritesheet
@@ -81,40 +112,4 @@ FXRenderer.TILE_SIZE = { width: 64, height: 64 };
 FXRenderer.ANIMATION = {
     CLOUD    : 0,
     EXPLOSION: 1
-};
-
-/* public methods */
-
-/**
- * @public
- * @param {Actor} actor
- * @param {number} animationIndex
- */
-FXRenderer.prototype.showAnimation = function( actor, animationIndex ) {
-
-    // animation gets equal width/height and coordinates of given actor
-
-    this.setWidth ( actor.width );
-    this.setHeight( actor.height );
-
-    this.setX( actor.x + actor.offsetX );
-    this.setY( actor.y + actor.offsetY );
-
-    this.switchAnimation( animationIndex );
-};
-
-/**
- * @override
- * @public
- * @param {CanvasRenderingContext2D} aCanvasContext
- */
-FXRenderer.prototype.draw = function( aCanvasContext ) {
-    // need to manually trigger update (zCanvas has been
-    // initialized to use an external update handler, which is
-    // the gameloop in Game. The FXRenderer is not part
-    // of the game loop as it has no associated Actor (TODO: is this logical?)
-
-    this.update();
-
-    FXRenderer.super( this, "draw", aCanvasContext );
 };

@@ -20,9 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-module.exports = {
+export default {
 
     /**
      * @public
@@ -39,7 +37,7 @@ module.exports = {
             scriptTag.setAttribute( "async", "true" );
             scriptTag.setAttribute( "src", "https://connect.soundcloud.com/sdk.js" );
 
-            scriptTag.onload = resolve;
+            scriptTag.onload  = resolve;
             scriptTag.onerror = reject;
 
             document.getElementsByTagName( "head" )[ 0 ].appendChild( scriptTag );

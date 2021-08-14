@@ -20,28 +20,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Pubsub           from "pubsub-js";
+import Messages         from "@/definitions/Messages";
+import TitleScreen      from "@/view/screens/TitleScreen";
+import GameScreen       from "@/view/screens/GameScreen";
+import GameOverScreen   from "@/view/screens/GameOverScreen";
+import HighScoresScreen from "@/view/screens/HighScoresScreen";
+import AboutScreen      from "@/view/screens/AboutScreen";
+import HowToPlayScreen  from "@/view/screens/HowToPlayScreen";
 
-const Messages         = require( "../definitions/Messages" );
-const Pubsub           = require( "pubsub-js" );
-const TemplateService  = new ( require( "../services/TemplateService" ))();
-const TitleScreen      = require( "../view/TitleScreen" );
-const GameScreen       = require( "../view/GameScreen" );
-const GameOverScreen   = require( "../view/GameOverScreen" );
-const HighScoresScreen = require( "../view/HighScoresScreen" );
-const AboutScreen      = require( "../view/AboutScreen" );
-const HowToPlayScreen  = require( "../view/HowToPlayScreen" );
+let wrapper, currentScreen, models, gameModel, highScoresModel;
 
-let wks, wrapper, currentScreen;
+export default {
 
-module.exports = {
+    init( container, modelRefs ) {
 
-    init( wksRef, container ) {
-
-        wks = wksRef;
+        models = modelRefs;
+        ({ gameModel, highScoresModel } = models );
 
         wrapper = document.createElement( "div" );
-        wrapper.setAttribute( "id", "screenOverlay" );
+        wrapper.setAttribute( "class", "wks-container" );
         container.appendChild( wrapper );
 
         // subscribe to messaging system
@@ -97,6 +95,6 @@ function renderScreen( screen ) {
         currentScreen.dispose();
         wrapper.innerHTML = "";
     }
-    screen.render( wrapper, TemplateService, wks );
+    screen.render( wrapper, models );
     currentScreen = screen;
 }

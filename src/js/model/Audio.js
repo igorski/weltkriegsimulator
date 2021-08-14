@@ -20,15 +20,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config       = require( "../config/Config" );
-const Assets       = require( "../definitions/Assets" );
-const Copy         = require( "../definitions/Copy" );
-const AudioTracks  = require( "../definitions/AudioTracks" );
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
+import Pubsub       from "pubsub-js";
+import Config       from "@/config/Config";
+import Assets       from "@/definitions/Assets";
+import Copy         from "@/definitions/Copy";
+import AudioTracks  from "@/definitions/AudioTracks";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
 
 let inited        = false;
 let playing       = false;
@@ -39,7 +37,7 @@ const handler     = new EventHandler();
 
 let audioContext, filter, masterBus, explosion, laser;
 
-const Audio = module.exports = {
+const Audio = {
 
     muted: false,
 
@@ -47,23 +45,25 @@ const Audio = module.exports = {
      * @public
      */
     init() {
-        if ( inited || !( "SC" in window ))
+        if ( inited || !( "SC" in window )) {
             return;
+        }
 
-        SC.initialize({
-            client_id: Config.SOUNDCLOUD_CLIENT_ID
-            //    ,redirect_uri: "https://developers.soundcloud.com/callback.html"
+        debouncedSetup(() => {
+            SC.initialize({
+                client_id: Config.SOUNDCLOUD_CLIENT_ID
+            });
+            inited = true;
+
+            setupWebAudioAPI();
+
+            // prepare the sound effects
+            explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
+            laser     = createAudioElement( Assets.AUDIO.AU_LASER );
+
+            // enqueue the first track for playback
+            Audio.enqueueTrack();
         });
-        inited = true;
-
-        setupWebAudioAPI();
-
-        // prepare the sound effects
-        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
-        laser     = createAudioElement( Assets.AUDIO.AU_LASER );
-
-        // enqueue the first track for playback
-        Audio.enqueueTrack();
     },
 
     /**
@@ -83,19 +83,18 @@ const Audio = module.exports = {
             }
         }
     },
-    
+
     /**
      * enqueue a track from the available pool for playing
      */
     enqueueTrack() {
-        if ( !inited || Audio.muted )
+        if ( !inited || Audio.muted ) {
             return;
-
+        }
         const trackId = _getTrackIdFromPool();
-    
-        if ( queuedTrackId === trackId  )
+        if ( queuedTrackId === trackId ) {
             return;
-    
+        }
         queuedTrackId = trackId;
 
         // prepare the stream from SoundCloud, we create an inline <audio> tag instead
@@ -117,14 +116,11 @@ const Audio = module.exports = {
      */
     playEnqueuedTrack() {
 
-        if ( !inited || Audio.muted )
+        if ( !inited || Audio.muted ) {
             return;
-
+        }
         if ( Config.HAS_TOUCH_CONTROLS ) {
-            // on mobile devices we will not hear anything unless it comes
-            // after a direct user response
-            handler.listen( document, "touchstart", ( e ) => {
-                handler.dispose();
+            debouncedSetup(() => {
                 _startPlayingEnqueuedTrack();
             });
         }
@@ -158,6 +154,7 @@ const Audio = module.exports = {
         }
     }
 };
+export default Audio;
 
 /* private methods */
 
@@ -258,4 +255,16 @@ function setupWebAudioAPI() {
         // set default frequency of filter
         Audio.setFrequency();
     }
+}
+
+// WebAudio API is only allowed to start after a user interaction
+
+function debouncedSetup( callback ) {
+    const handler = () => {
+        setupHandler.dispose();
+        callback();
+    };
+    const setupHandler = new EventHandler();
+    setupHandler.listen( document, "keyup", handler );
+    setupHandler.listen( document, "click", handler );
 }

@@ -20,14 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const ActorUtil    = require( "../util/ActorUtil" );
-const Bullet       = require( "../model/actors/Bullet" );
-const EventHandler = require( "../util/EventHandler" );
-const { TweenMax } = require( "gsap" );
+import Messages     from "../definitions/Messages";
+import Pubsub       from "pubsub-js";
+import ActorUtil    from "../util/ActorUtil";
+import Bullet       from "../model/actors/Bullet";
+import EventHandler from "../util/EventHandler";
+import gsap         from "gsap";
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;
@@ -41,11 +39,11 @@ const activeMovement = {
 
 let gameModel, player;
 
-const InputController = module.exports = {
+const InputController = {
 
-    init( wks ) {
+    init( models ) {
 
-        gameModel = wks.gameModel;
+        ({ gameModel } = models );
         player = gameModel.player;
 
         [
@@ -62,7 +60,7 @@ const InputController = module.exports = {
             activeMovement.left = true;
             if ( killExisting ) {
                 activeMovement.right = false;
-                TweenMax.killTweensOf( player, true, { "xSpeed": true });
+                gsap.killTweensOf( player, true, { "xSpeed": true });
             }
             ActorUtil.setDelayed( player, "xSpeed", -5, speed );
         }
@@ -73,7 +71,7 @@ const InputController = module.exports = {
             activeMovement.right = true;
             if ( killExisting ) {
                 activeMovement.left = false;
-                TweenMax.killTweensOf( player, true, { "xSpeed": true });
+                gsap.killTweensOf( player, true, { "xSpeed": true });
             }
             ActorUtil.setDelayed( player, "xSpeed", 5, speed );
         }
@@ -84,7 +82,7 @@ const InputController = module.exports = {
             activeMovement.up = true;
             if ( killExisting ) {
                 activeMovement.down = false;
-                TweenMax.killTweensOf( player, true, { "ySpeed": true });
+                gsap.killTweensOf( player, true, { "ySpeed": true });
             }
             ActorUtil.setDelayed( player, "ySpeed", -5, speed );
         }
@@ -95,7 +93,7 @@ const InputController = module.exports = {
             activeMovement.down = true;
             if ( killExisting ) {
                 activeMovement.up = false;
-                TweenMax.killTweensOf( player, true, { "ySpeed": true });
+                gsap.killTweensOf( player, true, { "ySpeed": true });
             }
             ActorUtil.setDelayed( player, "ySpeed", 5, speed );
         }
@@ -110,7 +108,7 @@ const InputController = module.exports = {
         activeMovement.right = false;
 
         if ( player.xSpeed !== 0 ) {
-            TweenMax.killTweensOf( player, true, { "xSpeed": true });
+            gsap.killTweensOf( player, true, { "xSpeed": true });
             ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
         }
     },
@@ -124,7 +122,7 @@ const InputController = module.exports = {
         activeMovement.down = false;
 
         if ( player.ySpeed !== 0 ) {
-            TweenMax.killTweensOf( player, true, { "ySpeed": true });
+            gsap.killTweensOf( player, true, { "ySpeed": true });
             ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
         }
     },
@@ -153,6 +151,7 @@ const InputController = module.exports = {
             InputController.cancelVertical();
     }
 };
+export default InputController;
 
 /* private handlers */
 

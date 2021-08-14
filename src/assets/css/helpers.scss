@@ -1,4 +1,16 @@
-.noSelect {
+@mixin mobile {
+    @media (max-width: #{$mobile-width}) {
+        @content;
+    }
+}
+
+@mixin large {
+    @media (min-width: #{$mobile-width}) {
+        @content;
+    }
+}
+
+@mixin noSelect {
   -webkit-touch-callout: none;
     -webkit-user-select: none;
      -khtml-user-select: none;
@@ -7,11 +19,11 @@
             user-select: none;
 }
 
-.noEvents {
+@mixin noEvents {
   pointer-events: none;
 }
 
-.boxSize {
+@mixin boxSize {
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
      -moz-box-sizing: border-box; /* Firefox, other Gecko */
           box-sizing: border-box;

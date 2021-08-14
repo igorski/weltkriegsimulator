@@ -20,25 +20,19 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Messages      = require( "../definitions/Messages" );
-const Pubsub        = require( "pubsub-js" );
-const ActionFactory = require( "../factory/ActionFactory" );
-const Assets        = require( "../definitions/Assets" );
-
-const { TweenMax } = require( "gsap");
+import Pubsub        from "pubsub-js";
+import Messages      from "@/definitions/Messages";
+import ActionFactory from "@/factory/ActionFactory";
+import Assets        from "@/definitions/Assets";
+import gsap          from "gsap";
 
 let audioModel, gameModel, settingsModel;
 let actionTimeout;
 
-module.exports = {
+export default {
 
-    init( wks ) {
-
-        audioModel    = wks.audioModel;
-        gameModel     = wks.gameModel;
-        settingsModel = wks.settingsModel;
+    init( models) {
+        ({ gameModel, audioModel, settingsModel } = models );
 
         // subscribe to pubsub system to receive and broadcast messages
 
@@ -64,7 +58,7 @@ function handleBroadcast( type, payload ) {
 
             if ( !settingsModel.get( settingsModel.PROPS.HAS_PLAYED )) {
                 // show instructions first
-                TweenMax.delayedCall( .5, () => Pubsub.publish( Messages.SHOW_INSTRUCTIONS ));
+                gsap.delayedCall( .5, () => Pubsub.publish( Messages.SHOW_INSTRUCTIONS ));
             }
             else {
                 startActionQueue();
@@ -74,7 +68,7 @@ function handleBroadcast( type, payload ) {
         case Messages.GAME_OVER:
             gameModel.active = false;
             stopActions();
-            WKS.audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
+            audioModel.playSoundFX( Assets.AUDIO.AU_EXPLOSION );
             // enqueue next music track so we have a different one ready for the next game
             audioModel.enqueueTrack();
             // store the flag stating the player has played at least one game
@@ -103,7 +97,7 @@ function startActionQueue() {
  */
 function startActions( timeout ) {
     if ( typeof timeout === "number" )
-        actionTimeout = TweenMax.delayedCall( timeout, executeAction );
+        actionTimeout = gsap.delayedCall( timeout, executeAction );
 }
 
 function executeAction() {

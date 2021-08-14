@@ -20,23 +20,21 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import Pubsub          from "pubsub-js";
+import gsap, { Cubic } from "gsap";
+import Copy          from "@/definitions/Copy";
+import Messages      from "@/definitions/Messages";
+import ActionFactory from "@/factory/ActionFactory";
+import WeaponFactory from "@/factory/WeaponFactory";
+import Actor         from "./actors/Actor";
+import Ship          from "./actors/Ship";
+import Player        from "./actors/Player";
+import Enemy         from "./actors/Enemy";
+import Boss          from "./actors/Boss";
+import Bullet        from "./actors/Bullet";
+import Powerup       from "./actors/Powerup";
 
-const Pubsub        = require( "pubsub-js" );
-const Copy          = require( "../definitions/Copy" );
-const Messages      = require( "../definitions/Messages" );
-const Actor         = require( "./actors/Actor" );
-const Ship          = require( "./actors/Ship" );
-const Player        = require( "./actors/Player" );
-const Enemy         = require( "./actors/Enemy" );
-const Boss          = require( "./actors/Boss" );
-const Bullet        = require( "./actors/Bullet" );
-const Powerup       = require( "./actors/Powerup" );
-const ActionFactory = require( "../factory/ActionFactory" );
-const WeaponFactory = require( "../factory/WeaponFactory" );
-const { TweenMax }  = require( "gsap" );
-
-const Game = module.exports = {
+const Game = {
 
     /**
      * @public
@@ -48,7 +46,7 @@ const Game = module.exports = {
      * all other Actors apart from the player
      *
      * @public
-     * @type {Array.<Actor>}
+     * @type {Array<Actor>}
      */
     actors: [],
 
@@ -65,8 +63,8 @@ const Game = module.exports = {
      * @type {Object}
      */
     world: {
-        width: 400,
-        height: 400
+        width  : 400,
+        height : 400
     },
 
     /**
@@ -385,6 +383,7 @@ const Game = module.exports = {
         Game.active = true;
     }
 };
+export default Game;
 
 /* initialize Pools for commonly (re)used Actors */
 
@@ -411,7 +410,7 @@ const powerupPool = new Array( 5 );
  * used (and disposed) Actors
  *
  * @private
- * @param {Array.<Actor>} pool
+ * @param {Array<Actor>} pool
  * @param {number} x
  * @param {number} y
  * @param {number} xSpeed
@@ -485,7 +484,7 @@ function createBulletForActor( actor ) {
                 bullets.push( bullet );
 
                 // ensure no pending Tweens exist for the bullet
-                TweenMax.killTweensOf( bullet );
+                gsap.killTweensOf( bullet );
 
                 targetPos = calcPosition( orgX, orgY, sprayRadius, angle );
 
@@ -497,10 +496,10 @@ function createBulletForActor( actor ) {
 
                 // the last Tween will dispose all the Bullets (can get stuck on screen
                 // edge during rapid movement / cancellation of pooled Tweens)
-                if ( i === max )
+                if ( i === max ) {
                     opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
-
-                TweenMax.to( bullet, 1, opts );
+                }
+                gsap.to( bullet, 1, opts );
             }
             break;
     }

@@ -20,14 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Ship          = require( "./Ship" );
-const Powerup       = require( "./Powerup" );
-const ShipRenderer  = require( "../../view/renderers/ShipRenderer" );
-const Weapons       = require( "../../definitions/Weapons" );
-const WeaponFactory = require( "../../factory/WeaponFactory" );
-const { TweenMax }  = require( "gsap" );
+import Ship          from "./Ship";
+import Powerup       from "./Powerup";
+import ShipRenderer  from "../../view/renderers/ShipRenderer";
+import Weapons       from "../../definitions/Weapons";
+import WeaponFactory from "../../factory/WeaponFactory";
+import gsap          from "gsap";
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;
@@ -35,7 +33,7 @@ const DEFAULT_WEAPON = 0;
 const MIN_X = 0, MIN_Y = 0;
 let MAX_X, MAX_Y;
 
-module.exports = class Player extends Ship {
+class Player extends Ship {
 
     /**
      * @constructor
@@ -147,7 +145,7 @@ module.exports = class Player extends Ship {
      */
     setWeaponTimer() {
         this.killWeaponTimer();
-        this._weaponTimer = TweenMax.delayedCall( 15, () => {
+        this._weaponTimer = gsap.delayedCall( 15, () => {
             WeaponFactory.applyToActor( Weapons.DEFAULT, this );
         });
     }
@@ -208,3 +206,4 @@ module.exports = class Player extends Ship {
             this.renderer.switchAnimation( ShipRenderer.ANIMATION.PLAYER_IDLE );
     }
 };
+export default Player;

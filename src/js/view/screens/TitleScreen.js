@@ -20,52 +20,47 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Config       = require( "../config/Config" );
-const Messages     = require( "../definitions/Messages" );
-const Pubsub       = require( "pubsub-js" );
-const EventHandler = require( "../util/EventHandler" );
-const { TweenMax, TimelineMax, Cubic, Elastic } = require( "gsap" );
+import Pubsub       from "pubsub-js";
+import Config       from "@/config/Config";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
+import HTMLTemplate from "Templates/title_screen.hbs";
+import gsap, { Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
 
-module.exports = {
+export default {
 
-    render( wrapper, templateService, wks ) {
+    render( wrapper, models ) {
+        wrapper.innerHTML = HTMLTemplate();
 
-        templateService.render( "Screen_Title", wrapper, {
+        // grab references to HTML Elements
 
-        }).then(() => {
+        title   = wrapper.querySelector( ".wks-title" );
+        menu    = wrapper.querySelector( ".wks-button-list" );
+        footer  = wrapper.querySelector( ".wks-footer" );
+        buttons = wrapper.querySelectorAll( "button" );
 
-            // grab references to HTML Elements
+        startButton      = wrapper.querySelector( "#btnStart" );
+        highScoresButton = wrapper.querySelector( "#btnHighScores" );
+        howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
+        aboutButton      = wrapper.querySelector( "#btnAbout" );
 
-            title   = wrapper.querySelector( "h1" );
-            menu    = wrapper.querySelector( "#menu" );
-            footer  = wrapper.querySelector( "footer" );
-            buttons = wrapper.querySelectorAll( "button" );
+        animateIn();
 
-            startButton      = wrapper.querySelector( "#btnStart" );
-            highScoresButton = wrapper.querySelector( "#btnHighScores" );
-            howToPlayButton  = wrapper.querySelector( "#btnHowToPlay" );
-            aboutButton      = wrapper.querySelector( "#btnAbout" );
+        handler = new EventHandler();
 
-            animateIn();
+        handler.listen( howToPlayButton,  "click",   handleHowToPlayClick );
+        handler.listen( highScoresButton, "click",   handleHighScoresClick );
+        handler.listen( aboutButton,      "click",   handleAboutClick );
+        handler.listen( startButton,      "mouseup", handleStartClick );
 
-            handler = new EventHandler();
+        // we deliberately listen to touch events on the document
+        // as we can determine whether we need to show on-screen game controls
 
-            handler.listen( howToPlayButton,  "click",   handleHowToPlayClick );
-            handler.listen( highScoresButton, "click",   handleHighScoresClick );
-            handler.listen( aboutButton,      "click",   handleAboutClick );
-            handler.listen( startButton,      "mouseup", handleStartClick );
-
-            // we deliberately listen to touch events on the document
-            // as we can determine whether we need to show on-screen game controls
-
-            handler.listen( document, "touchcancel", handleTouch );
-            handler.listen( document, "touchend",    handleTouch );
-        });
+        handler.listen( document, "touchcancel", handleTouch );
+        handler.listen( document, "touchend",    handleTouch );
     },
 
     dispose() {
@@ -115,16 +110,16 @@ function handleHowToPlayClick( event ) {
 }
 
 function animateIn() {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.fromTo( title, 2,
+    const tl = gsap.timeline();
+    tl.add( gsap.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+    tl.add( gsap.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
 
     for ( let i = 0; i < buttons.length; ++i ) {
         const button = buttons[ i ];
-        TweenMax.from( button, 1.5, {
+        gsap.from( button, 1.5, {
             css: { marginLeft: `-${window.innerWidth}px` },
             ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
         });
@@ -132,9 +127,9 @@ function animateIn() {
 }
 
 function animateOut( callback ) {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-        TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-        TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
+    const tl = gsap.timeline();
+    tl.add( gsap.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+        gsap.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
+        gsap.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
     }}));
 }

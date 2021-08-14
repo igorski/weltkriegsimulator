@@ -20,12 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
-
-const Copy = module.exports = {
+const Copy = {
 
     /**
-     * copy can be either string, Array.<string> or an Object
+     * copy can be either string, Array<string> or an Object
      * w/ separate "title" and "body" string (for
      * instance for displaying messages w/ title header)
      */
@@ -55,8 +53,8 @@ const Copy = module.exports = {
     /**
      * @public
      * @param {string} copyKey of above enumeration
-     * @param {string|Array.<string>=} optDataReplacement with values to replace in above strings,
-     *        either single string for single {0} replacement, or Array.<string> for {0}, {1}, {2}, etc..
+     * @param {string|Array<string>=} optDataReplacement with values to replace in above strings,
+     *        either single string for single {0} replacement, or Array<string> for {0}, {1}, {2}, etc..
      * @return {string}
      */
     applyData( copyKey, optDataReplacement ) {
@@ -82,3 +80,4 @@ const Copy = module.exports = {
         };
     }
 };
+export default Copy;

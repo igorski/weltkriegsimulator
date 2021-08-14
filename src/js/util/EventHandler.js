@@ -20,7 +20,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-module.exports = EventHandler;
 
 /**
  * an EventHandler provides an interface to attach event listeners
@@ -31,109 +30,87 @@ module.exports = EventHandler;
  *
  * @extends {Disposable}
  */
-function EventHandler() {
+export default class EventHandler {
+    constructor() {
+        /**
+         * @private
+         * @type {Array<{ element: Element, type: string, listener: !Function}>}
+         */
+        this._mappedEvents = [];
+    }
+
+    /* public methods */
+
     /**
-     * @private
-     * @type {Array.<{ element: Element, type: string, listener: !Function}>}
+     * attach a listener and an event handler to an element
+     * NOTE : only ONE callback can be assigned to a specific type
+     *
+     * @param {Element|EventDispatcher} aElement
+     * @param {string} aType
+     * @param {!Function} aCallback
+     * @param {boolean|Object=} aOptOptions
+     *
+     * @return {boolean} whether the listener has been attached successfully
      */
-    this._mappedEvents = [];
-}
-
-/* public methods */
-
-/**
- * attach a listener and an event handler to an element
- * NOTE : only ONE callback can be assigned to a specific type
- *
- * @param {Element|EventDispatcher} aElement
- * @param {string} aType
- * @param {!Function} aCallback
- * @param {boolean|Object=} aOptOptions
- *
- * @return {boolean} whether the listener has been attached successfully
- */
-EventHandler.prototype.listen = function( aElement, aType, aCallback, aOptOptions ) {
-    if ( !this.isListening( aElement, aType )) {
-        if ( aElement.addEventListener ) {
+    listen( aElement, aType, aCallback, aOptOptions ) {
+        if ( !this.isListening( aElement, aType )) {
             aElement.addEventListener( aType, aCallback, aOptOptions || false );
+            this._mappedEvents.push({ "element" : aElement, "type" : aType, "listener" : aCallback });
+            return true;
         }
-        else if ( aElement.attachEvent ) {
-            aElement.attachEvent( "on" + aType, aCallback );
-        }
-        else {
-            return false;
-        }
-        this._mappedEvents.push({ "element" : aElement, "type" : aType, "listener" : aCallback });
-        return true;
+        return false;
     }
-    return false;
-};
 
-/**
- * remove a previously registered handler from an element
- *
- * @public
- *
- * @param {Element|EventDispatcher} aElement
- * @param {string} aType
- *
- * @return {boolean} whether the listener has been found and removed
- */
-EventHandler.prototype.unlisten = function( aElement, aType ) {
-    let i = this._mappedEvents.length;
-    while ( i-- ) {
-        const theMapping = this._mappedEvents[ i ];
-
-        if ( theMapping.element === aElement && theMapping.type === aType )
-        {
-            if ( aElement.removeEventListener ) {
+    /**
+     * remove a previously registered handler from an element
+     *
+     * @public
+     *
+     * @param {Element|EventDispatcher} aElement
+     * @param {string} aType
+     *
+     * @return {boolean} whether the listener has been found and removed
+     */
+    unlisten( aElement, aType ) {
+        let i = this._mappedEvents.length;
+        while ( i-- ) {
+            const theMapping = this._mappedEvents[ i ];
+            if ( theMapping.element === aElement && theMapping.type === aType ) {
                 aElement.removeEventListener( aType, theMapping.listener, false );
+                this._mappedEvents.splice( i, 1 );
+                return true;
             }
-            else if ( aElement.detachEvent ) {
-                aElement.detachEvent( "on" + aType, theMapping.listener );
+        }
+        return false;
+    }
+
+    /**
+     * query whether a listener for a specific event type has already
+     * been registered for the given element
+     *
+     * @param {Element|EventDispatcher} aElement
+     * @param {string} aType
+     *
+     * @return {boolean} whether the listener already exists
+     */
+    isListening( aElement, aType ) {
+        let i = this._mappedEvents.length;
+        while ( i-- ) {
+            const theMapping = this._mappedEvents[ i ];
+            if ( theMapping.element === aElement &&
+                 theMapping.type    === aType ) {
+                return true;
             }
-            else {
-                return false;
-            }
+        }
+        return false;
+    }
+
+    dispose() {
+        let i = this._mappedEvents.length;
+        while ( i-- ) {
+            const mapping = this._mappedEvents[ i ];
+            this.unlisten( mapping.element, mapping.type );
             this._mappedEvents.splice( i, 1 );
-            return true;
         }
-    }
-    return false;
-};
-
-/**
- * query whether a listener for a specific event type has already
- * been registered for the given element
- *
- * @param {Element|EventDispatcher} aElement
- * @param {string} aType
- *
- * @return {boolean} whether the listener already exists
- */
-EventHandler.prototype.isListening = function( aElement, aType ) {
-    let i = this._mappedEvents.length;
-
-    while ( i-- ) {
-        const theMapping = this._mappedEvents[ i ];
-
-        if ( theMapping.element === aElement &&
-             theMapping.type    === aType ) {
-            return true;
-        }
-    }
-    return false;
-};
-
-/**
- * @public
- */
-EventHandler.prototype.dispose = function() {
-    let i = this._mappedEvents.length;
-
-    while ( i-- ) {
-        const mapping = this._mappedEvents[ i ];
-        this.unlisten( mapping.element, mapping.type );
-        this._mappedEvents.splice( i, 1 );
     }
 };

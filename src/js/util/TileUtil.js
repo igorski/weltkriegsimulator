@@ -20,11 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"use strict";
+import { loader } from "zcanvas";
 
-const zCanvas = require( "zcanvas" );
-
-module.exports = {
+export default {
 
     /**
      * create a random tile map from given aImage / image source
@@ -40,7 +38,6 @@ module.exports = {
     createTileMap( aImage, aScale ) {
 
         if ( typeof aImage === "string" ) {
-
             const src = aImage;
             aImage = new Image();
             aImage.src = src;
@@ -49,8 +46,7 @@ module.exports = {
 
         return new Promise(( resolve, reject ) => {
 
-            zCanvas.loader.onReady( aImage, () => {
-
+//            loader.onReady( aImage, () => {
                 const tileWidth  = aImage.width * aScale;
                 const tileHeight = aImage.height * aScale;
 
@@ -64,10 +60,9 @@ module.exports = {
 
                 for ( let col = 0; col < horAmount; ++col ) {
                     for ( let row = 0; row < verAmount; ++row ) {
-
-                        if ( Math.random() < .2 )
+                        if ( Math.random() < .2 ) {
                             continue;
-
+                        }
                         ctx.drawImage(
                             aImage,
                             row * tileWidth, col * tileHeight,
@@ -77,6 +72,6 @@ module.exports = {
                 }
                 resolve( cvs );
             });
-        });
+//        });
     }
 };
