@@ -24,7 +24,7 @@ import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import ActionFactory from "@/factory/ActionFactory";
 import Assets        from "@/definitions/Assets";
-import { TweenMax }  from "gsap";
+import gsap          from "gsap";
 
 let audioModel, gameModel, settingsModel;
 let actionTimeout;
@@ -58,7 +58,7 @@ function handleBroadcast( type, payload ) {
 
             if ( !settingsModel.get( settingsModel.PROPS.HAS_PLAYED )) {
                 // show instructions first
-                TweenMax.delayedCall( .5, () => Pubsub.publish( Messages.SHOW_INSTRUCTIONS ));
+                gsap.delayedCall( .5, () => Pubsub.publish( Messages.SHOW_INSTRUCTIONS ));
             }
             else {
                 startActionQueue();
@@ -97,7 +97,7 @@ function startActionQueue() {
  */
 function startActions( timeout ) {
     if ( typeof timeout === "number" )
-        actionTimeout = TweenMax.delayedCall( timeout, executeAction );
+        actionTimeout = gsap.delayedCall( timeout, executeAction );
 }
 
 function executeAction() {

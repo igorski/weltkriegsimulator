@@ -21,10 +21,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import Enemy        from "./Enemy";
-import Patterns     from "../../definitions/Patterns";
-import Weapons      from "../../definitions/Weapons";
-import BossRenderer from "../../view/renderers/BossRenderer";
-import { TweenMax } from "gsap";
+import Patterns     from "@/definitions/Patterns";
+import Weapons      from "@/definitions/Weapons";
+import BossRenderer from "@/view/renderers/BossRenderer";
+import gsap         from "gsap";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.SPRAY;
@@ -120,7 +120,7 @@ class Boss extends Enemy {
         if ( ++this._attack > 2 )
             this._attack = 0;
 
-        this.attackTimeout = TweenMax.delayedCall( timeoutInSeconds, this.startAttack.bind( this ));
+        this.attackTimeout = gsap.delayedCall( timeoutInSeconds, this.startAttack.bind( this ));
     }
 
     die() {

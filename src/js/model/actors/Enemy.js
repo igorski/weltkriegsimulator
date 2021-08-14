@@ -24,7 +24,7 @@ import Ship         from "./Ship";
 import Patterns     from "../../definitions/Patterns";
 import Weapons      from "../../definitions/Weapons";
 import ShipRenderer from "../../view/renderers/ShipRenderer";
-import { TweenMax, Sine, Cubic } from "gsap";
+import gsap, { Sine, Cubic } from "gsap";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;
@@ -134,9 +134,9 @@ class Enemy extends Ship {
                 break;
         }
 
-        // use TweenMax to provide the math functions and updates for the flight pattern
+        // use GSAP to provide the math functions and updates for the flight pattern
 
-        this.trajectoryTween = TweenMax.to( this, speed * speedMultiplier, {
+        this.trajectoryTween = gsap.to( this, speed * speedMultiplier, {
             x: targetX, repeat: Infinity, yoyo: true, ease: ease, onRepeat: () => {
 
                 // enemies moving in a pattern are allowed to switch layer

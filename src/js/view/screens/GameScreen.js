@@ -27,7 +27,7 @@ import Messages        from "@/definitions/Messages";
 import EventHandler    from "@/util/EventHandler";
 import InputController from "@/controller/InputController";
 import HTMLTemplate    from "Templates/game_screen.hbs";
-import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
+import gsap, { Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
@@ -140,11 +140,11 @@ function updateScore( score ) {
 }
 
 function animateMessage() {
-    TweenMax.killTweensOf( messagePanel );
+    gsap.killTweensOf( messagePanel );
     // fade message in
-    TweenMax.fromTo( messagePanel, .5, { css: { autoAlpha: 0 }}, { css: { autoAlpha: 1 }});
+    gsap.fromTo( messagePanel, .5, { css: { autoAlpha: 0 }}, { css: { autoAlpha: 1 }});
     // and remove it after a short period
-    TweenMax.to( messagePanel, .5, { css: { autoAlpha: 0 }, delay: 5 });
+    gsap.to( messagePanel, .5, { css: { autoAlpha: 0 }, delay: 5 });
 }
 
 function handleDPad( event ) {
@@ -248,21 +248,22 @@ function showInstructions() {
     el.setAttribute( "id", "instructions" );
     container.appendChild( el );
 
-    const tl = new TimelineMax();
-    tl.add( TweenMax.delayedCall( 1, () => true ));
+    const tl = gsap.timeline();
+    tl.add( gsap.delayedCall( 1, () => true ));
 
     let lastDisplayedDoc = -1;
     for ( let i = 0, l = docs.length; i < l; ++i ) {
-        tl.add( TweenMax.delayedCall( docs[ i ].timeout, () => {
+        tl.add( gsap.delayedCall( docs[ i ].timeout, () => {
             el.innerHTML = docs[ ++lastDisplayedDoc ].text;
         }));
     }
     // all done, start the game actions queue
-    tl.add( TweenMax.delayedCall( 4, () => {
+    tl.add( gsap.delayedCall( 4, () => {
         // null check as the player can die during the instructions ;)
         // (leads to this screen to have been removed)
-        if ( el )
+        if ( el ) {
             container.removeChild( el );
+        }
         Pubsub.publish( Messages.INSTRUCTIONS_COMPLETE );
     }));
 }

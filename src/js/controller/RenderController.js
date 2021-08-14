@@ -28,7 +28,7 @@ import SkyRenderer     from "../view/renderers/SkyRenderer";
 import TileRenderer    from "../view/renderers/TileRenderer";
 import FXRenderer      from "../view/renderers/FXRenderer";
 import Powerup         from "../model/actors/Powerup";
-import { TweenMax, TimelineMax, Power1 } from "gsap";
+import gsap, { TweenMax, Power1 } from "gsap";
 
 let audioModel, gameModel, zCanvas, player;
 
@@ -199,7 +199,7 @@ function handleBroadcast( type, payload ) {
 
         case Messages.ACTOR_LAYER_SWITCH_START:
             showLayerSwitchAnimation( payload.actor, payload.layer );
-            TweenMax.delayedCall( .5, () => checkLayerSwitchCollision( payload.actor, payload.layer ));
+            gsap.delayedCall( .5, () => checkLayerSwitchCollision( payload.actor, payload.layer ));
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
@@ -267,12 +267,12 @@ function removeRendererFromDisplayList( renderer ) {
  */
 function rumble() {
 
-    if ( RenderController.rumbling.active )
+    if ( RenderController.rumbling.active ) {
         return;
-
+    }
     RenderController.rumbling.active = true;
 
-    const tl = new TimelineMax({ repeat: 5, onComplete: () => {
+    const tl = gsap.timeline({ repeat: 5, onComplete: () => {
         RenderController.rumbling.active = false;
     }});
     tl.add( new TweenMax(
@@ -343,6 +343,6 @@ function handleResize() {
 }
 
 function animateBackgroundColor( targetLayer ) {
-    TweenMax.killTweensOf( zCanvas );
-    TweenMax.to( zCanvas, 2, { _bgColor: ( targetLayer === 1 ) ? COLORS.TOP : COLORS.BOTTOM });
+    gsap.killTweensOf( zCanvas );
+    gsap.to( zCanvas, 2, { _bgColor: ( targetLayer === 1 ) ? COLORS.TOP : COLORS.BOTTOM });
 }

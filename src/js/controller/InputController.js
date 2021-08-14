@@ -25,7 +25,7 @@ import Pubsub       from "pubsub-js";
 import ActorUtil    from "../util/ActorUtil";
 import Bullet       from "../model/actors/Bullet";
 import EventHandler from "../util/EventHandler";
-import { TweenMax } from "gsap";
+import gsap         from "gsap";
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;
@@ -60,7 +60,7 @@ const InputController = {
             activeMovement.left = true;
             if ( killExisting ) {
                 activeMovement.right = false;
-                TweenMax.killTweensOf( player, true, { "xSpeed": true });
+                gsap.killTweensOf( player, true, { "xSpeed": true });
             }
             ActorUtil.setDelayed( player, "xSpeed", -5, speed );
         }
@@ -71,7 +71,7 @@ const InputController = {
             activeMovement.right = true;
             if ( killExisting ) {
                 activeMovement.left = false;
-                TweenMax.killTweensOf( player, true, { "xSpeed": true });
+                gsap.killTweensOf( player, true, { "xSpeed": true });
             }
             ActorUtil.setDelayed( player, "xSpeed", 5, speed );
         }
@@ -82,7 +82,7 @@ const InputController = {
             activeMovement.up = true;
             if ( killExisting ) {
                 activeMovement.down = false;
-                TweenMax.killTweensOf( player, true, { "ySpeed": true });
+                gsap.killTweensOf( player, true, { "ySpeed": true });
             }
             ActorUtil.setDelayed( player, "ySpeed", -5, speed );
         }
@@ -93,7 +93,7 @@ const InputController = {
             activeMovement.down = true;
             if ( killExisting ) {
                 activeMovement.up = false;
-                TweenMax.killTweensOf( player, true, { "ySpeed": true });
+                gsap.killTweensOf( player, true, { "ySpeed": true });
             }
             ActorUtil.setDelayed( player, "ySpeed", 5, speed );
         }
@@ -108,7 +108,7 @@ const InputController = {
         activeMovement.right = false;
 
         if ( player.xSpeed !== 0 ) {
-            TweenMax.killTweensOf( player, true, { "xSpeed": true });
+            gsap.killTweensOf( player, true, { "xSpeed": true });
             ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
         }
     },
@@ -122,7 +122,7 @@ const InputController = {
         activeMovement.down = false;
 
         if ( player.ySpeed !== 0 ) {
-            TweenMax.killTweensOf( player, true, { "ySpeed": true });
+            gsap.killTweensOf( player, true, { "ySpeed": true });
             ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
         }
     },

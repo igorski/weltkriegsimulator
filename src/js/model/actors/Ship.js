@@ -22,8 +22,8 @@
  */
 import Actor        from "./Actor";
 import Bullet       from "./Bullet";
-import ShipRenderer from "../../view/renderers/ShipRenderer";
-import { TweenMax } from "gsap";
+import ShipRenderer from "@/view/renderers/ShipRenderer";
+import gsap         from "gsap";
 
 class Ship extends Actor {
 
@@ -142,7 +142,7 @@ export default Ship;
 
 function killLayerSwitch( ship ) {
     if ( ship.switching ) {
-        TweenMax.killTweensOf( ship );
+        gsap.killTweensOf( ship );
         ship.switching = false;
         ship.layer     = 1;
         ship.width     = ship.orgWidth;

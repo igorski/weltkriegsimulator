@@ -25,7 +25,7 @@ import Powerup       from "./Powerup";
 import ShipRenderer  from "../../view/renderers/ShipRenderer";
 import Weapons       from "../../definitions/Weapons";
 import WeaponFactory from "../../factory/WeaponFactory";
-import { TweenMax }  from "gsap";
+import gsap          from "gsap";
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;
@@ -145,7 +145,7 @@ class Player extends Ship {
      */
     setWeaponTimer() {
         this.killWeaponTimer();
-        this._weaponTimer = TweenMax.delayedCall( 15, () => {
+        this._weaponTimer = gsap.delayedCall( 15, () => {
             WeaponFactory.applyToActor( Weapons.DEFAULT, this );
         });
     }

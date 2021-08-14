@@ -32,7 +32,7 @@ import Bullet        from "./actors/Bullet";
 import Powerup       from "./actors/Powerup";
 import ActionFactory from "../factory/ActionFactory";
 import WeaponFactory from "../factory/WeaponFactory";
-import { TweenMax, Cubic } from "gsap";
+import gsap, { Cubic } from "gsap";
 
 const Game = {
 
@@ -484,7 +484,7 @@ function createBulletForActor( actor ) {
                 bullets.push( bullet );
 
                 // ensure no pending Tweens exist for the bullet
-                TweenMax.killTweensOf( bullet );
+                gsap.killTweensOf( bullet );
 
                 targetPos = calcPosition( orgX, orgY, sprayRadius, angle );
 
@@ -499,7 +499,7 @@ function createBulletForActor( actor ) {
                 if ( i === max ) {
                     opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
                 }
-                TweenMax.to( bullet, 1, opts );
+                gsap.to( bullet, 1, opts );
             }
             break;
     }

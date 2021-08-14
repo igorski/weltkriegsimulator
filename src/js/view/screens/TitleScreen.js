@@ -25,7 +25,7 @@ import Config       from "@/config/Config";
 import Messages     from "@/definitions/Messages";
 import EventHandler from "@/util/EventHandler";
 import HTMLTemplate from "Templates/title_screen.hbs";
-import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
+import gsap, { Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
@@ -110,16 +110,16 @@ function handleHowToPlayClick( event ) {
 }
 
 function animateIn() {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.fromTo( title, 2,
+    const tl = gsap.timeline();
+    tl.add( gsap.fromTo( title, 2,
         { css: { marginTop: "-200px" }},
         { css: { marginTop: 0 }, ease: Elastic.easeInOut })
     );
-    tl.add( TweenMax.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+    tl.add( gsap.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
 
     for ( let i = 0; i < buttons.length; ++i ) {
         const button = buttons[ i ];
-        TweenMax.from( button, 1.5, {
+        gsap.from( button, 1.5, {
             css: { marginLeft: `-${window.innerWidth}px` },
             ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
         });
@@ -127,9 +127,9 @@ function animateIn() {
 }
 
 function animateOut( callback ) {
-    const tl = new TimelineMax();
-    tl.add( TweenMax.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-        TweenMax.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-        TweenMax.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
+    const tl = gsap.timeline();
+    tl.add( gsap.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
+        gsap.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
+        gsap.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
     }}));
 }

@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { TweenMax } from "gsap";
+import gsap from "gsap";
 
 export default {
 
@@ -58,7 +58,7 @@ export default {
             vars[ "ease" ] = optEase;
         }
 
-        TweenMax.to(
+        gsap.to(
             actor, delayTime, vars
         );
     }
