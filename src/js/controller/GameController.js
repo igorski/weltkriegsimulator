@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- import Pubsub       from "pubsub-js";
+import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import ActionFactory from "@/factory/ActionFactory";
 import Assets        from "@/definitions/Assets";
