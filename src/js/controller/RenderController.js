@@ -54,8 +54,8 @@ let TOP_ACTOR_LAYER         = 3;
 let TOP_DECORATION_LAYER    = 4;
 
 const COLORS = {
-    TOP: "#0055d8",
-    BOTTOM: "#990000"
+    TOP     : "#0055d8",
+    BOTTOM  : "#990000"
 };
 
 // pool of renderers that show effects like transitions or explosions
