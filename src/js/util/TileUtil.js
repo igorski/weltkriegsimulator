@@ -20,8 +20,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { loader } from "zcanvas";
-
 export default {
 
     /**
@@ -33,7 +31,6 @@ export default {
      *
      * @param {string|Image} aImage
      * @param {number=} aScale
-     * @return {Promise}
      */
     createTileMap( aImage, aScale ) {
 
@@ -44,34 +41,29 @@ export default {
         }
         aScale = ( typeof aScale === "number" ) ? aScale : 1;
 
-        return new Promise(( resolve, reject ) => {
+        const tileWidth  = Math.round( aImage.width  * aScale );
+        const tileHeight = Math.round( aImage.height * aScale );
 
-//            loader.onReady( aImage, () => {
-                const tileWidth  = aImage.width * aScale;
-                const tileHeight = aImage.height * aScale;
+        const horAmount = Math.ceil( Math.random() * 25 );
+        const verAmount = Math.ceil( Math.random() * 15 );
 
-                const horAmount = Math.round( Math.random() * 25 );
-                const verAmount = Math.round( Math.random() * 15 );
+        const cvs  = document.createElement( "canvas" );
+        const ctx  = cvs.getContext( "2d" );
+        cvs.width  = horAmount * tileWidth;
+        cvs.height = verAmount * tileHeight;
 
-                const cvs  = document.createElement( "canvas" );
-                const ctx  = cvs.getContext( "2d" );
-                cvs.width  = horAmount * tileWidth;
-                cvs.height = verAmount * tileHeight;
-
-                for ( let col = 0; col < horAmount; ++col ) {
-                    for ( let row = 0; row < verAmount; ++row ) {
-                        if ( Math.random() < .2 ) {
-                            continue;
-                        }
-                        ctx.drawImage(
-                            aImage,
-                            row * tileWidth, col * tileHeight,
-                            tileWidth, tileHeight
-                        )
-                    }
+        for ( let col = 0; col < horAmount; ++col ) {
+            for ( let row = 0; row < verAmount; ++row ) {
+                if ( Math.random() < .2 ) {
+                    continue;
                 }
-                resolve( cvs );
-            });
-//        });
+                ctx.drawImage(
+                    aImage,
+                    row * tileWidth, col * tileHeight,
+                    tileWidth, tileHeight
+                )
+            }
+        }
+        return cvs;
     }
 };

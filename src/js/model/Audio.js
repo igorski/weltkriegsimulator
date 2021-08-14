@@ -51,7 +51,7 @@ const Audio = {
 
         debouncedSetup(() => {
             SC.initialize({
-                client_id: Config.getSoundCloudClient()
+                client_id: Config.getSoundCloudClientId()
             });
             inited = true;
 
@@ -103,7 +103,7 @@ const Audio = {
 
         Audio.stop();
         sound = createAudioElement(
-            `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${Config.SOUNDCLOUD_CLIENT_ID}`
+            `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${Config.getSoundCloudClientId()}`
         );
     },
 

@@ -46,9 +46,8 @@ export default class TileRenderer extends sprite
 
         /* initialization */
 
-        TileUtil.createTileMap( Assets.GRAPHICS.TILE, scale ).then( cvs => {
-            this.setBitmap( cvs, cvs.width, cvs.height );
-        });
+        const cvs = TileUtil.createTileMap( Assets.GRAPHICS.TILE, scale );
+        this.setBitmap( cvs, cvs.width, cvs.height );
     }
 
     /* public methods */

@@ -32,5 +32,5 @@ export default {
      *
      * @type {string}
      */
-    getSoundCloudClient: () => "" || window.soundCloudApiKey || localStorage?.getItem( "soundCloudApiKey" ),
+    getSoundCloudClientId: () => "" || window.soundCloudApiKey || localStorage?.getItem( "soundCloudApiKey" ),
 };

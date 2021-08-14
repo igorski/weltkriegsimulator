@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { loader } from "zcanvas";
-import Assets     from "../definitions/Assets";
+import Assets     from "@/definitions/Assets";
 
 export default {
 
