@@ -51,7 +51,7 @@ const Audio = {
 
         debouncedSetup(() => {
             SC.initialize({
-                client_id: Config.SOUNDCLOUD_CLIENT_ID
+                client_id: Config.getSoundCloudClient()
             });
             inited = true;
 
