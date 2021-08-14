@@ -20,9 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Pubsub        from "pubsub-js";
-import Copy          from "../definitions/Copy";
-import Messages      from "../definitions/Messages";
+import Pubsub          from "pubsub-js";
+import gsap, { Cubic } from "gsap";
+import Copy          from "@/definitions/Copy";
+import Messages      from "@/definitions/Messages";
+import ActionFactory from "@/factory/ActionFactory";
+import WeaponFactory from "@/factory/WeaponFactory";
 import Actor         from "./actors/Actor";
 import Ship          from "./actors/Ship";
 import Player        from "./actors/Player";
@@ -30,9 +33,6 @@ import Enemy         from "./actors/Enemy";
 import Boss          from "./actors/Boss";
 import Bullet        from "./actors/Bullet";
 import Powerup       from "./actors/Powerup";
-import ActionFactory from "../factory/ActionFactory";
-import WeaponFactory from "../factory/WeaponFactory";
-import gsap, { Cubic } from "gsap";
 
 const Game = {
 
@@ -63,8 +63,8 @@ const Game = {
      * @type {Object}
      */
     world: {
-        width: 400,
-        height: 400
+        width  : 400,
+        height : 400
     },
 
     /**
