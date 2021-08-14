@@ -20,13 +20,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Config          from "../config/Config";
-import Copy            from "../definitions/Copy";
-import Messages        from "../definitions/Messages";
 import Pubsub          from "pubsub-js";
-import EventHandler    from "../util/EventHandler";
-import InputController from "../controller/InputController";
-import HTMLTemplate    from "../../templates/game_screen.hbs";
+import Config          from "@/config/Config";
+import Copy            from "@/definitions/Copy";
+import Messages        from "@/definitions/Messages";
+import EventHandler    from "@/util/EventHandler";
+import InputController from "@/controller/InputController";
+import HTMLTemplate    from "Templates/game_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
@@ -38,10 +38,10 @@ const MOVE_RAMP_UP_DURATION = .3;
 
 export default {
 
-    render( wrapper, gameModelRef ) {
+    render( wrapper, models ) {
 
         const addControls = Config.HAS_TOUCH_CONTROLS;
-        player    = gameModelRef.player;
+        player    = models.gameModel.player;
         container = wrapper;
 
         wrapper.innerHTML = HTMLTemplate({
@@ -49,16 +49,16 @@ export default {
         });
 
         // grab references to HTML Elements
-        energyUI       = wrapper.querySelector( "#energy" );
-        scoreUI        = wrapper.querySelector( "#score .counter" );
-        messagePanel   = wrapper.querySelector( "#messages" );
-        messageTitleUI = messagePanel.querySelector( ".title" );
-        messageBodyUI  = messagePanel.querySelector( ".body" );
+        energyUI       = wrapper.querySelector( ".wks-ui-energy" );
+        scoreUI        = wrapper.querySelector( ".wks-ui-score__counter" );
+        messagePanel   = wrapper.querySelector( ".wks-ui-messages" );
+        messageTitleUI = messagePanel.querySelector( ".wks-ui-messages__title" );
+        messageBodyUI  = messagePanel.querySelector( ".wks-ui-messages__text" );
 
         if ( addControls ) {
-            dPad     = wrapper.querySelector( "#dPad" );
-            btnFire  = wrapper.querySelector( "#btnFire" );
-            btnLayer = wrapper.querySelector( "#btnLayer" );
+            dPad     = wrapper.querySelector( ".wks-ui-dpad" );
+            btnFire  = wrapper.querySelector( ".wks-ui-buttons__fire" );
+            btnLayer = wrapper.querySelector( ".wks-ui-buttons__layer" );
 
             handler = new EventHandler();
 

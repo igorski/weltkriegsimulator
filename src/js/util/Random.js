@@ -52,7 +52,7 @@ const Random = {
 
     /**
      * random value from given Array
-     * @param {Array.<*>} array
+     * @param {Array<*>} array
      * @return {*}
      */
     from( array ) {

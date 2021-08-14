@@ -20,13 +20,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Config       from "../config/Config";
-import Assets       from "../definitions/Assets";
-import Copy         from "../definitions/Copy";
-import AudioTracks  from "../definitions/AudioTracks";
-import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
-import EventHandler from "../util/EventHandler";
+import Config       from "@/config/Config";
+import Assets       from "@/definitions/Assets";
+import Copy         from "@/definitions/Copy";
+import AudioTracks  from "@/definitions/AudioTracks";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
 
 let inited        = false;
 let playing       = false;
@@ -45,23 +45,25 @@ const Audio = {
      * @public
      */
     init() {
-        if ( inited || !( "SC" in window ))
+        if ( inited || !( "SC" in window )) {
             return;
+        }
 
-        SC.initialize({
-            client_id: Config.SOUNDCLOUD_CLIENT_ID
-            //    ,redirect_uri: "https://developers.soundcloud.com/callback.html"
+        debouncedSetup(() => {
+            SC.initialize({
+                client_id: Config.SOUNDCLOUD_CLIENT_ID
+            });
+            inited = true;
+
+            setupWebAudioAPI();
+
+            // prepare the sound effects
+            explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
+            laser     = createAudioElement( Assets.AUDIO.AU_LASER );
+
+            // enqueue the first track for playback
+            Audio.enqueueTrack();
         });
-        inited = true;
-
-        setupWebAudioAPI();
-
-        // prepare the sound effects
-        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
-        laser     = createAudioElement( Assets.AUDIO.AU_LASER );
-
-        // enqueue the first track for playback
-        Audio.enqueueTrack();
     },
 
     /**
@@ -86,14 +88,13 @@ const Audio = {
      * enqueue a track from the available pool for playing
      */
     enqueueTrack() {
-        if ( !inited || Audio.muted )
+        if ( !inited || Audio.muted ) {
             return;
-
+        }
         const trackId = _getTrackIdFromPool();
-
-        if ( queuedTrackId === trackId  )
+        if ( queuedTrackId === trackId ) {
             return;
-
+        }
         queuedTrackId = trackId;
 
         // prepare the stream from SoundCloud, we create an inline <audio> tag instead
@@ -115,14 +116,11 @@ const Audio = {
      */
     playEnqueuedTrack() {
 
-        if ( !inited || Audio.muted )
+        if ( !inited || Audio.muted ) {
             return;
-
+        }
         if ( Config.HAS_TOUCH_CONTROLS ) {
-            // on mobile devices we will not hear anything unless it comes
-            // after a direct user response
-            handler.listen( document, "touchstart", ( e ) => {
-                handler.dispose();
+            debouncedSetup(() => {
                 _startPlayingEnqueuedTrack();
             });
         }
@@ -257,4 +255,16 @@ function setupWebAudioAPI() {
         // set default frequency of filter
         Audio.setFrequency();
     }
+}
+
+// WebAudio API is only allowed to start after a user interaction
+
+function debouncedSetup( callback ) {
+    const handler = () => {
+        setupHandler.dispose();
+        callback();
+    };
+    const setupHandler = new EventHandler();
+    setupHandler.listen( document, "keyup", handler );
+    setupHandler.listen( document, "click", handler );
 }

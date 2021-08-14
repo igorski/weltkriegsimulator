@@ -1,46 +1,46 @@
 @import "helpers";
 
 // the threshold where we start to use the mobile view
+// use mobile() and large() helpers accordingly
 $mobile-width: 640px;
 
+// spacing units
+$spacing-small: 8px;
+$spacing-medium: 16px;
+$spacing-large: 32px;
+
 html, body {
-  height: 100%;
-  // prevents page scroll on touch/mousewheel
-  overflow: hidden;
+    height: 100%;
+    // prevents page scroll on touch/mousewheel
+    overflow: hidden;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: #0055d8;
-  @include noSelect;
+    margin: 0;
+    padding: 0;
+    background-color: #0055d8;
+    @include noSelect();
 
-  &.loading {
-    background-image: url(../images/graphics/loader.svg);
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-  }
-}
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+    &.loading {
+        background-image: url(../images/graphics/loader.svg);
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+    }
 }
 
 /* on top of everything, full viewport width and height */
 
-#screenOverlay {
-  position: fixed;
-  display: block;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 5em;
-  @include boxSize;
+.wks-container {
+    position: fixed;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: $spacing-large;
+    @include boxSize();
 }
 
 @import "typography";
-@import "screens";
+@import "layout";
 @import "ui";

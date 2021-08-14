@@ -54,6 +54,13 @@ function init() {
 
     // initialize models
 
+    const models = {
+        audioModel,
+        gameModel,
+        settingsModel,
+        highScoresModel,
+    };
+
     settingsModel.init();
     highScoresModel.init();
 
@@ -63,10 +70,10 @@ function init() {
 
     // initialize controllers
 
-    gameController.init( gameModel, audioModel, settingsModel );
-    inputController.init( gameModel );
-    renderController.init( gameModel, audioModel, container );
-    screenController.init( container, gameModel, highScoresModel );
+    gameController.init( models );
+    inputController.init( models );
+    renderController.init( container, models );
+    screenController.init( container, models );
 
     PubSub.publish( Messages.READY );
 }

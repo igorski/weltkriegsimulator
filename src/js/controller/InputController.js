@@ -41,10 +41,10 @@ let gameModel, player;
 
 const InputController = {
 
-    init( gameModelRef ) {
+    init( models ) {
 
-        gameModel = gameModelRef;
-        player    = gameModel.player;
+        ({ gameModel } = models );
+        player = gameModel.player;
 
         [
             Messages.GAME_START,

@@ -20,64 +20,35 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
-import EventHandler from "../util/EventHandler";
-import HTMLTemplate from "../../templates/game_over_screen.hbs";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
+import HTMLTemplate from "Templates/how_to_play_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
-let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
+let handler, text, playButton, homeButton;
 let title, footer;
 
-const GameOverScreen = {
+export default {
 
-    render( wrapper, gameModelRef, highScoresModelRef ) {
+    render( wrapper, models ) {
 
-        gameModel       = gameModelRef;
-        highScoresModel = highScoresModelRef;
-
-        const player       = gameModel.player;
-        const score        = player.score;
-        const hasHighScore = highScoresModel.isNewScore( score );
-
-        wrapper.innerHTML = HTMLTemplate({
-            highScore: hasHighScore,
-            score
-        });
+        wrapper.innerHTML = HTMLTemplate();
 
         // grab references to HTML Elements
 
-        title   = wrapper.querySelector( "h1" );
-        footer  = wrapper.querySelector( "footer" );
-        text    = wrapper.querySelector( "#text" );
+        title   = wrapper.querySelector( ".wks-title" );
+        footer  = wrapper.querySelector( ".wks-footer" );
+        text    = wrapper.querySelector( ".wks-text" );
 
-        nameInput  = wrapper.querySelector( "#nameInput" );
-        saveButton = wrapper.querySelector( "#saveHighScore" );
-        playButton = wrapper.querySelector( "#btnPlay" );
-        homeButton = wrapper.querySelector( "#btnHome" );
-
-        handler = new EventHandler();
-
-        // in case of new high score, show last known player name
-        // as well as option to save this stuff!
-
-        if ( hasHighScore ) {
-            if ( player.name.length > 0 ) {
-                nameInput.value = player.name;
-            }
-            handler.listen( saveButton, "click", handleSaveClick );
-
-            // also save on keyboard enter press
-            handler.listen( window, "keyup", ( e ) => {
-                if ( e.keyCode === 13 ) {
-                    handleSaveClick();
-                }
-            });
-        }
-        handler.listen( playButton, "click", handlePlayClick );
-        handler.listen( homeButton, "click", handleHomeClick );
+        playButton = wrapper.querySelector( ".wks-menu__play-button" );
+        homeButton = wrapper.querySelector( ".wks-menu__home-button" );
 
         animateIn();
+
+        handler = new EventHandler();
+        handler.listen( playButton, "click", handlePlayClick );
+        handler.listen( homeButton, "click", handleHomeClick );
     },
 
     dispose() {
@@ -86,27 +57,8 @@ const GameOverScreen = {
             handler.dispose();
     }
 };
-export default GameOverScreen;
 
 /* private methods */
-
-function handleSaveClick( event ) {
-
-    if ( nameInput.value.length > 2 ) {
-
-        GameOverScreen.dispose(); // prevent double save cheaply ;)
-
-        gameModel.player.name = nameInput.value;
-        highScoresModel.save( gameModel.player.name, gameModel.player.score );
-
-        animateOut(() => {
-            Pubsub.publish( Messages.SHOW_HIGHSCORES );
-        });
-    }
-    else {
-        nameInput.classList.add( "error" );
-    }
-}
 
 function handlePlayClick( event ) {
 

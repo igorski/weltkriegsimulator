@@ -20,26 +20,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Messages         from "../definitions/Messages";
 import Pubsub           from "pubsub-js";
-import TitleScreen      from "../view/TitleScreen";
-import GameScreen       from "../view/GameScreen";
-import GameOverScreen   from "../view/GameOverScreen";
-import HighScoresScreen from "../view/HighScoresScreen";
-import AboutScreen      from "../view/AboutScreen";
-import HowToPlayScreen  from "../view/HowToPlayScreen";
+import Messages         from "@/definitions/Messages";
+import TitleScreen      from "@/view/screens/TitleScreen";
+import GameScreen       from "@/view/screens/GameScreen";
+import GameOverScreen   from "@/view/screens/GameOverScreen";
+import HighScoresScreen from "@/view/screens/HighScoresScreen";
+import AboutScreen      from "@/view/screens/AboutScreen";
+import HowToPlayScreen  from "@/view/screens/HowToPlayScreen";
 
-let wrapper, currentScreen, gameModel, highScoresModel;
+let wrapper, currentScreen, models, gameModel, highScoresModel;
 
 export default {
 
-    init( container, gameModelRef, highScoresModelRef ) {
+    init( container, modelRefs ) {
 
-        gameModel       = gameModelRef;
-        highScoresModel = highScoresModelRef;
+        models = modelRefs;
+        ({ gameModel, highScoresModel } = models );
 
         wrapper = document.createElement( "div" );
-        wrapper.setAttribute( "id", "screenOverlay" );
+        wrapper.setAttribute( "class", "wks-container" );
         container.appendChild( wrapper );
 
         // subscribe to messaging system
@@ -95,6 +95,6 @@ function renderScreen( screen ) {
         currentScreen.dispose();
         wrapper.innerHTML = "";
     }
-    screen.render( wrapper, gameModel, highScoresModel );
+    screen.render( wrapper, models );
     currentScreen = screen;
 }

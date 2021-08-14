@@ -6,35 +6,35 @@
     font-style: normal;
 }
 
-body {
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-size: 16px;
+.wks-container {
+    font-family: Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-size: 16px;
 }
 
-h1, button {
-  font-family: astral_delight_upright;
-  text-transform: uppercase;
+.wks-title,
+.wks-button {
+    font-family: astral_delight_upright;
+    text-transform: uppercase;
 }
 
-button {
-  font-size: 100%;
+.wks-button {
+    font-size: 100%;
 }
 
-a {
-  color :#b6b6b6;
-  text-decoration: underline;
+.wks-link {
+    color :#b6b6b6;
+    text-decoration: underline;
 
-  &:hover {
-    text-decoration: none;
-  }
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 /* mobile view */
 
-@media screen and ( max-width: $mobile-width )
-{
-  h1 {
-    font-size: 125%;
-  }
+@include mobile() {
+    .wks-title {
+        font-size: 125%;
+    }
 }

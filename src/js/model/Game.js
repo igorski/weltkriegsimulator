@@ -46,7 +46,7 @@ const Game = {
      * all other Actors apart from the player
      *
      * @public
-     * @type {Array.<Actor>}
+     * @type {Array<Actor>}
      */
     actors: [],
 
@@ -410,7 +410,7 @@ const powerupPool = new Array( 5 );
  * used (and disposed) Actors
  *
  * @private
- * @param {Array.<Actor>} pool
+ * @param {Array<Actor>} pool
  * @param {number} x
  * @param {number} y
  * @param {number} xSpeed

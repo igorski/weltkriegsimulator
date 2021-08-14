@@ -92,10 +92,10 @@ function save() {
 
 function createDefaultConfiguration() {
     const out = {};
-
+    
     out[ Settings.PROPS.HAS_PLAYED ] = false;
     // note we mute audio when in local dev mode
-    out[ Settings.PROPS.MUSIC_ON ]   = ( window.location.href.indexOf( "localhost" ) === -1 );
+    out[ Settings.PROPS.MUSIC_ON ]   = process.env.NODE_ENV !== "development";
 
     return out;
 }

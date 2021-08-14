@@ -29,8 +29,8 @@ export default {
      * to targetValue over a time of delayTime seconds
      *
      * @param {Ship} actor
-     * @param {string|Array.<string>} property single String or Array of Strings
-     * @param {number|Array.<number>} targetValue single number or Array of numbers
+     * @param {string|Array<string>} property single String or Array of Strings
+     * @param {number|Array<number>} targetValue single number or Array of numbers
      * @param {number} delayTime in seconds
      * @param {Function=} optCallback optional callback to execute when ready
      * @param {Function=} optEase optional easing function to use
@@ -47,8 +47,9 @@ export default {
             vars.onUpdate = optUpdate;
 
         if ( Array.isArray( property )) {
-            for ( let i = 0, l = property.length; i < l; ++i )
+            for ( let i = 0, l = property.length; i < l; ++i ) {
                 vars[ property[ i ]] = targetValue[ i ];
+            }
         }
         else {
             vars[ property ] = targetValue;

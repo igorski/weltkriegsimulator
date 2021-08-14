@@ -1,0 +1,95 @@
+.wks-header {
+    width: 100%;
+    text-align: center;
+    color: #FFF;
+}
+
+.wks-menu {
+    width: 100%;
+    padding-top: $spacing-medium;
+    @include boxSize();
+}
+
+.wks-button {
+    width: 50%;
+    display: block;
+    padding: $spacing-medium;
+    margin: $spacing-small auto;
+    cursor: pointer;
+    background-color: lighten(#0055d8, 20%);
+    border: 3px solid #0033ee;
+    border-radius: 13px;
+    color: #FFF;
+    @include boxSize();
+
+    &:hover {
+        background-color: #FFF;
+        color: #0055d8;
+    }
+}
+
+.wks-button-list {
+    width: 100%;
+    padding-top: $spacing-medium;
+    @include boxSize();
+
+    @include mobile() {
+        .wks-button {
+            width: 100%;
+        }
+    }
+}
+
+.wks-text {
+    width: 50%;
+    height: 75%;
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 0 1em;
+    background-color: #e6e6e6;
+    border-radius: 13px;
+    border: 3px solid #0033ee;
+    @include boxSize();
+
+    @include mobile() {
+        width: 100%;
+    }
+
+    button {
+        width: 50%;
+        display: block;
+        padding: 2em;
+        margin: $spacing-small auto;
+        cursor: pointer;
+    }
+
+    a {
+        color: blue;
+    }
+
+    input {
+        &.error {
+          border: 1px solid red;
+        }
+    }
+}
+
+.wks-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: $spacing-medium $spacing-large;
+    text-align: center;
+    color: #FFF;
+    @include boxSize();
+
+    .wks-menu button {
+        display: inline;
+        width: 33%;
+
+        @include mobile() {
+            width: 85%;
+        }
+    }
+}

@@ -31,11 +31,8 @@ let actionTimeout;
 
 export default {
 
-    init( gameModelRef, audioModelRef, settingsModelRef ) {
-
-        gameModel     = gameModelRef;
-        audioModel    = audioModelRef;
-        settingsModel = settingsModelRef;
+    init( models) {
+        ({ gameModel, audioModel, settingsModel } = models );
 
         // subscribe to pubsub system to receive and broadcast messages
 

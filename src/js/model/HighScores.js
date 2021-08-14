@@ -54,7 +54,7 @@ const HighScores = {
     /**
      * retrieve the list of high scores
      *
-     * @return {Array.<{name: string, score: number}>}
+     * @return {Array<{name: string, score: number}>}
      */
     get() {
         return list;

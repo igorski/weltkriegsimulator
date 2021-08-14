@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Config       from "../config/Config";
-import Messages     from "../definitions/Messages";
 import Pubsub       from "pubsub-js";
-import EventHandler from "../util/EventHandler";
-import HTMLTemplate from "../../templates/title_screen.hbs";
+import Config       from "@/config/Config";
+import Messages     from "@/definitions/Messages";
+import EventHandler from "@/util/EventHandler";
+import HTMLTemplate from "Templates/title_screen.hbs";
 import { TweenMax, TimelineMax, Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
@@ -32,14 +32,14 @@ let title, menu, footer, buttons;
 
 export default {
 
-    render( wrapper ) {
+    render( wrapper, models ) {
         wrapper.innerHTML = HTMLTemplate();
 
         // grab references to HTML Elements
 
-        title   = wrapper.querySelector( "h1" );
-        menu    = wrapper.querySelector( "#menu" );
-        footer  = wrapper.querySelector( "footer" );
+        title   = wrapper.querySelector( ".wks-title" );
+        menu    = wrapper.querySelector( ".wks-button-list" );
+        footer  = wrapper.querySelector( ".wks-footer" );
         buttons = wrapper.querySelectorAll( "button" );
 
         startButton      = wrapper.querySelector( "#btnStart" );

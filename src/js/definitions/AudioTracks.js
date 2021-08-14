@@ -36,7 +36,7 @@ const AudioTracks =
      * listed in this Object
      *
      * @public
-     * @return {Array.<string>}
+     * @return {Array<string>}
      */
     getAll() {
         const out = [];

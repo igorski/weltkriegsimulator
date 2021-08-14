@@ -20,6 +20,10 @@ module.exports = {
         wks: path.join( dirSrc, "index" )
     },
     resolve: {
+        alias: {
+            '@': dirSrc,
+            Templates: dirHtml
+        },
         modules: [
             dirNode,
             dirApp

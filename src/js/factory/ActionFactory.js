@@ -34,7 +34,7 @@ import Boss          from "../model/actors/Boss";
  * "timeout" describes the timeout (in seconds) until
  * the next action in the list should be called
  *
- * @type {Array.<{fn: Function, timeout: number}>}
+ * @type {Array<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
     { fn: generateHorizontalWave,    timeout: 5 },

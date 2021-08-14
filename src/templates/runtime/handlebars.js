@@ -1,5 +1,7 @@
 const Handlebars = require( "handlebars/runtime" );
 
+/* custom helpers */
+
 Handlebars.registerHelper( "toLowerCase", string => {
     if ( typeof string === "string" ) {
         return string.toLowerCase();
@@ -12,7 +14,7 @@ Handlebars.registerHelper( "toLowerCase", string => {
  */
 Handlebars.registerHelper( "loop", ( n, block ) => {
     let out = "";
-    for( var i = 0; i < n; ++i ) {
+    for ( var i = 0; i < n; ++i ) {
         out += block.fn( i );
     }
     return out;

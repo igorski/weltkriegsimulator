@@ -63,10 +63,9 @@ const FXRenderers = new Array( 25 );
 
 const RenderController = {
 
-    init( gameModelRef, audioModelRef, container ) {
+    init( container, models ) {
 
-        gameModel  = gameModelRef;
-        audioModel = audioModelRef;
+        ({ gameModel, audioModel } = models );
 
         zCanvas = new canvas({
             width       : IDEAL_WIDTH,

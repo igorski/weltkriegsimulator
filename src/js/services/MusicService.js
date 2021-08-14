@@ -37,7 +37,7 @@ export default {
             scriptTag.setAttribute( "async", "true" );
             scriptTag.setAttribute( "src", "https://connect.soundcloud.com/sdk.js" );
 
-            scriptTag.onload = resolve;
+            scriptTag.onload  = resolve;
             scriptTag.onerror = reject;
 
             document.getElementsByTagName( "head" )[ 0 ].appendChild( scriptTag );
