@@ -20,12 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap          from "gsap";
 import Ship          from "./Ship";
 import Powerup       from "./Powerup";
-import ShipRenderer  from "../../view/renderers/ShipRenderer";
-import Weapons       from "../../definitions/Weapons";
-import WeaponFactory from "../../factory/WeaponFactory";
-import gsap          from "gsap";
+import ShipRenderer  from "@/view/renderers/ShipRenderer";
+import Weapons       from "@/definitions/Weapons";
+import WeaponFactory from "@/factory/WeaponFactory";
 
 const DEFAULT_ENERGY = 10;
 const DEFAULT_WEAPON = 0;

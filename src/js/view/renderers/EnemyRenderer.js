@@ -20,10 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Config       from "../../config/Config";
-import Enemy        from "../../model/actors/Enemy";
 import ShipRenderer from "./ShipRenderer";
-import Assets       from "../../definitions/Assets";
+import Config       from "@/config/Config";
+import Enemy        from "@/model/actors/Enemy";
+import Assets       from "@/definitions/Assets";
 
 export default class EnemyRenderer extends ShipRenderer
 {

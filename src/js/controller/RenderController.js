@@ -20,17 +20,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap, { TweenMax, Power1 } from "gsap";
 import Pubsub          from "pubsub-js";
 import { canvas, sprite, collision } from "zcanvas";
-import Messages        from "../definitions/Messages";
-import RendererFactory from "../factory/RendererFactory";
-import SkyRenderer     from "../view/renderers/SkyRenderer";
-import TileRenderer    from "../view/renderers/TileRenderer";
-import FXRenderer      from "../view/renderers/FXRenderer";
-import Powerup         from "../model/actors/Powerup";
-import gsap, { TweenMax, Power1 } from "gsap";
+import Messages        from "@/definitions/Messages";
+import RendererFactory from "@/factory/RendererFactory";
+import SkyRenderer     from "@/view/renderers/SkyRenderer";
+import TileRenderer    from "@/view/renderers/TileRenderer";
+import WaterRenderer   from "@/view/renderers/WaterRenderer";
+import FXRenderer      from "@/view/renderers/FXRenderer";
+import Powerup         from "@/model/actors/Powerup";
 
-let audioModel, gameModel, zCanvas, player;
+let audioModel, gameModel, zCanvas, player, waterRenderer;
 
 // ideal width of the game, this is blown up by CSS
 // for a fullscreen experience, while maintaining the "pixel art" vibe
@@ -151,7 +152,12 @@ function setupGame() {
 
     // add some default renderers for scenery
 
+    // ground layer is out of player bounds, is just visual candy
+    waterRenderer = new WaterRenderer();
+    GROUND_LAYER.addChild( waterRenderer ); // eternally animating water sprite
     GROUND_LAYER.addChild( new TileRenderer( 0, 0, 1, .5 ) );
+    // TODO: add island/ground
+
     BOTTOM_DECORATION_LAYER.addChild( new SkyRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
     TOP_DECORATION_LAYER.addChild( new SkyRenderer( zCanvas.getWidth() - 100, -100, 1 ) );
@@ -340,6 +346,7 @@ function handleResize() {
     gameModel.world.width  = zCanvas.getWidth();
     gameModel.world.height = zCanvas.getHeight();
     gameModel.player.cacheBounds();
+    waterRenderer.cacheBounds();
 }
 
 function animateBackgroundColor( targetLayer ) {

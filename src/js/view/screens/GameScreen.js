@@ -20,6 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap, { Cubic, Elastic } from "gsap";
 import Pubsub          from "pubsub-js";
 import Config          from "@/config/Config";
 import Copy            from "@/definitions/Copy";
@@ -27,7 +28,6 @@ import Messages        from "@/definitions/Messages";
 import EventHandler    from "@/util/EventHandler";
 import InputController from "@/controller/InputController";
 import HTMLTemplate    from "Templates/game_screen.hbs";
-import gsap, { Cubic, Elastic } from "gsap";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
@@ -245,7 +245,7 @@ function showInstructions() {
     const docs = Config.HAS_TOUCH_CONTROLS ? Copy.TUTORIAL.TOUCH : Copy.TUTORIAL.KEYBOARD;
 
     const el = document.createElement( "div" );
-    el.setAttribute( "id", "instructions" );
+    el.setAttribute( "class", "wks-ui-instructions" );
     container.appendChild( el );
 
     const tl = gsap.timeline();

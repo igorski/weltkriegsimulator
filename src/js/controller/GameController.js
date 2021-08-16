@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap          from "gsap";
 import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import ActionFactory from "@/factory/ActionFactory";
 import Assets        from "@/definitions/Assets";
-import gsap          from "gsap";
 
 let audioModel, gameModel, settingsModel;
 let actionTimeout;

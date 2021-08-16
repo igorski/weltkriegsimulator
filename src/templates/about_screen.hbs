@@ -9,33 +9,14 @@
     </p>
     <p>
         The music is by the respective artists (shown on playback start). Graphics for the game sprites as
-        well as sound effects come from <i>opengameart.org</i> and feature entries by:
+        well as sound effects come from <i>opengameart.org</i> and features entries by:
     </p>
     <ul class="wks-list">
+        {{#each resources}}
         <li>
-            <a href="http://opengameart.org/content/explosion" class="wks-link" target="_blank">Explosion by Cuzco</a>
+            <a href="{{href}}" class="wks-link" target="_blank">{{name}}</a>
         </li>
-        <li>
-            <a href="http://opengameart.org/content/space-ship-building-bits-volume-1" class="wks-link" target="_blank">Ship by Redshrike</a>
-        </li>
-        <li>
-            <a href="https://opengameart.org/content/spaceships-1" class="wks-link" target="_blank">Spaceships by wuhu</a>
-        </li>
-        <li>
-            <a href="https://opengameart.org/content/retro-shmup-boss-2" class="wks-link" target="_blank">Retro shmup boss 2 by Jerom</a>
-        </li>
-        <li>
-            <a href="https://opengameart.org/content/explosion-0" class="wks-link" target="_blank">Explosion by TinyWorlds</a>
-        </li>
-        <li>
-            <a href="https://opengameart.org/content/laser-fire" class="wks-link" target="_blank">Laser Fire by dklon</a>
-        </li>
-        <li>
-            <a href="https://opengameart.org/content/some-hud-elements-icons-and-crosshairs" class="wks-link" target="_blank">Some Hud Elements, Icons and Crosshairs by sbed</a>
-        </li>
-        <li>
-            <a href="http://www.dafont.com/astral-delight.font?fpp=100&text=WELTKRIEGSIMULATOR" class="wks-link" target="_blank">Font "Astral Delight" by imagex</a>
-        </li>
+        {{/each}}
     </ul>
 </section>
 <footer class="wks-footer">

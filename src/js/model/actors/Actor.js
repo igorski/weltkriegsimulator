@@ -22,8 +22,8 @@
  */
 import Pubsub    from "pubsub-js";
 import { Cubic } from "gsap";
-import Messages  from "../../definitions/Messages";
-import ActorUtil from "../../util/ActorUtil";
+import Messages  from "@/definitions/Messages";
+import ActorUtil from "@/util/ActorUtil";
 
 class Actor {
 
@@ -181,8 +181,9 @@ class Actor {
 
         // recalculate the hit box bounds if this Actor is inside the viewport
 
-        if ( this.y > -this.height )
+        if ( this.y > -this.height ) {
             this._cacheHitbox();
+        }
     }
 
     /**

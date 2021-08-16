@@ -70,13 +70,11 @@ export default class ActorRenderer extends sprite
         /* initialization */
 
         actor.renderer = this;
-
-        this.sync();
     }
 
     /* public methods */
 
-    sync() {
+    update() {
 
         const actor  = this.actor;
         const bounds = this._bounds;
@@ -106,8 +104,6 @@ export default class ActorRenderer extends sprite
      * @param {CanvasRenderingContext2D} aCanvasContext
      */
     draw( aCanvasContext ) {
-
-        this.sync(); // sync with model state
 
         // apply rumble when applicable
 

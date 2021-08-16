@@ -20,10 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Config        from "../../config/Config";
-import Powerup       from "../../model/actors/Powerup";
 import ActorRenderer from "./ActorRenderer";
-import Assets        from "../../definitions/Assets";
+import Config        from "@/config/Config";
+import Powerup       from "@/model/actors/Powerup";
+import Assets        from "@/definitions/Assets";
 
 export default class PowerupRenderer extends ActorRenderer
 {

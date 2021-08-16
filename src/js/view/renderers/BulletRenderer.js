@@ -21,8 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ActorRenderer from "./ActorRenderer";
-import Bullet        from "../../model/actors/Bullet";
-import Assets        from "../../definitions/Assets";
+import Bullet        from "@/model/actors/Bullet";
+import Assets        from "@/definitions/Assets";
 
 export default class BulletRenderer extends ActorRenderer
 {
@@ -47,8 +47,6 @@ export default class BulletRenderer extends ActorRenderer
      * @param {CanvasRenderingContext2D} aCanvasContext
      */
     draw( aCanvasContext ) {
-
-        this.sync(); // sync with model state
 
         if ( !this._bitmapReady )
             return;

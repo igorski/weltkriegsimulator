@@ -319,6 +319,7 @@ const Game = {
                 continue;
 
             actor.update( aTimestamp );
+            actor.renderer?.update();
 
             // no collision detection if game is inactive
 
@@ -362,8 +363,9 @@ const Game = {
             others.forEach(( other ) => {
                 if ( actor.collides( other )) {
                     actor.hit( other );
-                    if ( actor instanceof Player || other instanceof Player )
+                    if ( actor instanceof Player || other instanceof Player ) {
                         Game.onPlayerHit(( other !== player ) ? other : actor );
+                    }
                 }
             });
         }
@@ -375,9 +377,9 @@ const Game = {
     reset() {
         // remove Actors (reverse loop as Array will be updated on Actor.dispose())
         let i = Game.actors.length;
-        while ( i-- )
+        while ( i-- ) {
             Game.actors[ i ].dispose();
-
+        }
         Game.player.reset();
         Game.addActor( Game.player );
         Game.active = true;

@@ -119,10 +119,10 @@ function animateIn() {
 
     for ( let i = 0; i < buttons.length; ++i ) {
         const button = buttons[ i ];
-        gsap.from( button, 1.5, {
-            css: { marginLeft: `-${window.innerWidth}px` },
-            ease: Elastic.easeInOut, delay: 1 + ( i * .4 )
-        });
+        gsap.fromTo( button, 1.5,
+            { css: { marginLeft: `-${window.innerWidth}px` } },
+            { css: { marginLeft: "auto" }, ease: Elastic.easeInOut, delay: 1 + ( i * .4 ) }
+        );
     }
 }
 

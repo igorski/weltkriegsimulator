@@ -21,8 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { sprite } from "zcanvas";
-import Config     from "../../config/Config";
-import Assets     from "../../definitions/Assets";
+import Config     from "@/config/Config";
+import Assets     from "@/definitions/Assets";
 
 /**
  * a renderer that renders different animations

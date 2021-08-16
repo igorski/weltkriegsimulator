@@ -32,7 +32,18 @@ let title, footer;
 export default {
 
     render( wrapper, models ) {
-        wrapper.innerHTML = HTMLTemplate();
+        wrapper.innerHTML = HTMLTemplate({
+            resources: [
+                { name: "Explosion by Cuzco", href: "https://opengameart.org/content/explosion" },
+                { name: "Ship by Redshrike",  href: "https://opengameart.org/content/space-ship-building-bits-volume-1" },
+                { name: "Spaceships by wuhu", href: "https://opengameart.org/content/spaceships-1" },
+                { name: "Retro shmup boss 2 by Jerom", href: "https://opengameart.org/content/retro-shmup-boss-2" },
+                { name: "Explosion by TinyWorlds", href: "https://opengameart.org/content/explosion-0" },
+                { name: "Some Hud Elements, Icons and Crosshairs by sbed", href: "https://opengameart.org/content/some-hud-elements-icons-and-crosshairs" },
+                { name: "Font \"Astral Delight\" by imagex", href: "http://www.dafont.com/astral-delight.font?fpp=100&text=WELTKRIEGSIMULATOR" },
+                { name: "Animated flowing water 2d 16x16 by InThePixel", href: "https://opengameart.org/content/animated-flowing-water-2d-16x16" }
+            ]
+        });
 
         // grab references to HTML Elements
 

@@ -21,9 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { sprite } from "zcanvas";
-import Config     from "../../config/Config";
-import TileUtil   from "../../util/TileUtil";
-import Assets     from "../../definitions/Assets";
+import Config     from "@/config/Config";
+import TileUtil   from "@/util/TileUtil";
+import Assets     from "@/definitions/Assets";
 
 export default class TileRenderer extends sprite
 {
@@ -52,22 +52,15 @@ export default class TileRenderer extends sprite
 
     /* public methods */
 
-    /**
-     * @override
-     * @public
-     * @param {CanvasRenderingContext2D} aCanvasContext
-     */
     draw( aCanvasContext ) {
-        this.sync();
-        super.draw( aCanvasContext );
-    }
-
-    sync() {
+        // there is no associated Actor for a tile, run the update logic
+        // inside the draw method
         this._bounds.top += this.speed;
 
         if ( this._bounds.top > this.canvas.getHeight() ) {
             this._bounds.top = -this._bounds.height;
             this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
         }
+        super.draw( aCanvasContext );
     }
 }

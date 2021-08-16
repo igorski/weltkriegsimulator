@@ -28,6 +28,7 @@ export default {
         SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,
         BOSS         : `${assetRoot}images/sprites/spritesheet_boss.png`,
         FX           : `${assetRoot}images/sprites/spritesheet_fx.png`,
+        WATER        : `${assetRoot}images/sprites/spritesheet_water.png`,
         SKY          : `${assetRoot}images/sprites/clouds.png`,
         BULLET       : `${assetRoot}images/sprites/bullet.png`,
         TILE         : `${assetRoot}images/sprites/tile.png`

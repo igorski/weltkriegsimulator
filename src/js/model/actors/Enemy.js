@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Ship         from "./Ship";
-import Patterns     from "../../definitions/Patterns";
-import Weapons      from "../../definitions/Weapons";
-import ShipRenderer from "../../view/renderers/ShipRenderer";
 import gsap, { Sine, Cubic } from "gsap";
+import Ship         from "./Ship";
+import Patterns     from "@/definitions/Patterns";
+import Weapons      from "@/definitions/Weapons";
+import ShipRenderer from "@/view/renderers/ShipRenderer";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;
@@ -87,8 +87,9 @@ class Enemy extends Ship {
 
         const insideViewport = this.y > -this.height;
 
-        if ( !insideViewport )
+        if ( !insideViewport ) {
             return super.update( aTimestamp );
+        }
 
         // fire a shot in case the shoot interval has passed
 
@@ -107,8 +108,9 @@ class Enemy extends Ship {
 
         // recalculate the hit box bounds
 
-        if ( this.y > -this.height )
+        if ( this.y > -this.height ) {
             this._cacheHitbox();
+        }
     }
 
     calculateTrajectory() {

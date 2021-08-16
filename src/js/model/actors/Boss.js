@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap         from "gsap";
 import Enemy        from "./Enemy";
 import Patterns     from "@/definitions/Patterns";
 import Weapons      from "@/definitions/Weapons";
 import BossRenderer from "@/view/renderers/BossRenderer";
-import gsap         from "gsap";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.SPRAY;
