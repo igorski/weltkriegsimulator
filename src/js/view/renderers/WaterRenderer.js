@@ -23,6 +23,7 @@
 import { sprite } from "zcanvas";
 import Config     from "@/config/Config";
 import Assets     from "@/definitions/Assets";
+import { createCanvas } from "@/util/CanvasUtil";
 
 const TILE_SIZE       = 16;
 const FRAMES_PER_TILE = 5;
@@ -49,10 +50,7 @@ export default class WaterRenderer extends sprite
         bitmap.src   = Assets.GRAPHICS.WATER;
 
         this.patterns = [];
-        const cvs = document.createElement( "canvas" );
-        cvs.width  = TILE_SIZE;
-        cvs.height = TILE_SIZE;
-        const ctx = cvs.getContext( "2d" );
+        const { cvs, ctx } = createCanvas( TILE_SIZE, TILE_SIZE );
         for ( let i = 0; i < AMOUNT_OF_TILES; ++i ) {
             ctx.clearRect( 0, 0, TILE_SIZE, TILE_SIZE );
             ctx.drawImage( bitmap, 0, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, 0, 0, TILE_SIZE, TILE_SIZE );

@@ -22,17 +22,17 @@
  */
 import Pubsub          from "pubsub-js";
 import gsap, { Cubic } from "gsap";
-import Copy          from "@/definitions/Copy";
-import Messages      from "@/definitions/Messages";
-import ActionFactory from "@/factory/ActionFactory";
-import WeaponFactory from "@/factory/WeaponFactory";
-import Actor         from "./actors/Actor";
-import Ship          from "./actors/Ship";
-import Player        from "./actors/Player";
-import Enemy         from "./actors/Enemy";
-import Boss          from "./actors/Boss";
-import Bullet        from "./actors/Bullet";
-import Powerup       from "./actors/Powerup";
+import Copy            from "@/definitions/Copy";
+import Messages        from "@/definitions/Messages";
+import ActionFactory   from "@/factory/ActionFactory";
+import WeaponFactory   from "@/factory/WeaponFactory";
+import Actor           from "./actors/Actor";
+import Ship            from "./actors/Ship";
+import Player          from "./actors/Player";
+import Enemy           from "./actors/Enemy";
+import Boss            from "./actors/Boss";
+import Bullet          from "./actors/Bullet";
+import Powerup         from "./actors/Powerup";
 
 const Game = {
 
@@ -86,6 +86,8 @@ const Game = {
     onBulletHit( bullet, ship ) {
         ship.energy = Math.max( 0, ship.energy - bullet.damage );
         bullet.dispose(); // Bullets disappear on impact
+
+        Pubsub.publish( Messages.IMPACT );
 
         // if Bullet came from Player and Ship has died, award points :)
 

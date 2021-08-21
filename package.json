@@ -6,7 +6,7 @@
   "author": "Igor Zinken",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.config.dev.js",
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server --host=0.0.0.0 --progress --mode development --config webpack.config.dev.js",
     "build": "webpack -p --progress --mode production --config webpack.config.build.js"
   },
   "devDependencies": {

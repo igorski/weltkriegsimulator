@@ -38,14 +38,15 @@ export default {
     ACTOR_LAYER_SWITCH_START    : "S04", // payload is { actor: Actor, layer: number }
     ACTOR_LAYER_SWITCH_COMPLETE : "S05", // payload is { actor: Actor, layer: number }
     PLAYER_HIT                  : "S06", // payload is { player: Player, object: Actor }
-    BOSS_DEFEATED               : "S07", // payload is Boss
-    UPDATE_ENERGY               : "S08", // payload is Player
-    UPDATE_SCORE                : "S09", // payload is numerical value of new score
-    SHOW_INSTRUCTIONS           : "S10",
-    INSTRUCTIONS_COMPLETE       : "S11",
-    SHOW_MESSAGE                : "S12", // payload is { title: string, body: string }
-    SHOW_TITLE_SCREEN           : "S13",
-    SHOW_ABOUT                  : "S14",
-    SHOW_HOW_TO_PLAY            : "S15",
-    SHOW_HIGHSCORES             : "S16"
+    IMPACT                      : "S07",
+    BOSS_DEFEATED               : "S08", // payload is Boss
+    UPDATE_ENERGY               : "S09", // payload is Player
+    UPDATE_SCORE                : "S10", // payload is numerical value of new score
+    SHOW_INSTRUCTIONS           : "S11",
+    INSTRUCTIONS_COMPLETE       : "S12",
+    SHOW_MESSAGE                : "S13", // payload is { title: string, body: string }
+    SHOW_TITLE_SCREEN           : "S14",
+    SHOW_ABOUT                  : "S15",
+    SHOW_HOW_TO_PLAY            : "S16",
+    SHOW_HIGHSCORES             : "S17"
 };

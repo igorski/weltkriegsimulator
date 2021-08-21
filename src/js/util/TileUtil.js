@@ -20,6 +20,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { createCanvas } from "@/util/CanvasUtil";
+
 export default {
 
     /**
@@ -47,10 +49,7 @@ export default {
         const horAmount = Math.ceil( Math.random() * 25 );
         const verAmount = Math.ceil( Math.random() * 15 );
 
-        const cvs  = document.createElement( "canvas" );
-        const ctx  = cvs.getContext( "2d" );
-        cvs.width  = horAmount * tileWidth;
-        cvs.height = verAmount * tileHeight;
+        const { cvs, ctx } = createCanvas( horAmount * tileWidth, verAmount * tileHeight );
 
         for ( let col = 0; col < horAmount; ++col ) {
             for ( let row = 0; row < verAmount; ++row ) {

@@ -158,7 +158,7 @@ function handleDPad( event ) {
         case "touchstart":
             // store which pointer is touching the dPad (avoids collisions w/ other pointer events)
             dPadPointerId = touches[ 0 ].identifier;
-            break;
+        //    break; // allow fallthrough to move handler
 
         case "touchmove":
 
@@ -225,17 +225,19 @@ function handleResize( event ) {
     // get bounding box of dPad element
     DPAD_OFFSET = dPad.getBoundingClientRect();
 
-    // calculate center points of element
-    const hCenter = DPAD_OFFSET.width / 2;
+    // calculate center points of element (relative to its x, y coordinate)
+    const hCenter = DPAD_OFFSET.width  / 2;
     const vCenter = DPAD_OFFSET.height / 2;
 
-    // these represent the size of the outer ranges that distinguish
-    // whether we're dealing with either extreme of the axis, or in its center
-    const horizontalDelta = DPAD_OFFSET.width  / 3;
-    const verticalDelta   = DPAD_OFFSET.height / 3;
+    const horizontalDelta = DPAD_OFFSET.width  / 8;
+    const verticalDelta   = DPAD_OFFSET.height / 8;
 
     // cache coordinates for handleDPad
-    DPAD_LEFT   = hCenter - horizontalDelta ;
+    // basically we subtract the calculated horizontal and vertical delta from
+    // the center coordinate so we only respond to interactions on the outer edges
+    // of the dpad (otherwise we are always moving in both axes)
+
+    DPAD_LEFT   = hCenter - horizontalDelta;
     DPAD_RIGHT  = hCenter + horizontalDelta;
     DPAD_TOP    = vCenter - verticalDelta;
     DPAD_BOTTOM = vCenter + verticalDelta;

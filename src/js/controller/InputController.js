@@ -20,12 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Messages     from "../definitions/Messages";
-import Pubsub       from "pubsub-js";
-import ActorUtil    from "../util/ActorUtil";
-import Bullet       from "../model/actors/Bullet";
-import EventHandler from "../util/EventHandler";
 import gsap         from "gsap";
+import Pubsub       from "pubsub-js";
+import Messages     from "@/definitions/Messages";
+import ActorUtil    from "@/util/ActorUtil";
+import Bullet       from "@/model/actors/Bullet";
+import EventHandler from "@/util/EventHandler";
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;
@@ -54,47 +54,54 @@ const InputController = {
     },
 
     // player controls
+    // the optional killExisting flags are for touch control (as moving from right to left
+    // while keeping the finger pressed does not fire a new start/cancel/end event, meaning
+    // we must track changes in direction during touchmove keeping cancellations in check)
 
     left( speed = .5, killExisting = false ) {
+        if ( killExisting ) {
+            activeMovement.left  =
+            activeMovement.right = false;
+            gsap.killTweensOf( player, true, { "xSpeed": true });
+        }
         if ( !activeMovement.left ) {
             activeMovement.left = true;
-            if ( killExisting ) {
-                activeMovement.right = false;
-                gsap.killTweensOf( player, true, { "xSpeed": true });
-            }
             ActorUtil.setDelayed( player, "xSpeed", -5, speed );
         }
     },
 
     right( speed = .5, killExisting = false ) {
+        if ( killExisting ) {
+            activeMovement.left  =
+            activeMovement.right = false;
+            gsap.killTweensOf( player, true, { "xSpeed": true });
+        }
         if ( !activeMovement.right ) {
             activeMovement.right = true;
-            if ( killExisting ) {
-                activeMovement.left = false;
-                gsap.killTweensOf( player, true, { "xSpeed": true });
-            }
             ActorUtil.setDelayed( player, "xSpeed", 5, speed );
         }
     },
 
     up( speed = .5, killExisting = false ) {
+        if ( killExisting ) {
+            activeMovement.up   =
+            activeMovement.down = false;
+            gsap.killTweensOf( player, true, { "ySpeed": true });
+        }
         if ( !activeMovement.up ) {
             activeMovement.up = true;
-            if ( killExisting ) {
-                activeMovement.down = false;
-                gsap.killTweensOf( player, true, { "ySpeed": true });
-            }
             ActorUtil.setDelayed( player, "ySpeed", -5, speed );
         }
     },
 
     down( speed = .5, killExisting = false ) {
+        if ( killExisting ) {
+            activeMovement.up   =
+            activeMovement.down = false;
+            gsap.killTweensOf( player, true, { "ySpeed": true });
+        }
         if ( !activeMovement.down ) {
             activeMovement.down = true;
-            if ( killExisting ) {
-                activeMovement.up = false;
-                gsap.killTweensOf( player, true, { "ySpeed": true });
-            }
             ActorUtil.setDelayed( player, "ySpeed", 5, speed );
         }
     },

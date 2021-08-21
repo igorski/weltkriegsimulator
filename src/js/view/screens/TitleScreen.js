@@ -22,6 +22,7 @@
  */
 import Pubsub       from "pubsub-js";
 import Config       from "@/config/Config";
+import Assets       from "@/definitions/Assets";
 import Messages     from "@/definitions/Messages";
 import EventHandler from "@/util/EventHandler";
 import HTMLTemplate from "Templates/title_screen.hbs";
@@ -29,11 +30,14 @@ import gsap, { Cubic, Elastic } from "gsap";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
+let audioModel;
 
 export default {
 
     render( wrapper, models ) {
         wrapper.innerHTML = HTMLTemplate();
+
+        ({ audioModel } = models );
 
         // grab references to HTML Elements
 
@@ -76,6 +80,8 @@ function handleStartClick( event ) {
 
     // will otherwise fire multiple times on touch screen (due to multiple handlers for different event types)
     event.preventDefault();
+
+    audioModel.playSoundFX( Assets.AUDIO.AU_LASER );
 
     animateOut(() => {
         // start this game!

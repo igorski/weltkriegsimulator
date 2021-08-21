@@ -193,9 +193,9 @@ function handleBroadcast( type, payload ) {
         case Messages.ACTOR_REMOVED:
 
             const index = actors.indexOf( /** @type {Actor} */ ( payload ));
-            if ( index !== -1 )
+            if ( index !== -1 ) {
                 actors.splice( index, 1 );
-
+            }
             removeRendererFromDisplayList( /** @type {Actor} */ ( payload ).renderer );
             break;
 
@@ -220,8 +220,9 @@ function handleBroadcast( type, payload ) {
 
         case Messages.PLAYER_HIT:
             // rumble the screen when we're hit!
-            if ( !( payload.object instanceof Powerup ))
+            if ( !( payload.object instanceof Powerup )) {
                 rumble();
+            }
             break;
     }
 }

@@ -63,6 +63,8 @@ const Audio = {
 
             // enqueue the first track for playback
             Audio.enqueueTrack();
+
+            Pubsub.subscribe( Messages.IMPACT, Audio.playSoundFX.bind( Audio, Assets.AUDIO.AU_EXPLOSION ));
         });
     },
 
@@ -205,7 +207,7 @@ function _startPlayingEnqueuedTrack() {
 
     // get track META
     SC.get( "/tracks/" + queuedTrackId, ( track ) => {
-        if ( track && track.user ) {
+        if ( track?.user ) {
             Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "MUSIC", [
                 track.title, track.user.username
             ]));

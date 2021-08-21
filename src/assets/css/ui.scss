@@ -59,13 +59,13 @@
 
 /* touch screen controls */
 
-$dpadRadius: 90px;
+$dpadRadius: 132px;
 $margin: ( $dpadRadius / 2 );
 
 .wks-ui-dpad {
     position: absolute;
     left: $margin;
-    bottom: $margin;
+    bottom: 16px;
     width: $dpadRadius;
     height: $dpadRadius;
     background: transparent url(../images/graphics/dpad.png) no-repeat 50%;
@@ -79,7 +79,7 @@ $margin: ( $dpadRadius / 2 );
 
 .wks-ui-buttons {
     position: absolute;
-    bottom: $margin;
+    bottom: 16px;
     right: ( $margin / 2 );
 
     @include mobile() {
