@@ -20,10 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import gsap         from "gsap";
+import ShipRenderer from "@/view/renderers/ShipRenderer";
 import Actor        from "./Actor";
 import Bullet       from "./Bullet";
-import ShipRenderer from "@/view/renderers/ShipRenderer";
-import gsap         from "gsap";
 
 class Ship extends Actor {
 

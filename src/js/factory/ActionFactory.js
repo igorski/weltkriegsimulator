@@ -20,11 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Random        from "../util/Random";
-import Patterns      from "../definitions/Patterns";
-import Weapons       from "../definitions/Weapons";
+import Random        from "@/util/Random";
+import Enemies       from "@/definitions/Enemies";
+import Patterns      from "@/definitions/Patterns";
+import Weapons       from "@/definitions/Weapons";
+import Boss          from "@/model/actors/Boss";
 import WeaponFactory from "./WeaponFactory";
-import Boss          from "../model/actors/Boss";
 
 /**
  * list of actions that enqueue the enemy squadrons, powerups,
@@ -137,7 +138,7 @@ function generateHorizontalWave( gameModel ) {
 function generateWideSineSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
-    const type     = Random.range( 1, 3 );
+    const type     = Random.range( Enemies.SQUADRON_TYPE_1, Enemies.SQUADRON_TYPE_3 );
     const pattern  = Patterns.WIDE_SINE;
     const tileSize = 64;
 
@@ -156,7 +157,6 @@ function generateWideSineSquadron( gameModel ) {
 function generateMine( gameModel ) {
     // always generate mines on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
-    const mineType    = 4;
 
     for ( let i = 0, total = Random.byLevel( 2, level, 1 ); i < total; ++i ) {
 
@@ -166,14 +166,14 @@ function generateMine( gameModel ) {
         const xSpeed = 0;
         const ySpeed = 1;
 
-        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, 1, Weapons.SPRAY, mineType );
+        gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, 1, Weapons.SPRAY, Enemies.MINE );
     }
 }
 
 function generateSidewaysSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
-    const type     = Random.range( 1, 3 );
+    const type     = Random.range( Enemies.SQUADRON_TYPE_1, Enemies.SQUADRON_TYPE_3 );
     const pattern  = Patterns.SIDEWAYS_CUBE;
     const tileSize = 64;
 
@@ -199,8 +199,10 @@ function generateBoss( gameModel ) {
     );
 }
 
-// QQQ
-window.boss = () => generateBoss( WKS.gameModel );
+// DEBUG helpers
+if ( process.env.NODE_ENV === "development" ) {
+    window.boss = () => generateBoss( WKS.models.gameModel );
+}
 
 function progressLevel() {
     // increase the level of the game

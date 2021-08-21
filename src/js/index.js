@@ -40,7 +40,7 @@ import StyleSheet       from "../assets/css/_root.scss";
 
 const container = document.querySelector( "#application" ) || document.querySelector( "body" );
 
-// set up "framework"
+// set up global "framework" (used for creating hooks for high score retrieval/saving)
 
 const WKS = window.WKS = {
     pubSub: PubSub
@@ -75,6 +75,9 @@ function init() {
     renderController.init( container, models );
     screenController.init( container, models );
 
+    if ( process.env.NODE_ENV === "development" ) {
+        WKS.models = models; // expose models for debugging
+    }
     PubSub.publish( Messages.READY );
 }
 

@@ -23,7 +23,9 @@
 import Pubsub          from "pubsub-js";
 import gsap, { Cubic } from "gsap";
 import Copy            from "@/definitions/Copy";
+import Enemies         from "@/definitions/Enemies";
 import Messages        from "@/definitions/Messages";
+import Weapons         from "@/definitions/Weapons";
 import ActionFactory   from "@/factory/ActionFactory";
 import WeaponFactory   from "@/factory/WeaponFactory";
 import Actor           from "./actors/Actor";
@@ -33,6 +35,8 @@ import Enemy           from "./actors/Enemy";
 import Boss            from "./actors/Boss";
 import Bullet          from "./actors/Bullet";
 import Powerup         from "./actors/Powerup";
+
+const { DEFAULT, LASER, SPRAY } = Weapons;
 
 const Game = {
 
@@ -186,7 +190,7 @@ const Game = {
      * @param {number=} optType
      * @param {number=} optPattern
      */
-    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = 0, optPattern = 0 ) {
+    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = Enemies.DEFAULT, optPattern = 0 ) {
         const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
         if ( enemy ) {
             enemy.reset();
@@ -209,7 +213,7 @@ const Game = {
      * @param {number=} optEnergy
      * @param {number=} optType
      */
-    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optType = 0 ) {
+    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optType = Enemies.BOSS_TYPE_1 ) {
         const boss = getActorFromPool( bossPool, x, y, xSpeed, ySpeed, layer );
         if ( boss ) {
             boss.reset();
@@ -317,9 +321,9 @@ const Game = {
             actor = actors[ i ];
 
             // could be spliced during update
-            if ( !actor )
+            if ( !actor ) {
                 continue;
-
+            }
             actor.update( aTimestamp );
             actor.renderer?.update();
 
@@ -452,9 +456,8 @@ function createBulletForActor( actor ) {
     switch ( actor.weapon ) {
 
         default:
-        case 0:
-        case 2:
-            // single Bullet fire/laser
+        case DEFAULT:
+        case LASER:
             const y = ( actor instanceof Player ) ? actor.y + actor.offsetY - 10 : actor.y + actor.offsetY + actor.height;
             bullet = getActorFromPool(
                 bulletPool,
@@ -468,9 +471,7 @@ function createBulletForActor( actor ) {
                 bullets.push( bullet );
             break;
 
-        case 1:
-            // spray Bullets
-
+        case SPRAY:
             const orgX = actor.x + actor.offsetX + ( actor.width  * .5 );
             const orgY = actor.y + actor.offsetY + ( actor.height * .5 );
             const sprayRadius = Math.max( Game.world.width, Game.world.height ) + actor.width;
@@ -503,7 +504,8 @@ function createBulletForActor( actor ) {
                 if ( i === max ) {
                     opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
                 }
-                gsap.to( bullet, 1, opts );
+                // NOTE: mines fire sprays much more slowly (but more frequently, see WeaponFactory)
+                gsap.to( bullet, actor.type === Enemies.MINE ? 4 : 1, opts );
             }
             break;
     }

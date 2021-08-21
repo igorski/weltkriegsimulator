@@ -82,10 +82,12 @@ function handleBroadcast( msg, payload ) {
 
         case Messages.GAME_START:
             renderScreen( GameScreen );
+            wrapper.classList.add( "playing" );
             break;
 
         case Messages.GAME_OVER:
             renderScreen( GameOverScreen );
+            wrapper.classList.remove( "playing" );
             break;
     }
 }

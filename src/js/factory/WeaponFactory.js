@@ -20,8 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Random  from "../util/Random";
-import Weapons from "../definitions/Weapons";
+import Enemies from "@/definitions/Enemies";
+import Weapons from "@/definitions/Weapons";
+import Random  from "@/util/Random";
 
 export default {
 
@@ -51,7 +52,8 @@ export default {
                 break;
 
             case Weapons.SPRAY:
-                fireSpeed = 5;
+                // mines can spray at a higher speed (though the spray moves more slowly)
+                fireSpeed = ship.type === Enemies.MINE ? .5 : 5;
                 break;
 
             case Weapons.LASER:

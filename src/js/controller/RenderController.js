@@ -29,7 +29,9 @@ import SkyRenderer     from "@/view/renderers/SkyRenderer";
 import TileRenderer    from "@/view/renderers/TileRenderer";
 import WaterRenderer   from "@/view/renderers/WaterRenderer";
 import FXRenderer      from "@/view/renderers/FXRenderer";
+import Boss            from "@/model/actors/Boss";
 import Powerup         from "@/model/actors/Powerup";
+import Random          from "@/util/Random";
 
 let audioModel, gameModel, zCanvas, player, waterRenderer;
 
@@ -320,8 +322,22 @@ function checkLayerSwitchCollision( actor, targetLayer ) {
 }
 
 function showExplodeAnimation( actor ) {
-    // get FXRenderer from pool
-    const renderer = FXRenderers.shift();
+    // bosses explode in layers of fire
+    if ( actor instanceof Boss ) {
+        const incrX = actor.width  / 3;
+        const incrY = actor.height / 3;
+        for ( let x = -actor.width / 2; x < actor.width; x += incrX ) {
+            for ( let y = -actor.height / 2; y < actor.height; y += incrY ) {
+                const renderer = FXRenderers.shift(); // get FXRenderer from pool
+                if ( renderer ) {
+                    renderer.showAnimation( actor, FXRenderer.ANIMATION.EXPLOSION, x + Random.range( 1, 10 ), y + Random.range( 1, 10 ));
+                    addRendererToAppropriateLayer( actor.layer, renderer );
+                }
+            }
+        }
+        return;
+    }
+    const renderer = FXRenderers.shift(); // get FXRenderer from pool
     if ( renderer ) {
         renderer.showAnimation( actor, FXRenderer.ANIMATION.EXPLOSION );
         addRendererToAppropriateLayer( actor.layer, renderer );
