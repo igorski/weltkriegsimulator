@@ -20,11 +20,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Pubsub       from "pubsub-js";
-import Messages     from "@/definitions/Messages";
-import EventHandler from "@/util/EventHandler";
-import HTMLTemplate from "Templates/game_over_screen.hbs";
-import gsap, { Cubic, Elastic } from "gsap";
+import Pubsub        from "pubsub-js";
+import Messages      from "@/definitions/Messages";
+import AnimationUtil from "@/util/AnimationUtil";
+import EventHandler  from "@/util/EventHandler";
+import HTMLTemplate  from "Templates/game_over_screen.hbs";
 
 let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
 let title, footer;
@@ -122,20 +122,9 @@ function handleHomeClick( event ) {
 }
 
 function animateIn() {
-    const tl = gsap.timeline();
-    tl.add( gsap.to( text, 0, { css: { autoAlpha: 0 }} ));
-    tl.add( gsap.fromTo( title, 2,
-        { css: { marginTop: "-200px" }},
-        { css: { marginTop: 0 }, ease: Elastic.easeInOut })
-    );
-    tl.add( gsap.to( text, 1, { css: { autoAlpha: 1 }}));
-    tl.add( gsap.from( footer, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+    AnimationUtil.animateIn( title, text, footer );
 }
 
 function animateOut( callback ) {
-    const tl = gsap.timeline();
-    tl.add( gsap.to( text, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-        gsap.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-        gsap.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
-    }}));
+    AnimationUtil.animateOut( title, text, footer, callback );
 }
