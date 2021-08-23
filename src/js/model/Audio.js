@@ -43,29 +43,28 @@ const Audio = {
 
     /**
      * @public
+     * Must be called on user interaction to trigger unmute on iOS
      */
     init() {
         if ( inited || !( "SC" in window )) {
             return;
         }
 
-        debouncedSetup(() => {
-            SC.initialize({
-                client_id: Config.getSoundCloudClientId()
-            });
-            inited = true;
-
-            setupWebAudioAPI();
-
-            // prepare the sound effects
-            explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
-            laser     = createAudioElement( Assets.AUDIO.AU_LASER );
-
-            // enqueue the first track for playback
-            Audio.enqueueTrack();
-
-            Pubsub.subscribe( Messages.IMPACT, Audio.playSoundFX.bind( Audio, Assets.AUDIO.AU_EXPLOSION ));
+        SC.initialize({
+            client_id: Config.getSoundCloudClientId()
         });
+        inited = true;
+
+        setupWebAudioAPI();
+
+        // prepare the sound effects
+        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
+        laser     = createAudioElement( Assets.AUDIO.AU_LASER );
+
+        // enqueue the first track for playback
+        Audio.enqueueTrack();
+
+        Pubsub.subscribe( Messages.IMPACT, Audio.playSoundFX.bind( Audio, Assets.AUDIO.AU_EXPLOSION ));
     },
 
     /**
@@ -121,14 +120,7 @@ const Audio = {
         if ( !inited || Audio.muted ) {
             return;
         }
-        if ( Config.HAS_TOUCH_CONTROLS ) {
-            debouncedSetup(() => {
-                _startPlayingEnqueuedTrack();
-            });
-        }
-        else {
-            _startPlayingEnqueuedTrack();
-        }
+        _startPlayingEnqueuedTrack();
     },
 
     /**
@@ -257,16 +249,4 @@ function setupWebAudioAPI() {
         // set default frequency of filter
         Audio.setFrequency();
     }
-}
-
-// WebAudio API is only allowed to start after a user interaction
-
-function debouncedSetup( callback ) {
-    const handler = () => {
-        setupHandler.dispose();
-        callback();
-    };
-    const setupHandler = new EventHandler();
-    setupHandler.listen( document, "keyup", handler );
-    setupHandler.listen( document, "click", handler );
 }

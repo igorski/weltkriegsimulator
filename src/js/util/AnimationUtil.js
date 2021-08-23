@@ -57,6 +57,7 @@ export default {
      * input on mobile devices)
      */
     startGame( audioModel, animateOutFunction ) {
+        audioModel.init();
         audioModel.playEnqueuedTrack();
         animateOutFunction(() => {
             Pubsub.publish( Messages.GAME_START );

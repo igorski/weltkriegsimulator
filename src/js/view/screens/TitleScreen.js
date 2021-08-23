@@ -78,7 +78,6 @@ export default {
 /* private methods */
 
 function handleStartClick( event ) {
-
     // will otherwise fire multiple times on touch screen (due to multiple handlers for different event types)
     event.preventDefault();
 

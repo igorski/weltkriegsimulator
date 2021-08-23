@@ -87,7 +87,6 @@ AssetService.prepare().
     then( async () => {
         try {
             await MusicService.prepare();
-            audioModel.init();
             init();
         } catch {
             // failure during loading of SoundCloud SDK, continue
