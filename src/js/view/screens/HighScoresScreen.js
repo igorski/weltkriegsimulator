@@ -26,12 +26,14 @@ import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
 import HTMLTemplate  from "Templates/high_score_screen.hbs";
 
-let handler, text, playButton, homeButton;
+let models, handler, text, playButton, homeButton;
 let title, footer;
 
 export default {
 
-    render( wrapper, models ) {
+    render( wrapper, modelRefs ) {
+
+        models = modelRefs;
 
         wrapper.innerHTML = HTMLTemplate({
             scores: models.highScoresModel.get()
@@ -63,10 +65,7 @@ export default {
 /* private methods */
 
 function handlePlayClick( event ) {
-
-    animateOut(() => {
-        Pubsub.publish( Messages.GAME_START );
-    });
+    AnimationUtil.startGame( models.audioModel, animateOut );
 }
 
 function handleBackClick( event ) {

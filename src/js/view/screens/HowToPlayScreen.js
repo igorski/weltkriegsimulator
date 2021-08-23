@@ -26,12 +26,14 @@ import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
 import HTMLTemplate  from "Templates/how_to_play_screen.hbs";
 
-let handler, text, playButton, homeButton;
+let models, handler, text, playButton, homeButton;
 let title, footer;
 
 export default {
 
-    render( wrapper, models ) {
+    render( wrapper, modelRefs ) {
+
+        models = modelRefs;
 
         wrapper.innerHTML = HTMLTemplate();
 
@@ -61,10 +63,7 @@ export default {
 /* private methods */
 
 function handlePlayClick( event ) {
-
-    animateOut(() => {
-        Pubsub.publish( Messages.GAME_START );
-    });
+    AnimationUtil.startGame( models.audioModel, animateOut );
 }
 
 function handleHomeClick( event ) {

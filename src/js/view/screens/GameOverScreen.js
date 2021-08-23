@@ -26,18 +26,18 @@ import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
 import HTMLTemplate  from "Templates/game_over_screen.hbs";
 
-let gameModel, highScoresModel, handler, text, playButton, homeButton, nameInput, saveButton;
+let models, handler, text, playButton, homeButton, nameInput, saveButton;
 let title, footer;
 
 const GameOverScreen = {
 
-    render( wrapper, models ) {
+    render( wrapper, modelRefs ) {
 
-        ({ gameModel, highScoresModel } = models );
+        models = modelRefs;
 
-        const player       = gameModel.player;
+        const player       = models.gameModel.player;
         const score        = player.score;
-        const hasHighScore = highScoresModel.isNewScore( score );
+        const hasHighScore = models.highScoresModel.isNewScore( score );
 
         wrapper.innerHTML = HTMLTemplate({
             highScore: hasHighScore,
@@ -91,6 +91,8 @@ export default GameOverScreen;
 
 function handleSaveClick( event ) {
 
+    const { gameModel, highScoresModel } = models;
+
     if ( nameInput.value.length > 2 ) {
 
         GameOverScreen.dispose(); // prevent double save cheaply ;)
@@ -108,10 +110,7 @@ function handleSaveClick( event ) {
 }
 
 function handlePlayClick( event ) {
-
-    animateOut(() => {
-        Pubsub.publish( Messages.GAME_START );
-    });
+    AnimationUtil.startGame( models.audioModel, animateOut );
 }
 
 function handleHomeClick( event ) {

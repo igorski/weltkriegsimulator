@@ -20,13 +20,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Pubsub       from "pubsub-js";
-import Config       from "@/config/Config";
-import Assets       from "@/definitions/Assets";
-import Messages     from "@/definitions/Messages";
-import EventHandler from "@/util/EventHandler";
-import HTMLTemplate from "Templates/title_screen.hbs";
 import gsap, { Cubic, Elastic } from "gsap";
+import Pubsub        from "pubsub-js";
+import Config        from "@/config/Config";
+import Assets        from "@/definitions/Assets";
+import Messages      from "@/definitions/Messages";
+import AnimationUtil from "@/util/AnimationUtil";
+import EventHandler  from "@/util/EventHandler";
+import HTMLTemplate  from "Templates/title_screen.hbs";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
@@ -82,11 +83,7 @@ function handleStartClick( event ) {
     event.preventDefault();
 
     audioModel.playSoundFX( Assets.AUDIO.AU_LASER );
-
-    animateOut(() => {
-        // start this game!
-        Pubsub.publish( Messages.GAME_START );
-    });
+    AnimationUtil.startGame( audioModel, animateOut );
 }
 
 function handleTouch( event ) {
@@ -95,21 +92,18 @@ function handleTouch( event ) {
 }
 
 function handleHighScoresClick( event ) {
-
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_HIGHSCORES );
     });
 }
 
 function handleAboutClick( event ) {
-
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_ABOUT );
     });
 }
 
 function handleHowToPlayClick( event ) {
-
     animateOut(() => {
         Pubsub.publish( Messages.SHOW_HOW_TO_PLAY );
     });
@@ -133,9 +127,5 @@ function animateIn() {
 }
 
 function animateOut( callback ) {
-    const tl = gsap.timeline();
-    tl.add( gsap.to( menu, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-        gsap.to( title, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-        gsap.to( footer, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
-    }}));
+    AnimationUtil.animateOut( title, menu, footer, callback );
 }

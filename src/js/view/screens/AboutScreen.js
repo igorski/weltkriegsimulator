@@ -26,12 +26,13 @@ import EventHandler  from "@/util/EventHandler";
 import AnimationUtil from "@/util/AnimationUtil";
 import HTMLTemplate  from "Templates/about_screen.hbs";
 
-let handler, text, playButton, homeButton;
+let models, handler, text, playButton, homeButton;
 let title, footer;
 
 export default {
 
-    render( wrapper, models ) {
+    render( wrapper, modelRefs ) {
+        models = modelRefs;
         wrapper.innerHTML = HTMLTemplate({
             resources: [
                 { name: "Explosion by Cuzco", href: "https://opengameart.org/content/explosion" },
@@ -40,7 +41,7 @@ export default {
                 { name: "Retro shmup boss 2 by Jerom", href: "https://opengameart.org/content/retro-shmup-boss-2" },
                 { name: "Explosion by TinyWorlds", href: "https://opengameart.org/content/explosion-0" },
                 { name: "Some Hud Elements, Icons and Crosshairs by sbed", href: "https://opengameart.org/content/some-hud-elements-icons-and-crosshairs" },
-                { name: "Font \"Astral Delight\" by imagex", href: "http://www.dafont.com/astral-delight.font?fpp=100&text=WELTKRIEGSIMULATOR" },
+                { name: "Font \"Astral Delight\" by imagex", href: "https://www.dafont.com/astral-delight.font?fpp=100&text=WELTKRIEGSIMULATOR" },
                 { name: "Animated flowing water 2d 16x16 by InThePixel", href: "https://opengameart.org/content/animated-flowing-water-2d-16x16" }
             ]
         });
@@ -71,10 +72,7 @@ export default {
 /* private methods */
 
 function handlePlayClick( event ) {
-
-    animateOut(() => {
-        Pubsub.publish( Messages.GAME_START );
-    });
+    AnimationUtil.startGame( models.audioModel, animateOut );
 }
 
 function handleHomeClick( event ) {

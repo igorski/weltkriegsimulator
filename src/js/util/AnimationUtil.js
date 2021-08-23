@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import gsap, { Cubic, Elastic } from "gsap";
+import Pubsub   from "pubsub-js";
+import Messages from "@/definitions/Messages";
 
 export default {
     /**
@@ -46,5 +48,18 @@ export default {
             gsap.to( topContent, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
             gsap.to( bottomContent, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
         }}));
+    },
+
+    /**
+     * Handler that calls given animateOutFunction and triggers the
+     * game start upon animation completion. This also starts the music
+     * synchronously (to ensure that audio playback is unmuted after user
+     * input on mobile devices)
+     */
+    startGame( audioModel, animateOutFunction ) {
+        audioModel.playEnqueuedTrack();
+        animateOutFunction(() => {
+            Pubsub.publish( Messages.GAME_START );
+        });
     }
 };
