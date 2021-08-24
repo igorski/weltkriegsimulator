@@ -43,7 +43,7 @@ export default class FXRenderer extends sprite
 
         const animationCompleteHandler = renderController.onFXComplete.bind( renderController, this );
 
-        this.setBitmap( Assets.GRAPHICS.FX );
+        this.setBitmap( Assets.GRAPHICS.FX.img );
         this.setSheet([
 
                 // Animation when Actor is switching layer

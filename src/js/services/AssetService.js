@@ -33,16 +33,13 @@ export default {
 
         // load all graphic Assets
 
-        const graphics = [];
-        Object.keys( Assets.GRAPHICS ).forEach(( key ) => {
-            graphics.push( Assets.GRAPHICS[ key ] );
-        });
-
+        const graphics = Object.values( Assets.GRAPHICS );
         return new Promise( async ( resolve, reject ) => {
-
             let pending = graphics.length;
             for ( let i = 0; i < pending; ++i ) {
-                await loader.loadImage( graphics[ i ]);
+                const entry = graphics[ i ];
+                const { image } = await loader.loadImage( entry.src );
+                entry.img = image;
             }
             resolve();
         });

@@ -20,18 +20,26 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const assetRoot = "./assets/";
+const assetRoot  = "./assets/";
+const spriteRoot = `${assetRoot}images/sprites/`;
 
+/**
+ * All assets used in the game, e.g. graphics and sound effects.
+ * The image elements are appended by the AssetService during application start, these
+ * image elements can be reused by all renderers (zCanvas.sprites) without the need
+ * for them to each allocate a unique image per sprite type.
+ */
 export default {
     GRAPHICS: {
-        POWERUP      : `${assetRoot}images/sprites/spritesheet_powerups.png`,
-        SHIP         : `${assetRoot}images/sprites/spritesheet_ship.png`,
-        BOSS         : `${assetRoot}images/sprites/spritesheet_boss.png`,
-        FX           : `${assetRoot}images/sprites/spritesheet_fx.png`,
-        WATER        : `${assetRoot}images/sprites/spritesheet_water.png`,
-        SKY          : `${assetRoot}images/sprites/clouds.png`,
-        BULLET       : `${assetRoot}images/sprites/bullet.png`,
-        TILE         : `${assetRoot}images/sprites/tile.png`
+        POWERUP      : { src: `${spriteRoot}spritesheet_powerups.png`, img: null },
+        SHIP         : { src: `${spriteRoot}spritesheet_ship.png`,     img: null },
+        BOSS         : { src: `${spriteRoot}spritesheet_boss.png`,     img: null },
+        FX           : { src: `${spriteRoot}spritesheet_fx.png`,       img: null },
+        WATER        : { src: `${spriteRoot}spritesheet_water.png`,    img: null },
+        SKY          : { src: `${spriteRoot}clouds.png`,               img: null },
+        BULLET       : { src: `${spriteRoot}bullet.png`,               img: null },
+        TILE         : { src: `${spriteRoot}tile.png`,                 img: null },
+        ISLAND       : { src: `${spriteRoot}tilesheet_island.png`,     img: null }
     },
 
     AUDIO: {

@@ -46,8 +46,7 @@ export default class WaterRenderer extends sprite
         // the entire screen to create an eternal ocean. For this purpose, each
         // tile in the spritesheet is converted to a pattern
 
-        const bitmap = new Image();
-        bitmap.src   = Assets.GRAPHICS.WATER;
+        const bitmap = Assets.GRAPHICS.WATER.img;
 
         this.patterns = [];
         const { cvs, ctx } = createCanvas( TILE_SIZE, TILE_SIZE );

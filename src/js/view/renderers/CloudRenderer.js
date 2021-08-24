@@ -24,7 +24,7 @@ import { sprite } from "zcanvas";
 import Config     from "@/config/Config";
 import Assets     from "@/definitions/Assets";
 
-export default class SkyRenderer extends sprite
+export default class CloudRenderer extends sprite
 {
     /**
      * a renderer that draws some pretty nice lookin' sky details
@@ -40,7 +40,7 @@ export default class SkyRenderer extends sprite
 
         scale = ( typeof scale === "number" ) ? scale : 1;
 
-        super({ x, y, width: 300 * scale, height: 508 * scale, bitmap: Assets.GRAPHICS.SKY });
+        super({ x, y, width: 300 * scale, height: 508 * scale, bitmap: Assets.GRAPHICS.SKY.img });
 
         /* instance properties */
 
@@ -58,7 +58,7 @@ export default class SkyRenderer extends sprite
         // inside the draw method
 
         this._bounds.top += this.speed;
-
+        // when moving out of the screen reset position to the top
         if ( this._bounds.top > this.canvas.getHeight() ) {
             this._bounds.top = -this._bounds.height;
             this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );

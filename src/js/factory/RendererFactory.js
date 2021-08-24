@@ -23,19 +23,19 @@
 
 /* actors */
 
-import Bullet  from "../model/actors/Bullet";
-import Powerup from "../model/actors/Powerup";
-import Ship    from "../model/actors/Ship";
-import Enemy   from "../model/actors/Enemy";
-import Boss    from "../model/actors/Boss";
+import Bullet  from "@/model/actors/Bullet";
+import Powerup from "@/model/actors/Powerup";
+import Ship    from "@/model/actors/Ship";
+import Enemy   from "@/model/actors/Enemy";
+import Boss    from "@/model/actors/Boss";
 
 /* renderers */
 
-import BulletRenderer  from "../view/renderers/BulletRenderer";
-import PowerupRenderer from "../view/renderers/PowerupRenderer";
-import ShipRenderer    from "../view/renderers/ShipRenderer";
-import EnemyRenderer   from "../view/renderers/EnemyRenderer";
-import BossRenderer    from "../view/renderers/BossRenderer";
+import BulletRenderer  from "@/view/renderers/BulletRenderer";
+import PowerupRenderer from "@/view/renderers/PowerupRenderer";
+import ShipRenderer    from "@/view/renderers/ShipRenderer";
+import EnemyRenderer   from "@/view/renderers/EnemyRenderer";
+import BossRenderer    from "@/view/renderers/BossRenderer";
 
 export default {
 

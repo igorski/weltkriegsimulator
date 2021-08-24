@@ -25,7 +25,7 @@ import Pubsub          from "pubsub-js";
 import { canvas, sprite, collision } from "zcanvas";
 import Messages        from "@/definitions/Messages";
 import RendererFactory from "@/factory/RendererFactory";
-import SkyRenderer     from "@/view/renderers/SkyRenderer";
+import CloudRenderer   from "@/view/renderers/CloudRenderer";
 import TileRenderer    from "@/view/renderers/TileRenderer";
 import WaterRenderer   from "@/view/renderers/WaterRenderer";
 import FXRenderer      from "@/view/renderers/FXRenderer";
@@ -57,8 +57,8 @@ let TOP_ACTOR_LAYER         = 3;
 let TOP_DECORATION_LAYER    = 4;
 
 const COLORS = {
-    TOP     : "#0055d8",
-    BOTTOM  : "#990000"
+    TOP     : "#418ac3",
+    BOTTOM  : "#101b25"
 };
 
 // pool of renderers that show effects like transitions or explosions
@@ -150,19 +150,21 @@ function setupGame() {
     TOP_ACTOR_LAYER         = layers[ 3 ];
     TOP_DECORATION_LAYER    = layers[ 4 ];
 
-    COLLIDABLE_TILE = new TileRenderer( 0, -200, 1.5 );
+    COLLIDABLE_TILE = new TileRenderer( -200, 1.5, TileRenderer.TYPE.STONE );
 
     // add some default renderers for scenery
 
-    // ground layer is out of player bounds, is just visual candy
+    // ground layer is out of player bounds, these sprites are just visual candy
     waterRenderer = new WaterRenderer();
     GROUND_LAYER.addChild( waterRenderer ); // eternally animating water sprite
-    GROUND_LAYER.addChild( new TileRenderer( 0, 0, 1, .5 ) );
+    GROUND_LAYER.addChild( new TileRenderer( -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( 0, 1, TileRenderer.TYPE.STONE, .5 ) );
     // TODO: add island/ground
 
-    BOTTOM_DECORATION_LAYER.addChild( new SkyRenderer( 0, 0, .5 ) );
+    BOTTOM_DECORATION_LAYER.addChild( new CloudRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
-    TOP_DECORATION_LAYER.addChild( new SkyRenderer( zCanvas.getWidth() - 100, -100, 1 ) );
+    TOP_DECORATION_LAYER.addChild( new CloudRenderer( zCanvas.getWidth() - 100, -100, 1 ) );
 
     // create Pool of top level renderers
 

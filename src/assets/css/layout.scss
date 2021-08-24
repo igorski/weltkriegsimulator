@@ -6,6 +6,8 @@
 
 .wks-menu {
     width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
     padding-top: $spacing-medium;
     @include boxSize();
 }
@@ -16,21 +18,23 @@
     padding: $spacing-medium;
     margin: $spacing-small auto;
     cursor: pointer;
-    background-color: lighten(#0055d8, 20%);
-    border: 3px solid #0033ee;
+    background-color: $color-2;
+    border: none;
     border-radius: 13px;
     color: #FFF;
     @include boxSize();
 
     &:hover {
-        background-color: #FFF;
-        color: #0055d8;
+        background-color: $color-5;
+        color: $color-2;
     }
 }
 
 .wks-button-list {
     width: 100%;
-    padding-top: $spacing-medium;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: $spacing-medium + $spacing-small;
     @include boxSize();
 
     @include mobile() {
@@ -41,24 +45,30 @@
 }
 
 .wks-text {
+    @include boxSize();
+    padding: 0 $spacing-medium;
     width: 50%;
-    height: 75%;
     overflow-y: auto;
     margin: 0 auto;
-    padding: 0 1em;
-    background-color: #e6e6e6;
     border-radius: 13px;
-    border: 3px solid #0033ee;
-    @include boxSize();
+    background-color: $color-2;
+    color: $color-1;
+
+    @include large() {
+        max-width: 475px;
+        height: 75%;
+        padding: $spacing-small $spacing-large;
+    }
 
     @include mobile() {
         width: 100%;
+        height: 85%;
     }
 
     button {
         width: 50%;
         display: block;
-        padding: 2em;
+        padding: $spacing-large;
         margin: $spacing-small auto;
         cursor: pointer;
     }
@@ -87,5 +97,57 @@
         @include mobile() {
             width: 49%;
         }
+    }
+}
+
+.wks-bar {
+    background-color: $color-2;
+    padding: $spacing-small $spacing-medium;
+}
+
+.wks-input {
+    @include boxSize();
+    padding: $spacing-medium;
+    background-color: #FFF;
+    border-radius: 14px;
+    border: none;
+    margin-bottom: $spacing-medium;
+}
+
+.wks-submit {
+    cursor: pointer;
+    padding: $spacing-medium;
+    background-color: $color-2;
+    color: #FFF;
+    border-radius: 14px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.wks-input,
+.wks-submit {
+    width: 100%;
+    display: block;
+}
+
+.wks-highscore-table {
+    width: 100%;
+    font-weight: bold;
+    padding: $spacing-large;
+    @include boxSize();
+
+    @include mobile() {
+        padding: $spacing-medium 0;
+    }
+
+    &__index {
+        width: 10%;
+    }
+    &__name {
+        width: 65%;
+    }
+    &__score {
+        width: 25%;
+        text-align: right;
     }
 }

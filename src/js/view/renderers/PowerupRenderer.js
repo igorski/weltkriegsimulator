@@ -37,7 +37,7 @@ export default class PowerupRenderer extends ActorRenderer
     constructor( powerup, renderController ) {
         super( powerup, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.POWERUP );
+        this.setBitmap( Assets.GRAPHICS.POWERUP.img );
         this.setSheet([
                 // energy
                 { row: 0, col: 0, fpt: 1, amount: 1 },

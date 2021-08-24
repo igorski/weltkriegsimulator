@@ -4,10 +4,22 @@
 <section class="wks-text">
     {{#if highScore}}
         <p>
-            You perished bravely in battle... AND got a new high score ({{score}} points)!
+            You perished bravely in battle... AND got a new high score of {{score}} points!
         </p>
-        <input type="text" id="nameInput" pattern=".{3,}" required placeholder="Enter your name..." />
-        <input type="submit" id="saveHighScore" value="OK" />
+        <input
+            type="text"
+            id="nameInput"
+            pattern=".{3,}"
+            required
+            placeholder="Enter your name..."
+            class="wks-input"
+        />
+        <input
+            type="submit"
+            id="saveHighScore"
+            value="Save"
+            class="wks-submit"
+        />
     {{else}}
         <p>
             You gave it your best. Alas, they gave it their best...er.

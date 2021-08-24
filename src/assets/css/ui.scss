@@ -3,9 +3,9 @@
 .wks-ui-score {
     position: absolute;
     top: 0;
-    right: 1em;
+    right: $spacing-medium;
     color: #FFF;
-    font-family: astral_delight_upright;
+    @include customFont();
     font-size: 150%;
 
     div {
@@ -19,7 +19,7 @@
 
 .wks-ui-energy {
     position: absolute;
-    top: 3em;
+    top: 36px;
     right: $spacing-medium;
     height: 8px;
     width: 100px;
@@ -30,7 +30,7 @@
 .wks-ui-messages {
     position: absolute;
     top: 0;
-    left: 1em;
+    left: $spacing-medium;
     color: #FFF;
 
     h1 {
@@ -45,16 +45,17 @@
     transform: translateY(-50%);
     text-align: center;
     color: #FFF;
-    font-family: astral_delight_upright;
+    @include customFont();
     text-transform: uppercase;
     @include noSelect();
     @include noEvents();
 }
 
 .wks-list {
+    @include boxSize();
+    padding: 0 0 $spacing-medium;
     list-style-type: none;
     margin: 0;
-    padding: 0;
 }
 
 /* touch screen controls */

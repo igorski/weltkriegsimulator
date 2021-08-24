@@ -42,7 +42,6 @@ module.exports = {
             { from: `${dirAssets}/images/graphics/**/*`, to: "assets/images/graphics", flatten: true },
             { from: `${dirAssets}/images/icons/**/*`,    to: "assets/images/icons",    flatten: true },
             { from: `${dirAssets}/images/sprites/**/*`,  to: "assets/images/sprites",  flatten: true },
-            { from: `${dirAssets}/fonts/**/*`,  to: "assets/fonts",  flatten: true },
             { from: `${dirAssets}/sounds/**/*`, to: "assets/sounds", flatten: true }
         ]),
     ],

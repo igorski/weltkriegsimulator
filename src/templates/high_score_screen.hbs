@@ -2,11 +2,17 @@
     <h1 class="wks-title">High scores</h1>
 </header>
 <section class="wks-text">
-    <ol>
-    {{#each scores}}
-        <li>{{name}} - {{score}}</li>
-    {{/each}}
-    </ol>
+    <table class="wks-highscore-table">
+        <tbody>
+        {{#each scores}}
+            <tr>
+                <td class="wks-highscore-table__index">{{add @index 1}}</td>
+                <td class="wks-highscore-table__name">{{name}}</td>
+                <td class="wks-highscore-table__score">{{score}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
 </section>
 <footer class="wks-footer">
     <section class="wks-menu">

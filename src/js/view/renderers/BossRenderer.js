@@ -37,7 +37,7 @@ export default class BossRenderer extends ActorRenderer
     constructor( boss, renderController ) {
         super( boss, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.BOSS );
+        this.setBitmap( Assets.GRAPHICS.BOSS.img );
         this.setSheet([
                 // Boss sprites (facing down)
                 { row: 0, col: 0, fpt: 1, amount: 1 },

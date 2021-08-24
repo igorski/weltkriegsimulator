@@ -31,12 +31,12 @@ export default {
     animateIn( topContent, middleContent, bottomContent ) {
         const tl = gsap.timeline();
         tl.add( gsap.to( middleContent, 0, { css: { autoAlpha: 0 }} ));
-        tl.add( gsap.fromTo( topContent, 2,
+        gsap.fromTo( topContent, 2,
             { css: { marginTop: "-200px" }},
-            { css: { marginTop: 0 }, ease: Elastic.easeInOut })
+            { css: { marginTop: 0 }, ease: Elastic.easeInOut }
         );
-        tl.add( gsap.to( middleContent, 1, { css: { autoAlpha: 1 }}));
-        tl.add( gsap.from( bottomContent, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut }));
+        gsap.from( bottomContent, 1.5, { css: { bottom: "-200px" }, ease: Cubic.easeOut });
+        tl.add( gsap.to( middleContent, 1, { css: { autoAlpha: 1 }, delay: 1.5 }));
     },
 
     /**
@@ -44,9 +44,9 @@ export default {
      */
      animateOut( topContent, middleContent, bottomContent, callback ) {
         const tl = gsap.timeline();
-        tl.add( gsap.to( middleContent, 1, { css: { autoAlpha: 0 }, onComplete: () => {
-            gsap.to( topContent, 1, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
-            gsap.to( bottomContent, 1, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
+        tl.add( gsap.to( middleContent, 0.75, { css: { autoAlpha: 0 }, onComplete: () => {
+            gsap.to( topContent, 0.75, { css: { marginTop: "-200px" }, ease: Cubic.easeIn, onComplete: callback });
+            gsap.to( bottomContent, 0.75, { css: { bottom: "-200px" }, ease: Cubic.easeIn });
         }}));
     },
 

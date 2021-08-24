@@ -33,5 +33,6 @@ Handlebars.registerHelper( "loop", ( n, block ) => {
 Handlebars.registerHelper( "eq",  ( v1, v2 ) => v1 === v2 );
 Handlebars.registerHelper( "and", ( v1, v2 ) => v1 && v2 );
 Handlebars.registerHelper( "or",  ( v1, v2 ) => v1 || v2 );
+Handlebars.registerHelper( "add", ( v1, v2 ) => v1 + v2 );
 
 module.exports = Handlebars;

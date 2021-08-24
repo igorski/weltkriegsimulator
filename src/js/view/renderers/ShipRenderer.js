@@ -37,7 +37,7 @@ export default class ShipRenderer extends ActorRenderer
     constructor( ship, renderController ) {
         super( ship, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.SHIP );
+        this.setBitmap( Assets.GRAPHICS.SHIP.img );
         this.setSheet([
                 // These indices follow the declaration in definitions/Enemies.js
                 // Player ship (facing up)

@@ -35,7 +35,7 @@ export default class BulletRenderer extends ActorRenderer
      */
     constructor( bullet, renderController ) {
         super( bullet, renderController );
-        this.setBitmap( Assets.GRAPHICS.BULLET );
+        this.setBitmap( Assets.GRAPHICS.BULLET.img );
     }
 
 
