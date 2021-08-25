@@ -205,20 +205,21 @@ const Game = {
     /**
      * create a Boss
      *
-     * @param {number} x
-     * @param {number} y
      * @param {number} xSpeed
      * @param {number} ySpeed
      * @param {number} layer
      * @param {number=} optEnergy
      * @param {number=} optType
      */
-    createBoss( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optType = Enemies.BOSS_TYPE_1 ) {
-        const boss = getActorFromPool( bossPool, x, y, xSpeed, ySpeed, layer );
+    createBoss( xSpeed, ySpeed, layer, optEnergy = 1, optType = Enemies.BOSS_TYPE_1 ) {
+        const boss = getActorFromPool( bossPool, 0, 0, xSpeed, ySpeed, layer );
         if ( boss ) {
             boss.reset();
             boss.energy = optEnergy;
             boss.type   = optType;
+            boss.updateHitBox(); // different Boss types have different sizes
+            boss.x = Game.world.width / 2 - boss.width / 2;
+            boss.y = -boss.height;
             Game.addActor( boss );
         }
     },

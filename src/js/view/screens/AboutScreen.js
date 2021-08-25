@@ -38,11 +38,10 @@ export default {
                 { name: "Explosion by Cuzco", href: "https://opengameart.org/content/explosion" },
                 { name: "Ship by Redshrike",  href: "https://opengameart.org/content/space-ship-building-bits-volume-1" },
                 { name: "Spaceships by wuhu", href: "https://opengameart.org/content/spaceships-1" },
-                { name: "Retro shmup boss 2 by Jerom", href: "https://opengameart.org/content/retro-shmup-boss-2" },
                 { name: "Boss Ships by RSL Labs", href: "https://opengameart.org/content/boss-ships" },
                 { name: "Explosion by TinyWorlds", href: "https://opengameart.org/content/explosion-0" },
                 { name: "The Field of the Floating Islands by Buch", href: "https://opengameart.org/content/the-field-of-the-floating-islands" },
-                { name: "Some Hud Elements, Icons and Crosshairs by sbed", href: "https://opengameart.org/content/some-hud-elements-icons-and-crosshairs" },
+                { name: "Shoot-em-up Enemies by helpcomputer", href: "https://opengameart.org/content/shoot-em-up-enemies" },
                 { name: "Buildings / Bunkers / Weapon platforms by chabull", href: "https://opengameart.org/content/buildings-bunkers-weapon-platforms" },
                 { name: "Animated flowing water 2d 16x16 by InThePixel", href: "https://opengameart.org/content/animated-flowing-water-2d-16x16" }
             ]

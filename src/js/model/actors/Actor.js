@@ -103,13 +103,13 @@ class Actor {
          * @public
          * @type {number}
          */
-        this.width = 25;
+        this.width = 32;
 
         /**
          * @public
          * @type {number}
          */
-        this.height = 25;
+        this.height = 32;
 
         /**
          * Box to determine collision area
@@ -320,13 +320,14 @@ class Actor {
     _cacheHitbox() {
 
         // relative to the bounds described by x, y, width, and height
-        // we want to hitbox to be inside this area by this margin
-        const margin = this.width * .25;
+        // we want the hitbox to be inside this area by this margin
+        const marginX = this.width  * .25;
+        const marginY = this.height * .25;
 
-        this.hitBox.left   = this.x + this.offsetX + margin;
-        this.hitBox.top    = this.y + this.offsetY + margin;
-        this.hitBox.right  = this.x + this.offsetX + ( this.width  - margin );
-        this.hitBox.bottom = this.y + this.offsetY + ( this.height - margin );
+        this.hitBox.left   = this.x + this.offsetX + marginX;
+        this.hitBox.top    = this.y + this.offsetY + marginY;
+        this.hitBox.right  = this.x + this.offsetX + ( this.width  - marginX );
+        this.hitBox.bottom = this.y + this.offsetY + ( this.height - marginY );
     }
 };
 export default Actor;

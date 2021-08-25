@@ -22,6 +22,7 @@
  */
 import gsap         from "gsap";
 import Enemy        from "./Enemy";
+import Enemies      from "@/definitions/Enemies";
 import Patterns     from "@/definitions/Patterns";
 import Weapons      from "@/definitions/Weapons";
 import BossRenderer from "@/view/renderers/BossRenderer";
@@ -38,7 +39,7 @@ class Boss extends Enemy {
      * @param {number=} weapon
      * @param {number=} type
      */
-    constructor( game, energy = DEFAULT_ENERGY, weapon = DEFAULT_WEAPON, type = 3 ) {
+    constructor( game, energy = DEFAULT_ENERGY, weapon = DEFAULT_WEAPON, type = Enemies.BOSS.TYPE_1 ) {
 
         /* inherit prototype properties of Enemy */
 
@@ -52,8 +53,7 @@ class Boss extends Enemy {
 
         /* initialization */
 
-        this.width  = this.orgWidth  = BossRenderer.TILE_SIZE.width;
-        this.height = this.orgHeight = BossRenderer.TILE_SIZE.height;
+        this.updateHitBox();
 
         this.crashable = false;
 
@@ -62,6 +62,28 @@ class Boss extends Enemy {
     }
 
     /* public methods */
+
+    updateHitBox() {
+        let { width, height } = BossRenderer.TILE_SIZE;
+        switch ( this.type ) {
+            default:
+                break;
+            case Enemies.BOSS.TYPE_1:
+            case Enemies.BOSS.TYPE_2:
+            case Enemies.BOSS.TYPE_3:
+            case Enemies.BOSS.TYPE_4:
+                width *= 2;
+                break;
+            case Enemies.BOSS.TYPE_5:
+                width  *= 2;
+                height *= 2;
+                break;
+        }
+        this.width  = this.orgWidth  = width;
+        this.height = this.orgHeight = height;
+
+        this._cacheHitbox();
+    }
 
     /**
      * @override

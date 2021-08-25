@@ -60,16 +60,16 @@ export default class FXRenderer extends sprite
     /* public methods */
 
     /**
-     * @public
      * @param {Actor} actor
      * @param {number} animationIndex
      */
     showAnimation( actor, animationIndex, optXoffset = 0, optYoffset = 0 ) {
 
-        // animation gets equal width/height and coordinates of given actor
+        // animation gets equal coordinates of given actor
 
-        this.setWidth ( actor.width );
-        this.setHeight( actor.height );
+        // optional : align to width/height ?
+        //this.setWidth ( actor.width );
+        //this.setHeight( actor.height );
 
         this.setX( actor.x + actor.offsetX + optXoffset );
         this.setY( actor.y + actor.offsetY + optYoffset );
@@ -79,7 +79,6 @@ export default class FXRenderer extends sprite
 
     /**
      * @override
-     * @public
      * @param {CanvasRenderingContext2D} aCanvasContext
      */
     draw( aCanvasContext ) {

@@ -188,20 +188,17 @@ function generateSidewaysSquadron( gameModel ) {
     }
 }
 
-function generateBoss( gameModel ) {
-    const energy = Random.byLevel( 75, level, 100 );
+function generateBoss( gameModel, optLevel = level ) {
+    const energy = Random.byLevel( 250, optLevel, 100 );
     const layer  = 1; // always appears on top (can switch layers during battle)
-    const type   = level % 2; // 2 types available in total (see spritesheet)
+    const type   = optLevel % 5; // 5 types available in total (see spritesheet)
 
-    gameModel.createBoss(
-        gameModel.world.width / 2 - 64, -128,
-        0, .5, layer, energy, type
-    );
+    gameModel.createBoss( 0, .5, layer, energy, type );
 }
 
 // DEBUG helpers
 if ( process.env.NODE_ENV === "development" ) {
-    window.boss = () => generateBoss( WKS.models.gameModel );
+    window.boss = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
 }
 
 function progressLevel() {

@@ -116,7 +116,11 @@ export default class ActorRenderer extends sprite
         }
         super.draw( aCanvasContext );
 
-        //this.debug( aCanvasContext );
+        /*
+        if ( process.env.NODE_ENV === "development" ) {
+            this.debug( aCanvasContext );
+        }
+        */
     }
 
     /* protected methods */

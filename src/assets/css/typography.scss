@@ -14,10 +14,14 @@
 
 .wks-title {
     @include customFont();
-    color: $color-2;
+    color: #FFF;
     text-transform: uppercase;
-    font-size: 300%;
     margin: 0;
+
+    &--main {
+        color: $color-2;
+        font-size: 300%;
+    }
 }
 
 .wks-button {

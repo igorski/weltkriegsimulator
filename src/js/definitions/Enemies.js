@@ -35,6 +35,9 @@ export default {
 
     BOSS: {
         TYPE_1 : 0,
-        TYPE_2 : 1
+        TYPE_2 : 1,
+        TYPE_3 : 2,
+        TYPE_4 : 3,
+        TYPE_5 : 4
     }
 };

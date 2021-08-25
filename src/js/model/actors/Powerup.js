@@ -58,7 +58,7 @@ class Powerup extends Actor {
         /* initialization */
 
         this.width  = this.orgWidth  =
-        this.height = this.orgHeight = 30;
+        this.height = this.orgHeight = 48;
     }
 };
 export default Powerup;

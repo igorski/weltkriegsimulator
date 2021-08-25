@@ -160,7 +160,6 @@ function setupGame() {
     GROUND_LAYER.addChild( new TileRenderer( -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
     GROUND_LAYER.addChild( new TileRenderer( -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
     GROUND_LAYER.addChild( new TileRenderer( 0, 1, TileRenderer.TYPE.STONE, .5 ) );
-    // TODO: add island/ground
 
     BOTTOM_DECORATION_LAYER.addChild( new CloudRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
@@ -326,13 +325,17 @@ function checkLayerSwitchCollision( actor, targetLayer ) {
 function showExplodeAnimation( actor ) {
     // bosses explode in layers of fire
     if ( actor instanceof Boss ) {
-        const incrX = actor.width  / 3;
-        const incrY = actor.height / 3;
-        for ( let x = -actor.width / 2; x < actor.width; x += incrX ) {
-            for ( let y = -actor.height / 2; y < actor.height; y += incrY ) {
+        const halfWidth  = actor.width / 2;
+        const halfHeight = actor.height / 2;
+        const incrX      = actor.width  / 4;
+        const incrY      = actor.height / 4;
+        for ( let x = 0; x < actor.width; x += incrX ) {
+            for ( let y = 0; y < actor.height; y += incrY ) {
                 const renderer = FXRenderers.shift(); // get FXRenderer from pool
                 if ( renderer ) {
-                    renderer.showAnimation( actor, FXRenderer.ANIMATION.EXPLOSION, x + Random.range( 1, 10 ), y + Random.range( 1, 10 ));
+                    renderer.showAnimation(
+                        actor, FXRenderer.ANIMATION.EXPLOSION, x * ( Math.random() + 0.5 ), y * ( Math.random() + .5 )
+                    );
                     addRendererToAppropriateLayer( actor.layer, renderer );
                 }
             }
