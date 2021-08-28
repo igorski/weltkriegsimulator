@@ -36,7 +36,6 @@ export default class EnemyRenderer extends ShipRenderer
      */
     constructor( enemy, renderController ) {
         super( enemy, renderController );
-        this.setSheetForEnemy();
         this.canRumble = false;
     }
 
@@ -47,21 +46,6 @@ export default class EnemyRenderer extends ShipRenderer
      * @public
      */
     setSheetForEnemy() {
-        let animation = ShipRenderer.ANIMATION.ENEMY_1_IDLE;
-
-        switch ( /** @type {Enemy} */ ( this.actor ).type ) {
-            default:
-                break;
-            case 2:
-                animation = ShipRenderer.ANIMATION.ENEMY_2_IDLE;
-                break;
-            case 3:
-                animation = ShipRenderer.ANIMATION.ENEMY_3_IDLE;
-                break;
-            case 4:
-                animation = ShipRenderer.ANIMATION.MINE;
-                break;
-        }
-        this.switchAnimation( animation );
+        this.switchAnimation( this.actor.type );
     }
 }

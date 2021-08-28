@@ -27,27 +27,27 @@ const Copy = {
      * w/ separate "title" and "body" string (for
      * instance for displaying messages w/ title header)
      */
-    BONUS  : `+{0} pts.`,
-    ENERGY : `Energy restored`,
-    WEAPONS: [ `Bullet`, `Bullet spray`, `Laser` ],
-    WEAPON : `Equipped {0}`,
+    BONUS      : "+{0} pts.",
+    ENERGY     : "Energy restored",
+    WEAPONS    : [ "Bullet", "Bullet spray", "Laser" ],
+    NEXT_LEVEL : "Level {0}",
 
     TUTORIAL: {
         KEYBOARD: [
-            { text: `Move your ship using the arrow keys (or WASD)`, timeout: 0 },
-            { text: `Press the spacebar to shoot`,                   timeout: 5 },
-            { text: `Use the Z key to change vertical plane`,        timeout: 4 }
+            { text: "Move your ship using the arrow keys (or WASD)", timeout: 0 },
+            { text: "Press the spacebar to shoot",                   timeout: 5 },
+            { text: "Use the Z key to change vertical plane",        timeout: 4 }
         ],
         TOUCH: [
-            { text: `Steer your ship using the control stick on the bottom left`, timeout: 0 },
-            { text: `Press the right button to fire`,                             timeout: 5 },
-            { text: `Press the left button to change vertical plane`,             timeout: 4 }
+            { text: "Steer your ship using the control stick on the bottom left", timeout: 0 },
+            { text: "Press the right button to fire",                             timeout: 5 },
+            { text: "Press the left button to change vertical plane",             timeout: 4 }
         ]
     },
 
     MUSIC: {
-        title: `Now playing:`,
-        body : `{0} by {1}`
+        title: "Now playing:",
+        body : "{0} by {1}"
     },
 
     /**

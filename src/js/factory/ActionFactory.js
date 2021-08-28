@@ -38,6 +38,8 @@ import WeaponFactory from "./WeaponFactory";
  * @type {Array<{fn: Function, timeout: number}>}
  */
 const ACTION_LIST = [
+    // LEVEL ACTIONS
+
     { fn: generateHorizontalWave,    timeout: 5 },
     { fn: generateHorizontalWave,    timeout: 8 },
     { fn: generateWideSineSquadron,  timeout: 7.5 },
@@ -45,21 +47,30 @@ const ACTION_LIST = [
     { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateWideSineSquadron,  timeout: 5 },
     { fn: generateMine,              timeout: 2 },
-    { fn: createWeapon,              timeout: 3 },
+    { fn: generateSingle,            timeout: 2 },
+    { fn: createWeapon,              timeout: 1 },
     { fn: generateHorizontalWave,    timeout: 3 },
+    { fn: generateSingle,            timeout: 2 },
     { fn: generateSidewaysSquadron,  timeout: 5 },
     { fn: generateHorizontalWave,    timeout: 3 },
-    { fn: generateMine,              timeout: 2 },
+    { fn: generateSingle,            timeout: 1 },
+    { fn: generateMine,              timeout: 1 },
     { fn: createEnergyPowerUp,       timeout: 5 },    // energy before boss
+
+    // BOSS FIGHT
+
     { fn: generateBoss,              timeout: 2.5 },
-    { fn: () => true }            // when Boss is killed GameController will reset the action queue
+    { fn: createWeapon,              timeout: 15 },   // helping weapon some time into the boss fight
+    { fn: createPowerup,             timeout: 2 },
+    { fn: createPowerup,             timeout: 4 },
+    { fn: generateMine,              timeout: 5 },    // adding some additional annoyances during the fight
+    { fn: createWeapon,              timeout: 15 },
+    { fn: createEnergyPowerUp,       timeout: 15 },
+
+    // E.O. list (when Boss is killed GameController will reset the action queue)
+    { fn: () => true }
 ];
-let queuedAction;
-
-// as time progresses, we increase the level of the game, we can
-// use this as a multiplier for enemy properties or poewrups
-
-let level = 0;
+let gameModel, queuedAction;
 
 export default {
 
@@ -67,11 +78,11 @@ export default {
      * execute the enqueued action
      *
      * @public
-     * @param {Game} gameModel
+     * @param {Game} gameModelRef
      * @return {number} time (in milliseconds) to next action
      */
-    execute( gameModel ) {
-
+    execute( gameModelRef ) {
+        gameModel = gameModelRef;
         queuedAction.fn( gameModel );
 
         // proceed to next action
@@ -80,8 +91,6 @@ export default {
         if ( nextActionIndex >= ACTION_LIST.length ) {
             // or first one in list if we have completed one round
             nextActionIndex = 0;
-            // advance level (increments difficulty)
-            progressLevel();
         }
         queuedAction = ACTION_LIST[ nextActionIndex ];
         return queuedAction.timeout;
@@ -99,7 +108,7 @@ export default {
         let points;
 
         if ( enemy instanceof Boss )
-            points = 25000 + ( 25000 * level );
+            points = 25000 + ( 25000 * gameModel.level );
         else
             points = (( enemy.type + 1 ) * 100 ) + ( enemy.weapon * 100 ) + ( enemy.pattern * 500 );
 
@@ -112,7 +121,6 @@ export default {
      */
     reset() {
         queuedAction = ACTION_LIST[ 0 ];
-        level        = 0;
         return queuedAction.timeout;
     }
 };
@@ -123,7 +131,7 @@ function generateHorizontalWave( gameModel ) {
     // always generate enemy on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
 
-    for ( let i = 0, total = Random.byLevel( 5, level, 2 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 5, gameModel.level, 2 ); i < total; ++i ) {
 
         // wave 1 is spread horizontally across the screen
         const x      = ( gameModel.world.width / total ) * i;
@@ -142,7 +150,7 @@ function generateWideSineSquadron( gameModel ) {
     const pattern  = Patterns.WIDE_SINE;
     const tileSize = 64;
 
-    for ( let i = 0, total = Random.byLevel( 3, level, 2 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 3, gameModel.level, 2 ); i < total; ++i ) {
 
         const x           = ( gameModel.world.width / 2 ) - tileSize / 2;
         const y           = -( i * ( tileSize * 4 ));
@@ -158,7 +166,7 @@ function generateMine( gameModel ) {
     // always generate mines on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
 
-    for ( let i = 0, total = Random.byLevel( 2, level, 1 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 2, gameModel.level, 1 ); i < total; ++i ) {
 
         // wave 1 is spread horizontally across the screen
         const x      = ( gameModel.world.width / total ) * i;
@@ -170,6 +178,19 @@ function generateMine( gameModel ) {
     }
 }
 
+function generateSingle( gameModel ) {
+    // always generate mines on same layer as the players current layer
+    const targetLayer = gameModel.player.layer;
+
+    const type   = Random.range( Enemies.ALIEN, Enemies.FREIGHTER );
+    const x      = Random.range( 64, gameModel.world.width - 64 );
+    const y      = -64;
+    const xSpeed = 0;
+    const ySpeed = 1;
+
+    gameModel.createEnemy( x, y, xSpeed, ySpeed, targetLayer, 1, Weapons.LASER, type );
+}
+
 function generateSidewaysSquadron( gameModel ) {
 
     // squadron 2 at random target layers and using behaviours
@@ -177,7 +198,7 @@ function generateSidewaysSquadron( gameModel ) {
     const pattern  = Patterns.SIDEWAYS_CUBE;
     const tileSize = 64;
 
-    for ( let i = 0, total = Random.byLevel( 4, level, 2 ); i < total; ++i ) {
+    for ( let i = 0, total = Random.byLevel( 4, gameModel.level, 2 ); i < total; ++i ) {
 
         const y           = -( i * ( tileSize * 3 ));
         const ySpeed      = 1 + ( i * .25 );
@@ -188,22 +209,17 @@ function generateSidewaysSquadron( gameModel ) {
     }
 }
 
-function generateBoss( gameModel, optLevel = level ) {
+function generateBoss( gameModel, optLevel = gameModel.level ) {
     const energy = Random.byLevel( 250, optLevel, 100 );
     const layer  = 1; // always appears on top (can switch layers during battle)
     const type   = optLevel % 5; // 5 types available in total (see spritesheet)
-
-    gameModel.createBoss( 0, .5, layer, energy, type );
+    gameModel.createBoss( 0, 0.5, layer, energy, type );
 }
 
 // DEBUG helpers
 if ( process.env.NODE_ENV === "development" ) {
-    window.boss = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
-}
-
-function progressLevel() {
-    // increase the level of the game
-    ++level;
+    window.boss  = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
+    window.enemy = () => generateSingle( WKS.models.gameModel );
 }
 
 function createPowerup( gameModel, optType ) {
@@ -214,7 +230,7 @@ function createPowerup( gameModel, optType ) {
     switch ( powerupType ) {
         // energy
         default:
-            powerupValue = Random.range( 2, 2 + ( level ));
+            powerupValue = Random.range( 2, 2 + ( gameModel.level ));
             break;
         // weapon
         case 1:
@@ -222,7 +238,7 @@ function createPowerup( gameModel, optType ) {
             break;
         // score
         case 2:
-            powerupValue = 1000 + ( level * 250 );
+            powerupValue = 1000 + ( gameModel.level * 250 );
             break;
     }
 

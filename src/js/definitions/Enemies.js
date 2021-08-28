@@ -25,11 +25,13 @@ export default {
     // note the order of this enum is reflected in the spritesheet
     // used by the ShipRenderer
 
-    DEFAULT         : 0,
     SQUADRON_TYPE_1 : 1,
     SQUADRON_TYPE_2 : 2,
     SQUADRON_TYPE_3 : 3,
     MINE            : 4,
+    ALIEN           : 5,
+    SAUCER          : 6,
+    FREIGHTER       : 7,
 
     // Bosses are a special sub type (BossRenderer)
 

@@ -63,6 +63,9 @@ class Boss extends Enemy {
 
     /* public methods */
 
+    /**
+     * Not all Boss types are of equal dimensions
+     */
     updateHitBox() {
         let { width, height } = BossRenderer.TILE_SIZE;
         switch ( this.type ) {
@@ -83,6 +86,11 @@ class Boss extends Enemy {
         this.height = this.orgHeight = height;
 
         this._cacheHitbox();
+
+        if ( this.renderer ) {
+            this.renderer.setWidth( width );
+            this.renderer.setHeight( height );
+        }
     }
 
     /**
@@ -95,8 +103,8 @@ class Boss extends Enemy {
         // slowly move Boss into screen and then stop,
         // start swaying left right to target Player
 
-        if ( this.ySpeed !== 0 && this.y > this.game.world.height / 5 ) {
-            this.ySpeed  = 0;
+        if ( this.ySpeed !== 0 && this.y > ( this.game.world.height * 0.5 - this.height )) {
+            this.ySpeed = 0;
             this.startAttack();
         }
         super.update( aTimestamp );

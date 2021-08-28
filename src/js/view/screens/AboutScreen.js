@@ -42,6 +42,8 @@ export default {
                 { name: "Explosion by TinyWorlds", href: "https://opengameart.org/content/explosion-0" },
                 { name: "The Field of the Floating Islands by Buch", href: "https://opengameart.org/content/the-field-of-the-floating-islands" },
                 { name: "Shoot-em-up Enemies by helpcomputer", href: "https://opengameart.org/content/shoot-em-up-enemies" },
+                { name: "Schmup hips by surt", href: "https://opengameart.org/content/shmup-ships" },
+                { name: "Top-down space ships by Skorpio, wuhu", href: "https://opengameart.org/content/top-down-space-ships" },
                 { name: "Buildings / Bunkers / Weapon platforms by chabull", href: "https://opengameart.org/content/buildings-bunkers-weapon-platforms" },
                 { name: "Animated flowing water 2d 16x16 by InThePixel", href: "https://opengameart.org/content/animated-flowing-water-2d-16x16" }
             ]

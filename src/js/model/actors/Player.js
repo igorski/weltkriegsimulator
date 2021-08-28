@@ -21,7 +21,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import gsap          from "gsap";
-import ShipRenderer  from "@/view/renderers/ShipRenderer";
 import Weapons       from "@/definitions/Weapons";
 import WeaponFactory from "@/factory/WeaponFactory";
 import Ship          from "./Ship";
@@ -201,9 +200,6 @@ class Player extends Ship {
 
         this.xSpeed = 0;
         this.ySpeed = 0;
-
-        if ( this.renderer )
-            this.renderer.switchAnimation( ShipRenderer.ANIMATION.PLAYER_IDLE );
     }
 };
 export default Player;

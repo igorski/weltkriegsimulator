@@ -21,10 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import gsap, { Sine, Cubic } from "gsap";
-import Ship         from "./Ship";
-import Patterns     from "@/definitions/Patterns";
-import Weapons      from "@/definitions/Weapons";
-import ShipRenderer from "@/view/renderers/ShipRenderer";
+import Ship     from "./Ship";
+import Patterns from "@/definitions/Patterns";
+import Weapons  from "@/definitions/Weapons";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;
@@ -175,9 +174,6 @@ class Enemy extends Ship {
         this.collidable = true;
 
         killTrajectory( this );
-
-        if ( this.renderer )
-            this.renderer.switchAnimation( ShipRenderer.ANIMATION.ENEMY_1_IDLE );
     }
 };
 export default Enemy;

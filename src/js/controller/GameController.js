@@ -77,6 +77,7 @@ function handleBroadcast( type, payload ) {
 
         case Messages.BOSS_DEFEATED:
             // restart the action queue for the next "level"
+            ActionFactory.reset();
             executeAction();
             break;
 

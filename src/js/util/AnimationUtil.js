@@ -24,6 +24,8 @@ import gsap, { Cubic, Elastic } from "gsap";
 import Pubsub   from "pubsub-js";
 import Messages from "@/definitions/Messages";
 
+const pendingDebounces = new Map();
+
 export default {
     /**
      * Animates in any of the Screen contents, divided by top-, middle- and botom layers.
@@ -62,5 +64,24 @@ export default {
         animateOutFunction(() => {
             Pubsub.publish( Messages.GAME_START );
         });
+    },
+
+    /**
+     * Debounce a callback to only execute when the browser
+     * is ready to paint (on requestAnimationFrame). This ensures
+     * multiple calls (for instance DOM updates on input events)
+     * only happen once, when the browser renders
+     */
+    debounce( name, callback, replaceExisting = false ) {
+        if ( pendingDebounces.has( name )) {
+            if ( !replaceExisting ) {
+                return;
+            }
+            window.cancelAnimationFrame( pendingDebounces.get( name ));
+        }
+        pendingDebounces.set( name, window.requestAnimationFrame(() => {
+            callback();
+            pendingDebounces.delete( name );
+        }));
     }
 };

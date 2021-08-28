@@ -40,16 +40,14 @@ export default class ShipRenderer extends ActorRenderer
         this.setBitmap( Assets.GRAPHICS.SHIP.img );
         this.setSheet([
                 // These indices follow the declaration in definitions/Enemies.js
-                // Player ship (facing up)
-                { row: 0, col: 0, fpt: 1, amount: 1 },
-
-                // Enemy ships (facing down)
-                { row: 0, col: 1, fpt: 1, amount: 1 },
-                { row: 1, col: 0, fpt: 1, amount: 1 },
-                { row: 1, col: 1, fpt: 1, amount: 1 },
-
-                // Mine
-                { row: 0, col: 2, fpt: 1, amount: 1 }
+                { row: 0, col: 0, fpt: 1, amount: 1 }, // player ship (facing up, others face down)
+                { row: 0, col: 1, fpt: 1, amount: 1 }, // squadron type 1
+                { row: 1, col: 0, fpt: 1, amount: 1 }, // squadron type 2
+                { row: 1, col: 1, fpt: 1, amount: 1 }, // squadron type 3
+                { row: 0, col: 2, fpt: 1, amount: 1 }, // mine
+                { row: 1, col: 2, fpt: 1, amount: 1 }, // alien
+                { row: 0, col: 3, fpt: 1, amount: 1 }, // saucer
+                { row: 1, col: 3, fpt: 1, amount: 1 }  // freighter
             ],
             ShipRenderer.TILE_SIZE.width,
             ShipRenderer.TILE_SIZE.height
@@ -65,18 +63,3 @@ export default class ShipRenderer extends ActorRenderer
  * @type {{width: number, height: number}}
  */
 ShipRenderer.TILE_SIZE = { width: 64, height: 64 };
-
-/**
- * all animations that are available to this renderer
- * these translate to animation indices in the sprite sheet
- *
- * @public
- * @type {Object}
- */
-ShipRenderer.ANIMATION = {
-    PLAYER_IDLE  : 0,
-    ENEMY_1_IDLE : 1,
-    ENEMY_2_IDLE : 2,
-    ENEMY_3_IDLE : 3,
-    MINE         : 4
-};

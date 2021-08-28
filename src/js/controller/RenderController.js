@@ -358,7 +358,7 @@ function showLayerSwitchAnimation( actor, targetLayer ) {
     }
     if ( actor === player.actor ) {
         animateBackgroundColor( targetLayer );
-        audioModel.setFrequency(( targetLayer === 1 ) ? 22050 : 990 );
+        audioModel.setFrequency(( targetLayer === 1 ) ? 22050 : 1980 );
     }
 }
 

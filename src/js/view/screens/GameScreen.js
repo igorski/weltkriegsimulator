@@ -25,16 +25,18 @@ import Pubsub          from "pubsub-js";
 import Config          from "@/config/Config";
 import Copy            from "@/definitions/Copy";
 import Messages        from "@/definitions/Messages";
+import AnimationUtil   from "@/util/AnimationUtil";
 import EventHandler    from "@/util/EventHandler";
 import InputController from "@/controller/InputController";
 import HTMLTemplate    from "Templates/game_screen.hbs";
 
-let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, btnFire, btnLayer;
+let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, dPadPosition, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
-let handler, tokens = [], dPadPointerId, player;
+let handler, tokens = [], dPadPointerId, lastDpadHorizontal, lastDpadVertical, player;
 
 let eventOffsetX, eventOffsetY;
-const MOVE_RAMP_UP_DURATION = .3;
+const TOUCH_CONTROL_RESPONSE_TIME = 0.3;
+const DPAD_POSITION_CLASS = "wks-ui-dpad__position";
 
 export default {
 
@@ -56,9 +58,10 @@ export default {
         messageBodyUI  = messagePanel.querySelector( ".wks-ui-messages__text" );
 
         if ( addControls ) {
-            dPad     = wrapper.querySelector( ".wks-ui-dpad" );
-            btnFire  = wrapper.querySelector( ".wks-ui-buttons__fire" );
-            btnLayer = wrapper.querySelector( ".wks-ui-buttons__layer" );
+            dPad         = wrapper.querySelector( ".wks-ui-dpad" );
+            dPadPosition = wrapper.querySelector( `.${DPAD_POSITION_CLASS}` );
+            btnFire      = wrapper.querySelector( ".wks-ui-buttons__fire" );
+            btnLayer     = wrapper.querySelector( ".wks-ui-buttons__layer" );
 
             handler = new EventHandler();
 
@@ -117,7 +120,7 @@ function handleBroadcast( msg, payload ) {
 
         case Messages.SHOW_MESSAGE:
             messageTitleUI.innerHTML = payload.title;
-            messageBodyUI.innerHTML  = payload.body;
+            messageBodyUI.innerHTML  = payload.body || "";
             animateMessage();
             break;
 
@@ -132,7 +135,7 @@ function handleBroadcast( msg, payload ) {
 }
 
 function updateEnergy( player ) {
-    energyUI.style.width = (( player.energy / player.maxEnergy ) * 100 ) + "px";
+    energyUI.style.width = `${( player.energy / player.maxEnergy ) * 100}px`;
 }
 
 function updateScore( score ) {
@@ -176,25 +179,43 @@ function handleDPad( event ) {
             eventOffsetX = touch.pageX - DPAD_OFFSET.left;
             eventOffsetY = touch.pageY - DPAD_OFFSET.top;
 
-            if ( eventOffsetX < DPAD_LEFT )
-                InputController.left( MOVE_RAMP_UP_DURATION, true );
-            else if ( eventOffsetX > DPAD_RIGHT )
-                InputController.right( MOVE_RAMP_UP_DURATION, true );
-            else
-                InputController.cancelHorizontal();
+            const curHor = lastDpadHorizontal;
+            const curVer = lastDpadVertical;
 
-            if ( eventOffsetY < DPAD_TOP )
-                InputController.up( MOVE_RAMP_UP_DURATION, true );
-            else if ( eventOffsetY > DPAD_BOTTOM )
-                InputController.down( MOVE_RAMP_UP_DURATION, true );
-            else
+            if ( eventOffsetX < DPAD_LEFT ) {
+                InputController.left( TOUCH_CONTROL_RESPONSE_TIME, curHor !== 1 );
+                lastDpadHorizontal = 1;
+            } else if ( eventOffsetX > DPAD_RIGHT ) {
+                InputController.right( TOUCH_CONTROL_RESPONSE_TIME, curHor !== 2 );
+                lastDpadHorizontal = 2;
+            } else {
+                InputController.cancelHorizontal();
+                lastDpadHorizontal = 0;
+            }
+
+            if ( eventOffsetY < DPAD_TOP ) {
+                InputController.up( TOUCH_CONTROL_RESPONSE_TIME, curVer !== 1 );
+                lastDpadVertical = 1;
+            } else if ( eventOffsetY > DPAD_BOTTOM ) {
+                InputController.down( TOUCH_CONTROL_RESPONSE_TIME, curVer !== 2 );
+                lastDpadVertical = 2;
+            } else {
                 InputController.cancelVertical();
+                lastDpadVertical = 0;
+            }
+
+            // show indicator displaying the direction the pad is moving in
+            if ( curHor !== lastDpadHorizontal || curVer !== lastDpadVertical ) {
+                AnimationUtil.debounce( "dpad", requestDpadPositionUpdate );
+            }
             break;
 
         case "touchcancel":
         case "touchend":
             InputController.cancelHorizontal();
             InputController.cancelVertical();
+            lastDpadHorizontal = lastDpadVertical = 0;
+            AnimationUtil.debounce( "dpad", requestDpadPositionUpdate, true );
             break;
     }
 }
@@ -229,8 +250,8 @@ function handleResize( event ) {
     const hCenter = DPAD_OFFSET.width  / 2;
     const vCenter = DPAD_OFFSET.height / 2;
 
-    const horizontalDelta = DPAD_OFFSET.width  / 8;
-    const verticalDelta   = DPAD_OFFSET.height / 8;
+    const horizontalDelta = DPAD_OFFSET.width  / 6;
+    const verticalDelta   = DPAD_OFFSET.height / 6;
 
     // cache coordinates for handleDPad
     // basically we subtract the calculated horizontal and vertical delta from
@@ -268,4 +289,16 @@ function showInstructions() {
         }
         Pubsub.publish( Messages.INSTRUCTIONS_COMPLETE );
     }));
+}
+
+function requestDpadPositionUpdate() {
+    let cssClass = DPAD_POSITION_CLASS;
+
+    if ( lastDpadHorizontal === 1 ) cssClass = `${cssClass} left`;
+    else if ( lastDpadHorizontal === 2 ) cssClass = `${cssClass} right`;
+
+    if ( lastDpadVertical === 1 ) cssClass = `${cssClass} top`;
+    else if ( lastDpadVertical === 2 ) cssClass = `${cssClass} bottom`;
+
+    dPadPosition.className = cssClass;
 }

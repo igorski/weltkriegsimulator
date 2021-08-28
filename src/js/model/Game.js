@@ -37,6 +37,7 @@ import Bullet          from "./actors/Bullet";
 import Powerup         from "./actors/Powerup";
 
 const { DEFAULT, LASER, SPRAY } = Weapons;
+const DEG_TO_RAD = Math.PI / 180;
 
 const Game = {
 
@@ -70,6 +71,11 @@ const Game = {
         width  : 400,
         height : 400
     },
+
+    // as time progresses, we increase the level of the game, we can
+    // use this as a multiplier for enemy properties or power ups (see ActionFactory)
+
+    level: 0,
 
     /**
      * fire a Bullet from the Pool
@@ -134,9 +140,7 @@ const Game = {
             case 1:
                 WeaponFactory.applyToActor( powerupValue, player );
                 player.setWeaponTimer(); // nothing lasts forever :)
-                Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "WEAPON",
-                    Copy.WEAPONS[ powerupValue ])
-                );
+                Pubsub.publish( Messages.SHOW_MESSAGE, { title: Copy.WEAPONS[ powerupValue ] });
                 break;
 
             // score
@@ -153,7 +157,9 @@ const Game = {
      * @param {Boss} boss
      */
     onBossDeath( boss ) {
+        ++Game.level;
         Pubsub.publish( Messages.BOSS_DEFEATED, boss );
+        Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "NEXT_LEVEL", ( Game.level + 1 )));
     },
 
     /**
@@ -190,7 +196,7 @@ const Game = {
      * @param {number=} optType
      * @param {number=} optPattern
      */
-    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = 0, optType = Enemies.DEFAULT, optPattern = 0 ) {
+    createEnemy( x, y, xSpeed, ySpeed, layer, optEnergy = 1, optWeapon = Weapons.DEFAULT, optType = Enemies.SQUADRON_TYPE_1, optPattern = 0 ) {
         const enemy = getActorFromPool( enemyPool, x, y, xSpeed, ySpeed, layer );
         if ( enemy ) {
             enemy.reset();
@@ -389,6 +395,7 @@ const Game = {
         }
         Game.player.reset();
         Game.addActor( Game.player );
+        Game.level  = 0;
         Game.active = true;
     }
 };
@@ -400,7 +407,7 @@ Game.player = new Player( Game );
 
 const bulletPool  = new Array( 200 );
 const enemyPool   = new Array( 20 );
-const bossPool    = new Array( 5 );
+const bossPool    = new Array( 1 );
 const powerupPool = new Array( 5 );
 
 [[ bulletPool, Bullet ], [ enemyPool, Enemy ], [ bossPool, Boss ], [ powerupPool, Powerup ]].forEach(( poolObject ) => {
@@ -520,8 +527,8 @@ function createBulletForActor( actor ) {
 
 function calcPosition( originX, originY, radius, angle ) {
     return {
-        x: originX + radius * Math.cos( angle * Math.PI / 180 ),
-        y: originY + radius * Math.sin( angle * Math.PI / 180 )
+        x: originX + radius * Math.cos( angle * DEG_TO_RAD ),
+        y: originY + radius * Math.sin( angle * DEG_TO_RAD )
     }
 }
 

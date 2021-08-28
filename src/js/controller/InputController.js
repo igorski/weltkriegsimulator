@@ -30,6 +30,8 @@ import EventHandler from "@/util/EventHandler";
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;
 
+const PLAYER_SPEED = 5; // pixels per game tick
+
 const activeMovement = {
     up: false,
     down: false,
@@ -58,51 +60,51 @@ const InputController = {
     // while keeping the finger pressed does not fire a new start/cancel/end event, meaning
     // we must track changes in direction during touchmove keeping cancellations in check)
 
-    left( speed = .5, killExisting = false ) {
+    left( rampUpTime = 0.5, killExisting = false ) {
         if ( killExisting ) {
             activeMovement.left  =
             activeMovement.right = false;
-            gsap.killTweensOf( player, true, { "xSpeed": true });
+            gsap.killTweensOf( player, "xSpeed" );
         }
         if ( !activeMovement.left ) {
             activeMovement.left = true;
-            ActorUtil.setDelayed( player, "xSpeed", -5, speed );
+            ActorUtil.setDelayed( player, "xSpeed", -PLAYER_SPEED, rampUpTime );
         }
     },
 
-    right( speed = .5, killExisting = false ) {
+    right( rampUpTime = 0.5, killExisting = false ) {
         if ( killExisting ) {
             activeMovement.left  =
             activeMovement.right = false;
-            gsap.killTweensOf( player, true, { "xSpeed": true });
+            gsap.killTweensOf( player, "xSpeed" );
         }
         if ( !activeMovement.right ) {
             activeMovement.right = true;
-            ActorUtil.setDelayed( player, "xSpeed", 5, speed );
+            ActorUtil.setDelayed( player, "xSpeed", PLAYER_SPEED, rampUpTime );
         }
     },
 
-    up( speed = .5, killExisting = false ) {
+    up( rampUpTime = 0.5, killExisting = false ) {
         if ( killExisting ) {
             activeMovement.up   =
             activeMovement.down = false;
-            gsap.killTweensOf( player, true, { "ySpeed": true });
+            gsap.killTweensOf( player, "ySpeed" );
         }
         if ( !activeMovement.up ) {
             activeMovement.up = true;
-            ActorUtil.setDelayed( player, "ySpeed", -5, speed );
+            ActorUtil.setDelayed( player, "ySpeed", -PLAYER_SPEED, rampUpTime );
         }
     },
 
-    down( speed = .5, killExisting = false ) {
+    down( rampUpTime = 0.5, killExisting = false ) {
         if ( killExisting ) {
             activeMovement.up   =
             activeMovement.down = false;
-            gsap.killTweensOf( player, true, { "ySpeed": true });
+            gsap.killTweensOf( player, "ySpeed" );
         }
         if ( !activeMovement.down ) {
             activeMovement.down = true;
-            ActorUtil.setDelayed( player, "ySpeed", 5, speed );
+            ActorUtil.setDelayed( player, "ySpeed", PLAYER_SPEED, rampUpTime );
         }
     },
 
@@ -115,8 +117,8 @@ const InputController = {
         activeMovement.right = false;
 
         if ( player.xSpeed !== 0 ) {
-            gsap.killTweensOf( player, true, { "xSpeed": true });
-            ActorUtil.setDelayed( player, "xSpeed", 0, .5 );
+            gsap.killTweensOf( player, "xSpeed" );
+            ActorUtil.setDelayed( player, "xSpeed", 0, 0.5 );
         }
     },
 
@@ -129,8 +131,8 @@ const InputController = {
         activeMovement.down = false;
 
         if ( player.ySpeed !== 0 ) {
-            gsap.killTweensOf( player, true, { "ySpeed": true });
-            ActorUtil.setDelayed( player, "ySpeed", 0, .5 );
+            gsap.killTweensOf( player, "ySpeed" );
+            ActorUtil.setDelayed( player, "ySpeed", 0, 0.5 );
         }
     },
 

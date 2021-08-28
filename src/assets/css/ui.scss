@@ -76,6 +76,36 @@ $margin: ( $dpadRadius / 2 );
     @include mobile() {
         left: ( $margin / 3 );
     }
+
+    &__position {
+        @include noEvents();
+        display: none;
+        position: absolute;
+        width: $spacing-large;
+        height: $spacing-large;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #FFF;
+        border-radius: 50%;
+
+        &.left {
+            left: 5%;
+        }
+        &.right {
+            left: 95%;
+        }
+        &.top {
+            top: 5%;
+        }
+        &.bottom {
+            top: 95%;
+        }
+
+        &.left, &.right, &.top, &.bottom {
+            display: block;
+        }
+    }
 }
 
 .wks-ui-buttons {
