@@ -162,7 +162,7 @@ class Enemy extends Ship {
 
     dispose() {
         killTrajectory( this );
-        super.die();
+        super.dispose();
     }
 
     /**
