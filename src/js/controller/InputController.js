@@ -20,12 +20,12 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import gsap         from "gsap";
-import Pubsub       from "pubsub-js";
-import Messages     from "@/definitions/Messages";
-import ActorUtil    from "@/util/ActorUtil";
-import Bullet       from "@/model/actors/Bullet";
-import EventHandler from "@/util/EventHandler";
+import gsap           from "gsap";
+import Pubsub         from "pubsub-js";
+import Messages       from "@/definitions/Messages";
+import { setDelayed } from "@/util/ActorUtil";
+import Bullet         from "@/model/actors/Bullet";
+import EventHandler   from "@/util/EventHandler";
 
 const DEFAULT_BLOCKED = [ 8, 32, 37, 38, 39, 40 ];
 let blockDefaults = true, handler;
@@ -68,7 +68,7 @@ const InputController = {
         }
         if ( !activeMovement.left ) {
             activeMovement.left = true;
-            ActorUtil.setDelayed( player, "xSpeed", -PLAYER_SPEED, rampUpTime );
+            setDelayed( player, "xSpeed", -PLAYER_SPEED, rampUpTime );
         }
     },
 
@@ -80,7 +80,7 @@ const InputController = {
         }
         if ( !activeMovement.right ) {
             activeMovement.right = true;
-            ActorUtil.setDelayed( player, "xSpeed", PLAYER_SPEED, rampUpTime );
+            setDelayed( player, "xSpeed", PLAYER_SPEED, rampUpTime );
         }
     },
 
@@ -92,7 +92,7 @@ const InputController = {
         }
         if ( !activeMovement.up ) {
             activeMovement.up = true;
-            ActorUtil.setDelayed( player, "ySpeed", -PLAYER_SPEED, rampUpTime );
+            setDelayed( player, "ySpeed", -PLAYER_SPEED, rampUpTime );
         }
     },
 
@@ -104,7 +104,7 @@ const InputController = {
         }
         if ( !activeMovement.down ) {
             activeMovement.down = true;
-            ActorUtil.setDelayed( player, "ySpeed", PLAYER_SPEED, rampUpTime );
+            setDelayed( player, "ySpeed", PLAYER_SPEED, rampUpTime );
         }
     },
 
@@ -118,7 +118,7 @@ const InputController = {
 
         if ( player.xSpeed !== 0 ) {
             gsap.killTweensOf( player, "xSpeed" );
-            ActorUtil.setDelayed( player, "xSpeed", 0, 0.5 );
+            setDelayed( player, "xSpeed", 0, 0.5 );
         }
     },
 
@@ -132,7 +132,7 @@ const InputController = {
 
         if ( player.ySpeed !== 0 ) {
             gsap.killTweensOf( player, "ySpeed" );
-            ActorUtil.setDelayed( player, "ySpeed", 0, 0.5 );
+            setDelayed( player, "ySpeed", 0, 0.5 );
         }
     },
 

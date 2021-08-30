@@ -20,10 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Pubsub    from "pubsub-js";
-import { Cubic } from "gsap";
-import Messages  from "@/definitions/Messages";
-import ActorUtil from "@/util/ActorUtil";
+import Pubsub         from "pubsub-js";
+import { Cubic }      from "gsap";
+import Messages       from "@/definitions/Messages";
+import { setDelayed } from "@/util/ActorUtil";
 
 class Actor {
 
@@ -242,7 +242,7 @@ class Actor {
         // this allows us to change Actor position during the animation of the layer
         // switch (for instance: Player to keep moving during dive/rise)
 
-        ActorUtil.setDelayed( self,
+        setDelayed( self,
             [ "layer", "offsetX", "offsetY", "width", "height" ],
             [
                 targetLayer,
@@ -256,8 +256,9 @@ class Actor {
             },
             Cubic.easeOut, () => self._cacheHitbox()
         );
-        if ( switchSpeed !== 0 )
+        if ( switchSpeed !== 0 ) {
             this.game.initiateActorLayerSwitch( this, targetLayer );
+        }
     }
 
     /**

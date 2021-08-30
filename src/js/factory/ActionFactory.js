@@ -25,6 +25,8 @@ import Enemies       from "@/definitions/Enemies";
 import Patterns      from "@/definitions/Patterns";
 import Weapons       from "@/definitions/Weapons";
 import Boss          from "@/model/actors/Boss";
+import ShipRenderer  from "@/view/renderers/ShipRenderer";
+import { calculateSquadronWidth } from "@/util/ActorUtil";
 import WeaponFactory from "./WeaponFactory";
 
 /**
@@ -125,16 +127,17 @@ export default {
     }
 };
 
-/* private methods */
+/* internal methods */
 
 function generateHorizontalWave( gameModel ) {
     // always generate enemy on same layer as the players current layer
     const targetLayer = gameModel.player.layer;
 
-    for ( let i = 0, total = Random.byLevel( 5, gameModel.level, 2 ); i < total; ++i ) {
+    const total = Random.byLevel( 5, gameModel.level, 2 );
+    const { width, xOffset } = calculateSquadronWidth( gameModel, total );
 
-        // wave 1 is spread horizontally across the screen
-        const x      = ( gameModel.world.width / total ) * i;
+    for ( let i = 0; i < total; ++i ) {
+        const x      = xOffset + (( width / total ) * i );
         const y      = -( 100 + i * 50 );
         const xSpeed = 0;
         const ySpeed = 1 + ( i *.25 );
@@ -150,9 +153,11 @@ function generateWideSineSquadron( gameModel ) {
     const pattern  = Patterns.WIDE_SINE;
     const tileSize = 64;
 
-    for ( let i = 0, total = Random.byLevel( 3, gameModel.level, 2 ); i < total; ++i ) {
+    const total = Random.byLevel( 3, gameModel.level, 2 );
+    const { width, xOffset } = calculateSquadronWidth( gameModel, total );
 
-        const x           = ( gameModel.world.width / 2 ) - tileSize / 2;
+    for ( let i = 0; i < total; ++i ) {
+        const x           = xOffset + (( width / 2 ) - tileSize / 2 );
         const y           = -( i * ( tileSize * 4 ));
         const ySpeed      = 1 + ( i * .25 );
         const targetLayer = Random.bool() ? 1 : 0;
@@ -168,7 +173,7 @@ function generateMine( gameModel ) {
 
     for ( let i = 0, total = Random.byLevel( 2, gameModel.level, 1 ); i < total; ++i ) {
 
-        // wave 1 is spread horizontally across the screen
+        // mine is spread horizontally across the world
         const x      = ( gameModel.world.width / total ) * i;
         const y      = -( 100 + i * 100 );
         const xSpeed = 0;
@@ -183,7 +188,7 @@ function generateSingle( gameModel ) {
     const targetLayer = gameModel.player.layer;
 
     const type   = Random.range( Enemies.ALIEN, Enemies.FREIGHTER );
-    const x      = Random.range( 64, gameModel.world.width - 64 );
+    const x      = Random.range( ShipRenderer.TILE_SIZE.width, gameModel.world.width - ShipRenderer.TILE_SIZE.width );
     const y      = -64;
     const xSpeed = 0;
     const ySpeed = 1;
@@ -196,10 +201,9 @@ function generateSidewaysSquadron( gameModel ) {
     // squadron 2 at random target layers and using behaviours
     const type     = Random.range( Enemies.SQUADRON_TYPE_1, Enemies.SQUADRON_TYPE_3 );
     const pattern  = Patterns.SIDEWAYS_CUBE;
-    const tileSize = 64;
+    const tileSize = ShipRenderer.TILE_SIZE.width;
 
     for ( let i = 0, total = Random.byLevel( 4, gameModel.level, 2 ); i < total; ++i ) {
-
         const y           = -( i * ( tileSize * 3 ));
         const ySpeed      = 1 + ( i * .25 );
         const targetLayer = Random.bool() ? 1 : 0;
@@ -214,12 +218,6 @@ function generateBoss( gameModel, optLevel = gameModel.level ) {
     const layer  = 1; // always appears on top (can switch layers during battle)
     const type   = optLevel % 5; // 5 types available in total (see spritesheet)
     gameModel.createBoss( 0, 0.5, layer, energy, type );
-}
-
-// DEBUG helpers
-if ( process.env.NODE_ENV === "development" ) {
-    window.boss  = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
-    window.enemy = () => generateSingle( WKS.models.gameModel );
 }
 
 function createPowerup( gameModel, optType ) {
@@ -254,4 +252,10 @@ function createWeapon( gameModel ) {
 
 function createEnergyPowerUp( gameModel ) {
     createPowerup( gameModel, 0 );
+}
+
+// DEBUG helpers
+if ( process.env.NODE_ENV === "development" ) {
+    window.boss  = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
+    window.enemy = () => generateSingle( WKS.models.gameModel );
 }

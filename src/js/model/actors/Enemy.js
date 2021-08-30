@@ -24,6 +24,7 @@ import gsap, { Sine, Cubic } from "gsap";
 import Ship     from "./Ship";
 import Patterns from "@/definitions/Patterns";
 import Weapons  from "@/definitions/Weapons";
+import ShipRenderer from "@/view/renderers/ShipRenderer";
 
 const DEFAULT_ENERGY = 1;
 const DEFAULT_WEAPON = Weapons.DEFAULT;
@@ -97,12 +98,12 @@ class Enemy extends Ship {
             this.game.fireBullet( this );
         }
 
-        if ( this.pattern === 0 )
+        if ( this.pattern === 0 ) {
             return super.update( aTimestamp );
-
-        if ( !this.trajectoryCalculated )
+        }
+        if ( !this.trajectoryCalculated ) {
             this.calculateTrajectory();
-
+        }
         this.y += ( this.layer === 0 ) ? this.ySpeed * .75 : this.ySpeed;
 
         // recalculate the hit box bounds
@@ -113,6 +114,8 @@ class Enemy extends Ship {
     }
 
     calculateTrajectory() {
+        const { x } = this.game.player;
+        const width = Math.min( this.game.world.width, ShipRenderer.TILE_SIZE.width * 10 );
 
         const speedMultiplier = ( this.layer === 0 ) ? 1.33 : 1;
         let targetX, speed, ease;
@@ -120,16 +123,18 @@ class Enemy extends Ship {
             // center sine movement
             default:
             case Patterns.WIDE_SINE:
-                const size = Math.min( this.game.world.width, this.game.world.height ) * .5;
-                this.x  = this.game.world.width * .5 - size * .5;
-                targetX = this.game.world.width * .5 + size * .5;
+                const size = Math.min( width, this.game.world.height ) * .5;
+                const dX   = x + size > this.game.world.width ? ShipRenderer.TILE_SIZE.width : x;
+
+                this.x  = dX + ( width * .5 - size * .5 );
+                targetX = dX + ( width * .5 + size * .5 );
                 speed   = 1;
                 ease    = Sine.easeInOut;
                 break;
 
             // move between edges of screen
             case Patterns.SIDEWAYS_CUBE:
-                targetX = this.game.world.width - this.width;
+                targetX = width - this.width;
                 speed   = 3;
                 ease    = Cubic.easeInOut;
                 break;
@@ -143,11 +148,11 @@ class Enemy extends Ship {
                 // enemies moving in a pattern are allowed to switch layer
                 // to target the Player
 
-                if ( this.game.player.layer !== this.layer )
+                if ( this.game.player.layer !== this.layer ) {
                     this.switchLayer();
+                }
             }
         });
-
         this.trajectoryCalculated = true;
     }
 
