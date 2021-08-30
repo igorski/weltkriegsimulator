@@ -43,7 +43,8 @@ const container = document.querySelector( "#application" ) || document.querySele
 // set up global "framework" (used for creating hooks for high score retrieval/saving)
 
 const WKS = window.WKS = {
-    pubSub: PubSub
+    inited : false,
+    pubSub : PubSub
 };
 
 // start the application
@@ -79,6 +80,7 @@ function init() {
         WKS.models = models; // expose models for debugging
     }
     PubSub.publish( Messages.READY );
+    WKS.inited = true;
 }
 
 // load the assets and launch
