@@ -25,6 +25,11 @@ import { Cubic }      from "gsap";
 import Messages       from "@/definitions/Messages";
 import { setDelayed } from "@/util/ActorUtil";
 
+// class global variables for non-primitives used on update and collision calculations
+// this prevents allocation of scope variables across Actor instances which can lead to
+// garbage collection taking up execution time
+let myBox, otherBox;
+
 class Actor {
 
     /**
@@ -170,9 +175,8 @@ class Actor {
         // update Actor position by its speed
 
         if ( this.layer === 0 ) {
-            // if Actor is on lower layer, reduce the speed
-            this.x += ( this.xSpeed * .75 );
-            this.y += ( this.ySpeed * .75 );
+            this.x += ( this.xSpeed * 0.75 );
+            this.y += ( this.ySpeed * 0.75 );
         }
         else {
             this.x += this.xSpeed;
@@ -192,16 +196,15 @@ class Actor {
      * @param {Actor} actor
      */
     collides( actor ) {
-
-        if ( !actor.collidable || actor.layer !== this.layer || actor === this )
+        if ( !actor.collidable || actor.layer !== this.layer || actor === this ) {
             return false;
-
-        const myBox = this.hitBox, otherBox = actor.hitBox;
+        }
+        myBox = this.hitBox, otherBox = actor.hitBox;
 
         return !(
-            ( myBox.bottom < otherBox.top ) ||
+            ( myBox.bottom < otherBox.top )    ||
             ( myBox.top    > otherBox.bottom ) ||
-            ( myBox.right  < otherBox.left ) ||
+            ( myBox.right  < otherBox.left )   ||
             ( myBox.left   > otherBox.right )
         );
     }
@@ -211,7 +214,6 @@ class Actor {
      * @param {Object=} actor optional Actor to collide with
      */
     hit( actor ) {
-
         // extend in inheriting classes
     }
 
@@ -220,21 +222,20 @@ class Actor {
      * @param {number=} switchSpeed
      */
     switchLayer( switchSpeed = 1 ) {
-
-        if ( this.switching )
+        if ( this.switching ) {
             return;
-
+        }
         const self        = this;
         self.switching    = true;
-        const targetLayer = ( self.layer === 0 ) ? 1 : 0;
+        const targetLayer = self.layer === 0 ? 1 : 0;
 
         // during animation layer is floating point
         // we multiply by .5 as a lower layer Actor is displayed at half size
 
-        const multiplier = targetLayer * .5;
+        const multiplier = targetLayer * 0.5;
 
-        const width  = this.orgWidth  * .5 + ( this.orgWidth  * multiplier );
-        const height = this.orgHeight * .5 + ( this.orgHeight * multiplier );
+        const width  = this.orgWidth  * 0.5 + ( this.orgWidth  * multiplier );
+        const height = this.orgHeight * 0.5 + ( this.orgHeight * multiplier );
 
         // animate the following properties
         // note we animate offsetX and offsetY (instead of direct X and Y)
@@ -246,8 +247,8 @@ class Actor {
             [ "layer", "offsetX", "offsetY", "width", "height" ],
             [
                 targetLayer,
-                (( this.width * .5 ) - ( width  * .5 )),
-                (( this.width * .5 ) - ( height * .5 )),
+                (( this.width * 0.5 ) - ( width  * 0.5 )),
+                (( this.width * 0.5 ) - ( height * 0.5 )),
                 width, height
             ],
             switchSpeed, () => {
@@ -267,12 +268,10 @@ class Actor {
      * @public
      */
     dispose() {
-
-        if ( this.disposed )
+        if ( this.disposed ) {
             return;
-
+        }
         this.disposed = true;
-
         this.game.removeActor( this );
 
         if ( this.renderer ) {
@@ -322,13 +321,16 @@ class Actor {
 
         // relative to the bounds described by x, y, width, and height
         // we want the hitbox to be inside this area by this margin
-        const marginX = this.width  * .25;
-        const marginY = this.height * .25;
 
-        this.hitBox.left   = this.x + this.offsetX + marginX;
-        this.hitBox.top    = this.y + this.offsetY + marginY;
-        this.hitBox.right  = this.x + this.offsetX + ( this.width  - marginX );
-        this.hitBox.bottom = this.y + this.offsetY + ( this.height - marginY );
+        myBox = this.hitBox;
+
+        const marginX = this.width  * 0.25;
+        const marginY = this.height * 0.25;
+
+        myBox.left   = this.x + this.offsetX + marginX;
+        myBox.top    = this.y + this.offsetY + marginY;
+        myBox.right  = this.x + this.offsetX + ( this.width  - marginX );
+        myBox.bottom = this.y + this.offsetY + ( this.height - marginY );
     }
 };
 export default Actor;

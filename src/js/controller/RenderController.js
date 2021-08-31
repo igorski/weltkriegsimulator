@@ -212,9 +212,7 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.ACTOR_LAYER_SWITCH_COMPLETE:
-
             renderer = payload.actor.renderer;
-
             if ( renderer ) {
                 removeRendererFromDisplayList( renderer );
                 addRendererToAppropriateLayer( payload.layer, renderer );
@@ -262,13 +260,13 @@ function addRendererToAppropriateLayer( layer, renderer ) {
 }
 
 function removeRendererFromDisplayList( renderer ) {
-
-    if ( !renderer )
+    if ( !renderer ) {
         return;
-
+    }
     const parent = renderer.getParent();
-    if ( parent )
+    if ( parent ) {
         parent.removeChild( renderer );
+    }
 }
 
 /**

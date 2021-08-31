@@ -51,7 +51,7 @@ export default {
         });
 
         // grab references to HTML Elements
-        energyUI       = wrapper.querySelector( ".wks-ui-energy" );
+        energyUI       = wrapper.querySelector( ".wks-ui-energy__bar" );
         scoreUI        = wrapper.querySelector( ".wks-ui-score__counter" );
         messagePanel   = wrapper.querySelector( ".wks-ui-messages" );
         messageTitleUI = messagePanel.querySelector( ".wks-ui-messages__title" );

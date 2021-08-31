@@ -118,8 +118,9 @@ class Ship extends Actor {
                 actor.die();
             }
         }
-        if ( this.energy === 0 )
+        if ( this.energy === 0 ) {
             this.die();
+        }
     }
 
     dispose() {

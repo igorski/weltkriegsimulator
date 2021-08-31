@@ -222,8 +222,9 @@ function handleKeyDown( aEvent ) {
                 break;
 
             case 90: // Z
-                if ( !player.switching )
+                if ( !player.switching ) {
                     player.switchLayer();
+                }
                 break;
         }
    }

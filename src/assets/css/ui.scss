@@ -23,8 +23,13 @@
     right: $spacing-medium;
     height: 8px;
     width: 100px;
-    background-color: greenyellow;
-    transition: width 200ms ease-in-out;
+    background-color: red;
+
+    &__bar {
+        height: 8px;
+        background-color: greenyellow;
+        transition: width 200ms ease-in-out;
+    }
 }
 
 .wks-ui-messages {
