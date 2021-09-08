@@ -90,7 +90,7 @@ class Enemy extends Ship {
         // fire a shot in case the shoot interval has passed
 
         if ( this.lastShot < ( timestamp - this._shootInterval )) {
-            this.lastShot = Date.now();
+            this.lastShot = timestamp;
             this.game.fireBullet( this );
         }
 
