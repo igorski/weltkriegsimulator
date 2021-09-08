@@ -46,7 +46,8 @@ const DEG_TO_RAD = Math.PI / 180;
 let player,
     actors, actor,  // used by Game.update()
     pointActor,     // used by getActorsUnderPoint()
-    pos, bullet;    // used by createBulletForActor()
+    pos, bullet,    // used by createBulletForActor()
+    tween;          // used by disposeBulletsInTween()
 
 const pointActors    = [];   // used by getActorsUnderPoint()
 const bullets        = [];   // used by createBulletForActor()
@@ -308,11 +309,11 @@ const Game = {
      * and completed its layer switch
      *
      * @param {Actor} actor
-     * @param {number} targetLayer
+     * @param {number} layer destination layer Actor switched to
      */
-    completeActorLayerSwitch( actor, targetLayer ) {
+    completeActorLayerSwitch( actor, layer ) {
         Pubsub.publish(
-            Messages.ACTOR_LAYER_SWITCH_COMPLETE, { actor: actor, layer: targetLayer }
+            Messages.ACTOR_LAYER_SWITCH_COMPLETE, { actor, layer }
         );
     },
 
@@ -349,7 +350,7 @@ const Game = {
             }
 
             // cache variables (indeed, `const { x, y, width, height } = actor;` works nicely
-            // but Babel destructuring creates a local Object reference which requires garbage collection)
+            // though Babels destructuring creates a local Object reference which requires garbage collection)
             const x      = actor.x;
             const y      = actor.y;
             const width  = actor.width;
@@ -375,19 +376,20 @@ const Game = {
                     // Bullets should be allowed to travel downwards towards the player)
                     ( actor.owner === player && y + height < 0 )) {
                     actor.dispose();
-                    continue;
                 }
+                continue; // no collision detection for Bullets (is done on collidable Actors instead)
             }
 
-            // resolve collisions with other Actors in its vicinity
-            getActorsUnderPoint( x, y, width, height ).forEach(( other ) => {
-                if ( actor.collides( other )) {
-                    actor.hit( other );
-                    if ( actor instanceof Player || other instanceof Player ) {
-                        Game.onPlayerHit(( other !== player ) ? other : actor );
+            // resolve collisions with other Actors in the vicinity
+            getActorsUnderPoint( x, y, width, height ); // populates pointActors
+            for ( pointActor of pointActors ) {
+                if ( actor.collides( pointActor )) {
+                    actor.hit( pointActor );
+                    if ( actor instanceof Player || pointActor instanceof Player ) {
+                        Game.onPlayerHit(( pointActor !== player ) ? pointActor : actor );
                     }
                 }
-            });
+            }
         }
     },
 
@@ -442,24 +444,24 @@ const powerupPool = new Array( 5 );
  * @return {Actor}
  */
 function getActorFromPool( pool, x, y, xSpeed, ySpeed, layer ) {
-    const actor = pool.shift();
-    if ( actor ) {
-        actor.x      = x;
-        actor.y      = y;
-        actor.xSpeed = xSpeed;
-        actor.ySpeed = ySpeed;
+    const poolActor = pool.shift();
+    if ( poolActor ) {
+        poolActor.x      = x;
+        poolActor.y      = y;
+        poolActor.xSpeed = xSpeed;
+        poolActor.ySpeed = ySpeed;
 
         // if requested layer is different to old layer, switch it
 
         const targetLayer = Math.round( layer );
 
-        if ( actor.layer !== targetLayer ) {
-            actor.switchLayer( 0 );
+        if ( poolActor.layer !== targetLayer ) {
+            poolActor.switchLayer( 0 );
         }
         // ready for next iteration!
-        actor.disposed = false;
+        poolActor.disposed = false;
     }
-    return actor;
+    return poolActor;
 }
 
 function createBulletForActor( actor ) {
@@ -509,11 +511,9 @@ function createBulletForActor( actor ) {
 
                 const opts = { x: pos.x, y: pos.y, ease: Cubic.easeOut };
 
-                // the last Tween will dispose all the Bullets (can get stuck on screen
-                // edge during rapid movement / cancellation of pooled Tweens)
-                if ( i === max ) {
-                    opts.onComplete = () => bullets.forEach(( bullet ) => bullet.dispose() );
-                }
+                //if ( i === max ) { // optionally dispose on last bullet only ? needs cloned bullets list reference though...
+                    opts.onComplete = disposeBulletsInTween;
+                //}
                 // NOTE: mines fire sprays much more slowly (but more frequently, see WeaponFactory)
                 gsap.to( bullet, actor.type === Enemies.MINE ? 4 : 1, opts );
             }
@@ -544,5 +544,10 @@ function getActorsUnderPoint( compareX, compareY, compareWidth, compareHeight ) 
             pointActors.push( pointActor );
         }
     }
-    return pointActors;
+}
+
+function disposeBulletsInTween() {
+    for ( tween of this._targets ) {    // "this" reference is GSAP Tween instance
+        tween.dispose();                // "tween" is Bullet actor
+    }
 }

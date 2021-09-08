@@ -42,9 +42,9 @@ export function setDelayed( actor, property, targetValue, delayTime, optCallback
         onComplete: optCallback
     };
 
-    if ( optUpdate )
+    if ( optUpdate ) {
         vars.onUpdate = optUpdate;
-
+    }
     if ( Array.isArray( property )) {
         for ( let i = 0, l = property.length; i < l; ++i ) {
             vars[ property[ i ]] = targetValue[ i ];

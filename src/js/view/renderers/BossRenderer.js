@@ -62,8 +62,9 @@ export default class BossRenderer extends ActorRenderer
      */
     draw( aCanvasContext ) {
 
-        if ( !this.canvas )
+        if ( !this.canvas ) {
             return;
+        }
 
         // we override the draw method as we have different size sprites within the tile sheet
         // TODO: is this something we want to be able to solve from zCanvas itself ? ;)
@@ -72,6 +73,7 @@ export default class BossRenderer extends ActorRenderer
         const { tileWidth, tileHeight, type } = this._animation;
 
         const isHit = this.actor.energy !== this.lastEnergy;
+
         // flash when hit
         if ( isHit ) {
             this.lastEnergy = this.actor.energy;
@@ -85,16 +87,20 @@ export default class BossRenderer extends ActorRenderer
             type.row * tileHeight,
             tileWidth  * type.w,
             tileHeight * type.h,
-            ( .5 + bounds.left )   << 0,
-            ( .5 + bounds.top )    << 0,
-            ( .5 + bounds.width  ) << 0,
-            ( .5 + bounds.height ) << 0
+            ( 0.5 + bounds.left )   << 0,
+            ( 0.5 + bounds.top )    << 0,
+            ( 0.5 + bounds.width  ) << 0,
+            ( 0.5 + bounds.height ) << 0
         );
 
         if ( isHit ) {
             aCanvasContext.restore();
         }
-        //this.debug( aCanvasContext );
+        /*
+        if ( process.env.NODE_ENV === "development" ) {
+            this.debug( aCanvasContext );
+        }
+        */
     }
 
     setSheetForBoss() {
@@ -106,7 +112,6 @@ export default class BossRenderer extends ActorRenderer
 /**
  * dimensions of each tile in the spritesheet
  *
- * @public
  * @type {{width: number, height: number}}
  */
 BossRenderer.TILE_SIZE = { width: 128, height: 128 };

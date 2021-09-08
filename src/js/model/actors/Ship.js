@@ -47,31 +47,26 @@ class Ship extends Actor {
         /* instance properties */
 
         /**
-         * @public
          * @type {number}
          */
         this.energy = energy;
 
         /**
-         * @public
          * @type {number}
          */
         this.maxEnergy = this.energy;
 
         /**
-         * @public
          * @type {number}
          */
         this.weapon = weapon;
 
         /**
-         * @public
          * @type {boolean}
          */
         this.firing = false;
 
         /**
-         * @public
          * @type {number}
          */
         this.fireSpeed = 5;
@@ -79,7 +74,6 @@ class Ship extends Actor {
         /**
          * whether this Ship can crash into others and die in the process :)
          *
-         * @public
          * @type {boolean}
          */
         this.crashable = true;
@@ -94,25 +88,26 @@ class Ship extends Actor {
 
     /**
      * @override
-     * @public
      * @param {Object=} actor optional Actor to collide with, if null
      *        hit is presumed to be fatal, Actor energy depletes
      */
     hit( actor ) {
 
-        if ( !this.collidable )
+        if ( !this.collidable ) {
             return;
+        }
 
         // hit by a Bullet ?
         if ( actor instanceof Bullet ) {
             // colliding with others' Bullets
-            if ( actor.owner !== this )
+            if ( actor.owner !== this ) {
                 this.game.onBulletHit( actor, this );
+            }
         }
         else if ( this.crashable && actor && actor.collidable ) {
             // crashed into another Object
             this.energy = 0;
-            // crashing into another chrashable Ship ?? -> destroy it too
+            // crashing into another crashable Ship ?? -> destroy it too
             if ( actor instanceof Ship && actor.crashable ) {
                 actor.energy = 0;
                 actor.die();

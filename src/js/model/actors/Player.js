@@ -119,9 +119,6 @@ class Player extends Ship {
             this.y = MIN_Y;
     }
 
-    /**
-     * @public
-     */
     cacheBounds() {
         MAX_X = this.game.world.width  - this.width;
         MAX_Y = this.game.world.height - this.height;

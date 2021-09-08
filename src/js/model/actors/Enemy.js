@@ -21,9 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import gsap, { Sine, Cubic } from "gsap";
-import Ship     from "./Ship";
-import Patterns from "@/definitions/Patterns";
-import Weapons  from "@/definitions/Weapons";
+import Ship         from "./Ship";
+import Patterns     from "@/definitions/Patterns";
+import Weapons      from "@/definitions/Weapons";
 import ShipRenderer from "@/view/renderers/ShipRenderer";
 
 const DEFAULT_ENERGY = 1;
@@ -47,16 +47,19 @@ class Enemy extends Ship {
         /* instance properties */
 
         /**
-         * @public
          * @type {number}
          */
         this.lastShot = 0;
 
         /**
-         * @public
          * @type {number}
          */
         this.type = type;
+
+        /**
+         * @type {number}
+         */
+        this.pattern = Patterns.VERTICAL_ONLY;
 
         /**
          * the interval (in milliseconds) at which an
@@ -66,40 +69,33 @@ class Enemy extends Ship {
          * @type {number}
          */
         this._shootInterval = 1500;
-
-        /**
-         * @public
-         * @type {number}
-         */
-        this.pattern = Patterns.VERTICAL_ONLY;
     }
 
     /* public methods */
 
     /**
      * @override
-     * @public
-     * @param {number} aTimestamp
+     * @param {number} timestamp
      */
-    update( aTimestamp ) {
+    update( timestamp ) {
 
         // no special behaviour if Enemy is outside the viewport
 
         const insideViewport = this.y > -this.height;
 
         if ( !insideViewport ) {
-            return super.update( aTimestamp );
+            return super.update( timestamp );
         }
 
         // fire a shot in case the shoot interval has passed
 
-        if ( this.lastShot < ( aTimestamp - this._shootInterval )) {
+        if ( this.lastShot < ( timestamp - this._shootInterval )) {
             this.lastShot = Date.now();
             this.game.fireBullet( this );
         }
 
         if ( this.pattern === 0 ) {
-            return super.update( aTimestamp );
+            return super.update( timestamp );
         }
         if ( !this.trajectoryCalculated ) {
             this.calculateTrajectory();
@@ -114,7 +110,6 @@ class Enemy extends Ship {
     }
 
     calculateTrajectory() {
-        const { x } = this.game.player;
         const width = Math.min( this.game.world.width, ShipRenderer.TILE_SIZE.width * 10 );
 
         const speedMultiplier = ( this.layer === 0 ) ? 1.33 : 1;
@@ -123,11 +118,12 @@ class Enemy extends Ship {
             // center sine movement
             default:
             case Patterns.WIDE_SINE:
-                const size = Math.min( width, this.game.world.height ) * .5;
-                const dX   = x + size > this.game.world.width ? ShipRenderer.TILE_SIZE.width : x;
+                const { x } = this.game.player;
+                const size  = Math.min( width, this.game.world.height ) * 0.5;
+                const dX    = x + size > this.game.world.width ? ShipRenderer.TILE_SIZE.width : x;
 
-                this.x  = dX + ( width * .5 - size * .5 );
-                targetX = dX + ( width * .5 + size * .5 );
+                this.x  = dX + ( width * 0.5 - size * 0.5 );
+                targetX = dX + ( width * 0.5 + size * 0.5 );
                 speed   = 1;
                 ease    = Sine.easeInOut;
                 break;
@@ -143,7 +139,7 @@ class Enemy extends Ship {
         // use GSAP to provide the math functions and updates for the flight pattern
 
         this.trajectoryTween = gsap.to( this, speed * speedMultiplier, {
-            x: targetX, repeat: Infinity, yoyo: true, ease: ease, onRepeat: () => {
+            x: targetX, repeat: Infinity, yoyo: true, ease, onRepeat: () => {
 
                 // enemies moving in a pattern are allowed to switch layer
                 // to target the Player
@@ -156,29 +152,46 @@ class Enemy extends Ship {
         this.trajectoryCalculated = true;
     }
 
-    /**
-     * @override
-     * @public
-     */
-    die() {
-        killTrajectory( this );
-        super.die();
-    }
-
-    dispose() {
-        killTrajectory( this );
-        super.dispose();
-    }
-
-    /**
-     * @public
-     */
     reset() {
         this.energy     = DEFAULT_ENERGY;
         this.weapon     = DEFAULT_WEAPON;
         this.collidable = true;
 
         killTrajectory( this );
+    }
+
+    /**
+     * @override
+     * @protected
+     * @param {number} targetLayer
+     */
+    _onLayerSwitch( targetLayer ) {
+        if ( this.trajectoryTween ) {
+            // if Enemy is moving in a trajectory during a layer switch, slowly
+            // restore the offset coordinates (super behaviour would cause jump as trajectory
+            // destination can't take offset deviation during layer switches into account)
+            this.switching = false;
+            this.game.completeActorLayerSwitch( this, targetLayer );
+            gsap.to( this, 2, { offsetX: 0, offsetY: 0 });
+            return;
+        }
+        super._onLayerSwitch( targetLayer );
+    }
+
+    /**
+     * @override
+     */
+    die() {
+        killTrajectory( this );
+        super.die();
+    }
+
+    /**
+     * @override
+     */
+    dispose() {
+        killTrajectory( this );
+        super.dispose();
     }
 };
 export default Enemy;

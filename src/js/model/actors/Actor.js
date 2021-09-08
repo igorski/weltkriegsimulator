@@ -25,6 +25,8 @@ import { Cubic }      from "gsap";
 import Messages       from "@/definitions/Messages";
 import { setDelayed } from "@/util/ActorUtil";
 
+const LAYER_SWITCH_PROPS = [ "layer", "offsetX", "offsetY", "width", "height" ];
+
 // class global variables for non-primitives used on update and collision calculations
 // this prevents allocation of scope variables across Actor instances which can lead to
 // garbage collection taking up execution time
@@ -56,19 +58,16 @@ class Actor {
          * the layer this Actor is operating on
          * 1 = top, 0 = bottom
          *
-         * @public
          * @type {number}
          */
         this.layer = ( typeof layer === "number" ) ? layer : 1;
 
         /**
-         * @public
          * @type {number}
          */
         this.xSpeed = ( typeof xSpeed === "number" ) ? xSpeed : 0;
 
         /**
-         * @public
          * @type {number}
          */
         this.ySpeed = ( typeof ySpeed === "number" ) ? ySpeed : 0;
@@ -76,7 +75,6 @@ class Actor {
         // absolute coordinates for this Actor within the world
 
         /**
-         * @public
          * @type {number}
          */
         this.x = ( typeof x === "number" ) ? x : 0;
@@ -84,7 +82,6 @@ class Actor {
         /**
          * absolute coordinate for this Actor within the world
          *
-         * @public
          * @type {number}
          */
         this.y = ( typeof y === "number" ) ? y : 0;
@@ -93,25 +90,21 @@ class Actor {
         // at certain times (e.g. layer transitions)
 
         /**
-         * @public
          * @type {number}
          */
         this.offsetX = 0;
 
         /**
-         * @public
          * @type {number}
          */
         this.offsetY = 0;
 
         /**
-         * @public
          * @type {number}
          */
         this.width = 32;
 
         /**
-         * @public
          * @type {number}
          */
         this.height = 32;
@@ -121,13 +114,11 @@ class Actor {
          * (it is slightly smaller than the actual bounds of the actor which
          * match the size of its renderer)
          *
-         * @public
          * @type {{ left: number, top: number, right: number, bottom: number }}
          */
         this.hitBox = { left: 0, top: 0, right: 0, bottom: 0 };
 
         /**
-         * @public
          * @type {ActorRenderer}
          */
         this.renderer = null;
@@ -136,13 +127,11 @@ class Actor {
          * whether this Actor is kept inside a Pool for re-use
          * (for instance: Bullets) if so, we can also pool the renderer
          *
-         * @public
          * @type {boolean}
          */
         this.pooled = false;
 
         /**
-         * @public
          * @type {boolean}
          */
         this.disposed = false;
@@ -161,16 +150,18 @@ class Actor {
         this.orgWidth  = this.width;
         this.orgHeight = this.height;
 
-        this._cacheHitbox();
+        // bound callback for hitbox caching (used during layer switch animations)
+        this._boundCHB = this._cacheHitbox.bind( this );
+
+        this._cacheHitbox(); // cache hitbox
     }
 
     /* public methods */
 
     /**
-     * @public
-     * @param {number} aTimestamp
+     * @param {number} timestamp
      */
-    update( aTimestamp ) {
+    update( timestamp ) {
 
         // update Actor position by its speed
 
@@ -199,7 +190,8 @@ class Actor {
         if ( !actor.collidable || actor.layer !== this.layer || actor === this ) {
             return false;
         }
-        myBox = this.hitBox, otherBox = actor.hitBox;
+        myBox    = this.hitBox;
+        otherBox = actor.hitBox;
 
         return !(
             ( myBox.bottom < otherBox.top )    ||
@@ -210,27 +202,24 @@ class Actor {
     }
 
     /**
-     * @public
-     * @param {Object=} actor optional Actor to collide with
+     * @param {Actor=} actor optional Actor to collide with
      */
     hit( actor ) {
         // extend in inheriting classes
     }
 
     /**
-     * @public
      * @param {number=} switchSpeed
      */
     switchLayer( switchSpeed = 1 ) {
         if ( this.switching ) {
             return;
         }
-        const self        = this;
-        self.switching    = true;
-        const targetLayer = self.layer === 0 ? 1 : 0;
+        this.switching    = true;
+        const targetLayer = this.layer === 0 ? 1 : 0;
 
         // during animation layer is floating point
-        // we multiply by .5 as a lower layer Actor is displayed at half size
+        // we multiply by 0.5 as a lower layer Actor is displayed at half size
 
         const multiplier = targetLayer * 0.5;
 
@@ -243,19 +232,17 @@ class Actor {
         // this allows us to change Actor position during the animation of the layer
         // switch (for instance: Player to keep moving during dive/rise)
 
-        setDelayed( self,
-            [ "layer", "offsetX", "offsetY", "width", "height" ],
-            [
+        setDelayed( this, LAYER_SWITCH_PROPS, [
                 targetLayer,
-                (( this.width * 0.5 ) - ( width  * 0.5 )),
-                (( this.width * 0.5 ) - ( height * 0.5 )),
-                width, height
+                (( this.width * 0.5 ) - ( width  * 0.5 )), // offsetX
+                (( this.width * 0.5 ) - ( height * 0.5 )), // offsetY
+                width,
+                height
             ],
-            switchSpeed, () => {
-                self.layer = targetLayer; // overcome JS rounding errors
-                self._onLayerSwitch( targetLayer );
-            },
-            Cubic.easeOut, () => self._cacheHitbox()
+            switchSpeed,
+            handleSwitchComplete,
+            Cubic.easeOut,
+            this._boundCHB
         );
         if ( switchSpeed !== 0 ) {
             this.game.initiateActorLayerSwitch( this, targetLayer );
@@ -264,8 +251,6 @@ class Actor {
 
     /**
      * Invoke whenever Actor is no longer part of the Game
-     *
-     * @public
      */
     dispose() {
         if ( this.disposed ) {
@@ -307,7 +292,7 @@ class Actor {
 
         // restore offset
 
-        this.offsetX =
+        this.offsetX = 0;
         this.offsetY = 0;
     }
 
@@ -334,3 +319,11 @@ class Actor {
     }
 };
 export default Actor;
+
+/* internal methods */
+
+function handleSwitchComplete() {
+    const { layer } = this.vars;  // "this" reference is GSAP Tween instance, this._targets[ 0 ] is Actor instance
+    this._targets[ 0 ].layer = layer; // overcome JS rounding errors on tween completion
+    this._targets[ 0 ]._onLayerSwitch( layer );
+}

@@ -256,6 +256,8 @@ function createEnergyPowerUp( gameModel ) {
 
 // DEBUG helpers
 if ( process.env.NODE_ENV === "development" ) {
-    window.boss  = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
-    window.enemy = () => generateSingle( WKS.models.gameModel );
+    window.boss    = ( optLevel ) => generateBoss( WKS.models.gameModel, optLevel );
+    window.enemy   = () => generateSingle( WKS.models.gameModel );
+    window.powerUp = () => createEnergyPowerUp( WKS.models.gameModel );
+    window.weapon  = () => createWeapon( WKS.models.gameModel );
 }

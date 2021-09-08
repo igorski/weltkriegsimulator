@@ -1,13 +1,11 @@
-WELTKRIEGSIMULATOR
-==================
+# WELTKRIEGSIMULATOR
 
 _Weltkriegsimulator_ (WKS) is a vertical scrolling shoot 'em up that was created to showcase the
 possibilities of creating a game using the open source [zCanvas library](https://github.com/igorski/zCanvas).
 
 You can play the game directly in your browser by [navigating here](https://www.igorski.nl/weltkriegsimulator).
 
-Project outline
----------------
+## Project outline
 
 WKS is a Javascript project and uses the ES6 module-pattern in vanilla JS. It's deliberately designed to work
 without a framework or library just to focus on the game code. React and Vue are great, but reactivity
@@ -52,8 +50,7 @@ the same message for the same purpose (for instance: a message of GAME_OVER migh
 stop the action queue and freeze the game loop, while at the same time the _InputController_ decides to stop
 listening to input events and the _ScreenController_ to open the high score input screen. "Separate the concerns"!
 
-zCanvas in WKS
---------------
+## zCanvas in WKS
 
 The zCanvas is used to render the game "world". All other visual components (energy bar, score, menus, etc.) are
 overlaid in HTML.
@@ -74,16 +71,16 @@ learn about the API.
 Note zCanvas is _always_ on-screen, the different screens (e.g. Title, High Scores, etc.) are overlaid on top (see
 _ScreenController.js_).
 
-TweenMax in WKS
----------------
+## TweenMax in WKS
 
 TweenMax is a powerful animation engine by Greensock. Within WKS it is used to perform easing functions on
 Actors which in turn are visualised as animations. Additionally, TweenMax is also a convenient timing engine, instead
 of relying on _setTimeout()_ (which fires when the browser tab is suspended and can drift), we use _TweenMax.delayedCall()_
 which is rock solid and can pause when the applications tab suspends.
 
-Object pooling
---------------
+## Performance
+
+### Object pooling
 
 A vertical scrolling shoot 'em up is pure mayhem with a lot of Objects being in use simultaneously, as well
 a lot of generation / removal of Actors.
@@ -96,8 +93,22 @@ the appropriate properties (e.g. new position, direction, etc.). This pool is ma
 Apart from game Actors pools, there is also a pool for decorative effects (e.g. explosions which are
 triggered by Actors, but not actually an Actor by themselves). These are managed by _RenderController.js_.
 
-Project requirements
---------------------
+### Minimizing allocations
+
+In a game a lot of functions are executed upon each iteration of both the A.I. and render loop. Its good
+to know how the V8 engine deals with garbage collection on used resources. Any allocated variable other
+than a primitive becomes eligible for garbage collection, meaning it can impact performance when at a sudden
+time outside of your control, all unused memory is freed while potentially stalling your application.
+
+Create reusable variables outside of your function scopes to prevent these from being deallocated. Instead
+of creating a lot of lamba (arrow) functions, create a non instance function that receives a reference to
+the instance object it needs to operate on. Use the language loops (_for_, _while_, _for of_) instead of
+more expensive Array methods.
+
+_Don't go optimizing for the sake of optimizing_ though. Identify the critical areas in your application
+but also be reasonable with regards to optimizing at the expense of code clarity and maintainability.
+
+## Project requirements
 
 The only requirement on your system is to have Node.js installed. With Node installed, you can resolve all
 dependencies via command line using:

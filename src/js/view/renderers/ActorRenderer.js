@@ -60,7 +60,6 @@ export default class ActorRenderer extends sprite
         this.canRumble = false;
 
         /**
-         * @public
          * @type {{ lastLayer: number }}
          */
         this.cache = {
@@ -100,7 +99,6 @@ export default class ActorRenderer extends sprite
 
     /**
      * @override
-     * @public
      * @param {CanvasRenderingContext2D} aCanvasContext
      */
     draw( aCanvasContext ) {
@@ -115,7 +113,6 @@ export default class ActorRenderer extends sprite
             }
         }
         super.draw( aCanvasContext );
-
         /*
         if ( process.env.NODE_ENV === "development" ) {
             this.debug( aCanvasContext );
@@ -133,7 +130,6 @@ export default class ActorRenderer extends sprite
      * @param {CanvasRenderingContext2D} aCanvasContext
      */
     debug( aCanvasContext ) {
-
         aCanvasContext.strokeStyle = "#FF0000";
         aCanvasContext.lineWidth = 2;
 
@@ -141,7 +137,7 @@ export default class ActorRenderer extends sprite
 
         aCanvasContext.strokeRect(
             hitBox.left, hitBox.top,
-            hitBox.right - hitBox.left,
+            hitBox.right  - hitBox.left,
             hitBox.bottom - hitBox.top
         );
     }

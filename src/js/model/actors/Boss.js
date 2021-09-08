@@ -40,7 +40,6 @@ class Boss extends Enemy {
      * @param {number=} type
      */
     constructor( game, energy = DEFAULT_ENERGY, weapon = DEFAULT_WEAPON, type = Enemies.BOSS.TYPE_1 ) {
-
         /* inherit prototype properties of Enemy */
 
         super( game, energy, weapon, type );
@@ -95,10 +94,9 @@ class Boss extends Enemy {
 
     /**
      * @override
-     * @public
-     * @param {number} aTimestamp
+     * @param {number} timestamp
      */
-    update( aTimestamp ) {
+    update( timestamp ) {
 
         // slowly move Boss into screen and then stop,
         // start swaying left right to target Player
@@ -107,7 +105,7 @@ class Boss extends Enemy {
             this.ySpeed = 0;
             this.startAttack();
         }
-        super.update( aTimestamp );
+        super.update( timestamp );
     }
 
     /* protected methods */
@@ -118,7 +116,6 @@ class Boss extends Enemy {
      * as weapon types
      */
     startAttack() {
-
         clearAttackTimeout( this );
         const timeoutInSeconds = 3;
 
@@ -144,12 +141,12 @@ class Boss extends Enemy {
 
         // switch to the Players layer just to be creepy
 
-        if ( this.layer !== this.game.player.layer )
+        if ( this.layer !== this.game.player.layer ) {
             this.switchLayer();
-
-        if ( ++this._attack > 2 )
+        }
+        if ( ++this._attack > 2 ) {
             this._attack = 0;
-
+        }
         this.attackTimeout = gsap.delayedCall( timeoutInSeconds, this.startAttack.bind( this ));
     }
 

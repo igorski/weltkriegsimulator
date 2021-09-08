@@ -33,7 +33,7 @@ import Boss            from "@/model/actors/Boss";
 import Powerup         from "@/model/actors/Powerup";
 import Random          from "@/util/Random";
 
-let audioModel, gameModel, zCanvas, player, waterRenderer;
+let audioModel, gameModel, zCanvas, player, waterRenderer, renderer;
 
 // ideal width of the game, this is blown up by CSS
 // for a fullscreen experience, while maintaining the "pixel art" vibe
@@ -109,7 +109,6 @@ const RenderController = {
     /**
      * invoked when an FXRenderer has completed its animation
      *
-     * @public
      * @param {FXRenderer} renderer
      */
     onFXComplete( renderer ) {
@@ -119,7 +118,6 @@ const RenderController = {
     },
 
     /**
-     * @public
      * @type {{ active: boolean, x: number, y: number }}
      */
     rumbling: { active: false, x: 0, y: 0 }
@@ -176,15 +174,12 @@ function setupGame() {
 }
 
 function handleBroadcast( type, payload ) {
-
-    let renderer;
     switch ( type ) {
         case Messages.GAME_START:
             addRendererToAppropriateLayer( gameModel.player.layer, gameModel.player.renderer );
             break;
 
         case Messages.ACTOR_ADDED:
-
             renderer = RendererFactory.createRenderer(
                 payload, RenderController
             );
@@ -194,7 +189,6 @@ function handleBroadcast( type, payload ) {
             break;
 
         case Messages.ACTOR_REMOVED:
-
             const index = actors.indexOf( /** @type {Actor} */ ( payload ));
             if ( index !== -1 ) {
                 actors.splice( index, 1 );
