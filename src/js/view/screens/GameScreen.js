@@ -104,8 +104,9 @@ export default {
         tokens = [];
 
         // remove all DOM listeners
-        if ( handler )
+        if ( handler ) {
             handler.dispose();
+        }
     }
 };
 

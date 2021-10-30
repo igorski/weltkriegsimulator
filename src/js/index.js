@@ -31,7 +31,6 @@ import gameModel        from "./model/Game";
 import settingsModel    from "./model/Settings";
 import highScoresModel  from "./model/HighScores";
 import AssetService     from "./services/AssetService";
-import MusicService     from "./services/MusicService";
 import StyleSheet       from "../assets/css/_root.scss";
 
 /* initialize application */
@@ -85,14 +84,4 @@ function init() {
 
 // load the assets and launch
 
-AssetService.prepare().
-    then( async () => {
-        try {
-            await MusicService.prepare();
-            init();
-        } catch {
-            // failure during loading of SoundCloud SDK, continue
-            // as is (Audio model will not play music)
-            init();
-        }
-    });
+AssetService.prepare().then( init );

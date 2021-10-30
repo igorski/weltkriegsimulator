@@ -27,10 +27,10 @@ export default {
     HAS_TOUCH_CONTROLS: false,
 
     /**
-     * API clientId for SoundCloud, you can request one at
-     * https://soundcloud.com/you/apps
+     * oAuth access token SoundCloud, expected to managed through the containing page.
+     * You can register your app and request a client id and secret at https://soundcloud.com/you/apps
      *
      * @type {string}
      */
-    getSoundCloudClientId: () => "" || window.soundCloudApiKey || localStorage?.getItem( "soundCloudApiKey" ),
+    getSoundCloudClientId: () => "" || window.soundCloudAccessToken || localStorage?.getItem( "soundCloudAccessToken" ),
 };

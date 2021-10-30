@@ -20,6 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import axios        from "axios";
 import Pubsub       from "pubsub-js";
 import Config       from "@/config/Config";
 import Assets       from "@/definitions/Assets";
@@ -33,6 +34,7 @@ let playing       = false;
 let sound         = null; // HTML <audio> element
 let acSound       = null; // WebAudio wrapper for sound Element
 let queuedTrackId = null;
+let trackMeta     = {}; // soundcloud track data
 const handler     = new EventHandler();
 
 let audioContext, filter, masterBus, explosion, laser;
@@ -46,13 +48,9 @@ const Audio = {
      * Must be called on user interaction to trigger unmute on iOS
      */
     init() {
-        if ( inited || !( "SC" in window )) {
+        if ( inited ) {
             return;
         }
-
-        SC.initialize({
-            client_id: Config.getSoundCloudClientId()
-        });
         inited = true;
 
         setupWebAudioAPI();
@@ -88,7 +86,7 @@ const Audio = {
     /**
      * enqueue a track from the available pool for playing
      */
-    enqueueTrack() {
+    async enqueueTrack() {
         if ( !inited || Audio.muted ) {
             return;
         }
@@ -100,12 +98,27 @@ const Audio = {
 
         // prepare the stream from SoundCloud, we create an inline <audio> tag instead
         // of using SC stream to overcome silence on mobile devices (looking at you, Apple!)
-        // this will thus not actually play the track (see playEnqueuedTrack())
+        // this will not actually play the track yet (see playEnqueuedTrack())
 
         Audio.stop();
-        sound = createAudioElement(
-            `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${Config.getSoundCloudClientId()}`
-        );
+
+        const requestData = {
+            headers: {
+                "Content-Type"  : "application/json; charset=utf-8",
+                "Authorization" : `OAuth ${Config.getSoundCloudClientId()}`
+            }
+        };
+
+        let { data } = await axios.get( `https://api.soundcloud.com/tracks/${trackId}`, requestData );
+        if ( data?.access === "playable" && data.stream_url ) {
+            trackMeta = data;
+            // data.stream_url should be the way to go but this leads to CORS errors when following
+            // a redirect... for now use the /streams endpoint
+            ({ data } = await axios.get( `https://api.soundcloud.com/tracks/${trackId}/streams`, requestData ));
+            if ( data?.http_mp3_128_url ) {
+                sound = createAudioElement( data.http_mp3_128_url );
+            }
+        }
     },
 
     /**
@@ -116,7 +129,6 @@ const Audio = {
      * @public
      */
     playEnqueuedTrack() {
-
         if ( !inited || Audio.muted ) {
             return;
         }
@@ -197,14 +209,14 @@ function _startPlayingEnqueuedTrack() {
         nextTrack();
     });
 
-    // get track META
-    SC.get( "/tracks/" + queuedTrackId, ( track ) => {
-        if ( track?.user ) {
+    // show track META
+    if ( trackMeta?.user ) {
+        setTimeout(() => {
             Pubsub.publish( Messages.SHOW_MESSAGE, Copy.applyData( "MUSIC", [
-                track.title, track.user.username
+                trackMeta.title, trackMeta.user.username
             ]));
-        }
-    });
+        }, 1000 );
+    }
 }
 
 function createAudioElement( source ) {
