@@ -86,7 +86,7 @@ const Audio = {
     /**
      * enqueue a track from the available pool for playing
      */
-    async enqueueTrack() {
+    async enqueueTrack( optReadyCallback ) {
         if ( !inited || Audio.muted ) {
             return;
         }
@@ -116,7 +116,8 @@ const Audio = {
             // a redirect... for now use the /streams endpoint
             ({ data } = await axios.get( `https://api.soundcloud.com/tracks/${trackId}/streams`, requestData ));
             if ( data?.http_mp3_128_url ) {
-                sound = createAudioElement( data.http_mp3_128_url );
+                sound = createAudioElement( data.http_mp3_128_url, true );
+                optReadyCallback?.();
             }
         }
     },
@@ -203,12 +204,6 @@ function _startPlayingEnqueuedTrack() {
 
     playing = true;
 
-    // when song ends, enqueue and play the next one in the pool
-
-    handler.listen( sound, "ended", ( e ) => {
-        nextTrack();
-    });
-
     // show track META
     if ( trackMeta?.user ) {
         setTimeout(() => {
@@ -219,10 +214,14 @@ function _startPlayingEnqueuedTrack() {
     }
 }
 
-function createAudioElement( source ) {
+function createAudioElement( source, loop = false ) {
     const element = document.createElement( "audio" );
     element.crossOrigin = "anonymous";
     element.setAttribute( "src", source );
+
+    if ( loop ) {
+        element.setAttribute( "loop", "loop" );
+    }
 
     // connect sound to AudioContext when supported
     if ( audioContext ) {
@@ -234,8 +233,7 @@ function createAudioElement( source ) {
 
 function nextTrack() {
     handler.dispose();
-    Audio.enqueueTrack();
-    Audio.playEnqueuedTrack();
+    Audio.enqueueTrack( Audio.playEnqueuedTrack );
 }
 
 function playSoundFX( audioElement ) {
