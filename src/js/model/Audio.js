@@ -232,24 +232,6 @@ function createAudioElement( source, bus = null, loop = false ) {
     return element;
 }
 
-async function wavToBuffer( path ) {
-    return new Promise(( resolve, reject ) => {
-        const request = new XMLHttpRequest();
-        request.open( "GET", path );
-        request.responseType = "arraybuffer";
-        request.onload = () => {
-            audioCtx.decodeAudioData( request.response, buffer => {
-                const source  = audioContext.createBufferSource();
-                source.buffer = buffer;
-                source.connect( masterBus );
-                resolve( source );
-            });
-        };
-        request.onerror = reject;
-        request.send();
-    });
-}
-
 function nextTrack() {
     handler.dispose();
     Audio.enqueueTrack( Audio.playEnqueuedTrack );
