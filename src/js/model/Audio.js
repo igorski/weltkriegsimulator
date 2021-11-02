@@ -37,7 +37,7 @@ let queuedTrackId = null;
 let trackMeta     = {}; // soundcloud track data
 const handler     = new EventHandler();
 
-let audioContext, filter, masterBus, explosion, laser;
+let audioContext, filter, effectsBus, masterBus, explosion, laser;
 
 const Audio = {
 
@@ -56,13 +56,14 @@ const Audio = {
         setupWebAudioAPI();
 
         // prepare the sound effects
-        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION );
-        laser     = createAudioElement( Assets.AUDIO.AU_LASER );
+        explosion = createAudioElement( Assets.AUDIO.AU_EXPLOSION, effectsBus );
+        laser     = createAudioElement( Assets.AUDIO.AU_LASER, effectsBus );
 
         // enqueue the first track for playback
         Audio.enqueueTrack();
 
         Pubsub.subscribe( Messages.IMPACT, Audio.playSoundFX.bind( Audio, Assets.AUDIO.AU_EXPLOSION ));
+        Pubsub.subscribe( Messages.FIRE,   Audio.playSoundFX.bind( Audio, Assets.AUDIO.AU_LASER ));
     },
 
     /**
@@ -116,7 +117,7 @@ const Audio = {
             // a redirect... for now use the /streams endpoint
             ({ data } = await axios.get( `https://api.soundcloud.com/tracks/${trackId}/streams`, requestData ));
             if ( data?.http_mp3_128_url ) {
-                sound = createAudioElement( data.http_mp3_128_url, true );
+                sound = createAudioElement( data.http_mp3_128_url, masterBus, true );
                 optReadyCallback?.();
             }
         }
@@ -214,7 +215,7 @@ function _startPlayingEnqueuedTrack() {
     }
 }
 
-function createAudioElement( source, loop = false ) {
+function createAudioElement( source, bus = null, loop = false ) {
     const element = document.createElement( "audio" );
     element.crossOrigin = "anonymous";
     element.setAttribute( "src", source );
@@ -224,11 +225,29 @@ function createAudioElement( source, loop = false ) {
     }
 
     // connect sound to AudioContext when supported
-    if ( audioContext ) {
+    if ( bus ) {
         acSound = audioContext.createMediaElementSource( element );
-        acSound.connect( masterBus );
+        acSound.connect( bus );
     }
     return element;
+}
+
+async function wavToBuffer( path ) {
+    return new Promise(( resolve, reject ) => {
+        const request = new XMLHttpRequest();
+        request.open( "GET", path );
+        request.responseType = "arraybuffer";
+        request.onload = () => {
+            audioCtx.decodeAudioData( request.response, buffer => {
+                const source  = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect( masterBus );
+                resolve( source );
+            });
+        };
+        request.onerror = reject;
+        request.send();
+    });
 }
 
 function nextTrack() {
@@ -238,7 +257,15 @@ function nextTrack() {
 
 function playSoundFX( audioElement ) {
     audioElement.currentTime = 0;
-    audioElement.play();
+    // randomize pitch to prevent BOREDOM
+    if ( effectsBus ) {
+        effectsBus.detune.value = -1200 + ( Math.random() * 2400 ); // in -1200 to +1200 range
+    }
+    if ( !audioElement.paused || audioElement.currentTime ) {
+        audioElement.currentTime = 0; // audio was paused/stopped
+    } else {
+        audioElement.play();
+    }
 }
 
 // modern browsers with WebAudio API can enjoy filtering effects on the audio
@@ -250,6 +277,9 @@ function setupWebAudioAPI() {
         audioContext = new acConstructor();
         // a "channel strip" to connect all audio nodes to
         masterBus = audioContext.createGain();
+        // a bus for all sound effects (biquad filter allows detuning)
+        effectsBus = audioContext.createBiquadFilter();
+        effectsBus.connect( masterBus );
         // a low-pass filter to apply onto the master bus
         filter = audioContext.createBiquadFilter();
         filter.type = "lowpass";

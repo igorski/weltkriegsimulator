@@ -66,7 +66,7 @@ function init() {
 
     // apply stored settings
 
-    audioModel.muted = !settingsModel.get( settingsModel.PROPS.MUSIC_ON );
+    audioModel.muted = false;//!settingsModel.get( settingsModel.PROPS.MUSIC_ON );
 
     // initialize controllers
 

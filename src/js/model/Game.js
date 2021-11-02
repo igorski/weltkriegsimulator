@@ -94,6 +94,7 @@ const Game = {
      */
     fireBullet( actor ) {
         createBulletForActor( actor );
+        Pubsub.publish( Messages.FIRE );
     },
 
     /**
