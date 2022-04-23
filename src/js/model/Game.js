@@ -132,7 +132,7 @@ const Game = {
             Pubsub.publish( Messages.GAME_OVER );
             // broadcast game state to outside high score tracking applications
             const { name, score } = player;
-            Pubsub.publish( GAME_ENDED, { name, score });
+            Pubsub.publish( Messages.GAME_ENDED, { name, score });
         }
     },
 
