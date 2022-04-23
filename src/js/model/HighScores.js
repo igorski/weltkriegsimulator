@@ -107,7 +107,7 @@ const HighScores = {
             save( list );
 
             // allows us to save the high scores in an outside application
-            PubSub.publish( Messages.HIGH_SCORE_SAVED, newScore );
+            PubSub.publish( Messages.PLAYER_NAME_UPDATED, { name });
         }
     }
 };

@@ -130,6 +130,9 @@ const Game = {
         // are we still alive?
         if ( player.energy === 0 ) {
             Pubsub.publish( Messages.GAME_OVER );
+            // broadcast game state to outside high score tracking applications
+            const { name, score } = player;
+            Pubsub.publish( GAME_ENDED, { name, score });
         }
     },
 

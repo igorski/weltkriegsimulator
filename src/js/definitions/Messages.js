@@ -28,7 +28,8 @@ export default {
     GAME_START            : "GAME_START",
     GAME_OVER             : "GAME_OVER",
     HIGH_SCORES_RETRIEVED : "HIGH_SCORES_RETRIEVED", // payload is Array<{name: string, score: number}>
-    HIGH_SCORE_SAVED      : "HIGH_SCORE_SAVED",      // payload is { name: string, score: number }
+    GAME_ENDED            : "GAME_ENDED",            // payload is { name: string, score: number }
+    PLAYER_NAME_UPDATED   : "PLAYER_NAME_UPDATED",   // payload is { name: string }
 
     /* Game state changes */
 
