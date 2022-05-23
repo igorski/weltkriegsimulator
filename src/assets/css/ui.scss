@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /* game UI */
 
 .wks-ui-score {
@@ -66,7 +68,7 @@
 /* touch screen controls */
 
 $dpadRadius: 132px;
-$margin: ( $dpadRadius / 2 );
+$margin: math.div( $dpadRadius, 2 );
 
 .wks-ui-dpad {
     position: absolute;
@@ -74,12 +76,12 @@ $margin: ( $dpadRadius / 2 );
     bottom: 16px;
     width: $dpadRadius;
     height: $dpadRadius;
-    background: transparent url(../images/graphics/dpad.png) no-repeat 50%;
+    background: transparent url("../images/graphics/dpad.png") no-repeat 50%;
     background-size: 100%;
     @include noSelect();
 
     @include mobile() {
-        left: ( $margin / 3 );
+        left: math.div( $margin, 3 );
     }
 
     &__position {
@@ -116,10 +118,10 @@ $margin: ( $dpadRadius / 2 );
 .wks-ui-buttons {
     position: absolute;
     bottom: 16px;
-    right: ( $margin / 2 );
+    right: math.div( $margin, 2 );
 
     @include mobile() {
-        right: ( $margin / 4 );
+        right: math.div( $margin, 4 );
     }
 
     button {
@@ -134,11 +136,11 @@ $margin: ( $dpadRadius / 2 );
     }
 
     &__fire {
-        bottom: ( $margin / 2 );
-        background: transparent url(../images/graphics/btnB.png) no-repeat 50%;
+        bottom: math.div( $margin, 2 );
+        background: transparent url("../images/graphics/btnB.png") no-repeat 50%;
     }
 
     &__layer {
-        background: transparent url(../images/graphics/btnA.png) no-repeat 50%;
+        background: transparent url("../images/graphics/btnA.png") no-repeat 50%;
     }
 }

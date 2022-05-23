@@ -23,7 +23,7 @@ body {
     @include noSelect();
 
     &.loading {
-        background-image: url(../images/graphics/loader.svg);
+        background-image: url("../images/graphics/loader.svg");
         background-repeat: no-repeat;
         background-position: 50% 50%;
     }
