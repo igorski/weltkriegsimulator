@@ -21,9 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ActorRenderer from "./ActorRenderer";
-import Config        from "@/config/Config";
-import Powerup       from "@/model/actors/Powerup";
-import Assets        from "@/definitions/Assets";
+import Powerup from "@/model/actors/Powerup";
+import Assets from "@/definitions/Assets";
 
 export default class PowerupRenderer extends ActorRenderer
 {
@@ -37,7 +36,7 @@ export default class PowerupRenderer extends ActorRenderer
     constructor( powerup, renderController ) {
         super( powerup, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.POWERUP.img );
+        this.setResource( Assets.GRAPHICS.POWERUP.id );
         this.setSheet([
                 // energy
                 { row: 0, col: 0, fpt: 1, amount: 1 },

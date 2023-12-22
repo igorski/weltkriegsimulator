@@ -22,7 +22,7 @@
  */
 import gsap, { TweenMax, Power1 } from "gsap";
 import Pubsub          from "pubsub-js";
-import { canvas, sprite, collision } from "zcanvas";
+import { Canvas, Sprite } from "zcanvas";
 import Messages        from "@/definitions/Messages";
 import RendererFactory from "@/factory/RendererFactory";
 import CloudRenderer   from "@/view/renderers/CloudRenderer";
@@ -31,7 +31,6 @@ import WaterRenderer   from "@/view/renderers/WaterRenderer";
 import FXRenderer      from "@/view/renderers/FXRenderer";
 import Boss            from "@/model/actors/Boss";
 import Powerup         from "@/model/actors/Powerup";
-import Random          from "@/util/Random";
 
 let audioModel, gameModel, zCanvas, player, waterRenderer, renderer;
 
@@ -66,11 +65,10 @@ const FXRenderers = new Array( 25 );
 
 const RenderController = {
 
-    init( container, models ) {
-
+    init( models ) {
         ({ gameModel, audioModel } = models );
 
-        zCanvas = new canvas({
+        zCanvas = new Canvas({
             width       : IDEAL_WIDTH,
             height      : IDEAL_WIDTH,
             animate     : true,
@@ -81,6 +79,12 @@ const RenderController = {
         });
         zCanvas.preventEventBubbling( true );
         zCanvas.setBackgroundColor( COLORS.TOP );
+
+        return zCanvas;
+    },
+
+    start( container ) {
+
         zCanvas.insertInPage( container );
 
         setupGame();
@@ -135,7 +139,7 @@ function setupGame() {
     );
 
     for ( let i = 0; i < layers.length; ++i ) {
-        const layer = new sprite();//{ width: 0, height: 0 });
+        const layer = new Sprite();//{ width: 0, height: 0 });
         zCanvas.addChild( layer );
         layers[ i ] = layer;
     }
@@ -148,16 +152,16 @@ function setupGame() {
     TOP_ACTOR_LAYER         = layers[ 3 ];
     TOP_DECORATION_LAYER    = layers[ 4 ];
 
-    COLLIDABLE_TILE = new TileRenderer( -200, 1.5, TileRenderer.TYPE.STONE );
+    COLLIDABLE_TILE = new TileRenderer( zCanvas, -200, 1.5, TileRenderer.TYPE.STONE );
 
     // add some default renderers for scenery
 
     // ground layer is out of player bounds, these sprites are just visual candy
-    waterRenderer = new WaterRenderer();
+    waterRenderer = new WaterRenderer( zCanvas );
     GROUND_LAYER.addChild( waterRenderer ); // eternally animating water sprite
-    GROUND_LAYER.addChild( new TileRenderer( -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
-    GROUND_LAYER.addChild( new TileRenderer( -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
-    GROUND_LAYER.addChild( new TileRenderer( 0, 1, TileRenderer.TYPE.STONE, .5 ) );
+    GROUND_LAYER.addChild( new TileRenderer( zCanvas, -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( zCanvas, -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( zCanvas, 0, 1, TileRenderer.TYPE.STONE, .5 ) );
 
     BOTTOM_DECORATION_LAYER.addChild( new CloudRenderer( 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
@@ -304,7 +308,7 @@ function checkLayerSwitchCollision( actor, targetLayer ) {
     // (e.g. the tiles present on the middle layer)
     // pixel transparency check to ensure we're not moving through holes in the tiles
 
-    if ( collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
+    if ( zCanvas.collision.pixelCollision( actor.renderer, COLLIDABLE_TILE )) {
         actor.layer = 1;
         actor.die();
 

@@ -21,9 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ActorRenderer from "./ActorRenderer";
-import Config        from "@/config/Config";
-import Ship          from "@/model/actors/Ship";
-import Assets        from "@/definitions/Assets";
+import Ship from "@/model/actors/Ship";
+import Assets from "@/definitions/Assets";
 
 export default class ShipRenderer extends ActorRenderer
 {
@@ -37,7 +36,7 @@ export default class ShipRenderer extends ActorRenderer
     constructor( ship, renderController ) {
         super( ship, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.SHIP.img );
+        this.setResource( Assets.GRAPHICS.SHIP.id );
         this.setSheet([
                 // These indices follow the declaration in definitions/Enemies.js
                 { row: 0, col: 0, fpt: 1, amount: 1 }, // player ship (facing up, others face down)

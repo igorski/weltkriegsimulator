@@ -31,13 +31,18 @@ const spriteRoot = `${assetRoot}images/sprites/`;
  */
 export default {
     GRAPHICS: {
-        POWERUP      : { src: `${spriteRoot}spritesheet_powerups.png`, img: null },
-        SHIP         : { src: `${spriteRoot}spritesheet_ship.png`,     img: null },
-        BOSS         : { src: `${spriteRoot}spritesheet_boss.png`,     img: null },
-        FX           : { src: `${spriteRoot}spritesheet_fx.png`,       img: null },
+        // these will be registered directly inside zCanvas to be referenced by the renderers
+
+        POWERUP      : { src: `${spriteRoot}spritesheet_powerups.png`, id: "powerup" },
+        SHIP         : { src: `${spriteRoot}spritesheet_ship.png`,     id: "ship" },
+        BOSS         : { src: `${spriteRoot}spritesheet_boss.png`,     id: "boss" },
+        FX           : { src: `${spriteRoot}spritesheet_fx.png`,       id: "fx" },
+        SKY          : { src: `${spriteRoot}clouds.png`,               id: "sky" },
+        BULLET       : { src: `${spriteRoot}bullet.png`,               id: "bullet" },
+
+        // these will be loaded as Images as we will use them as sources to generate tiles with
+
         WATER        : { src: `${spriteRoot}spritesheet_water.png`,    img: null },
-        SKY          : { src: `${spriteRoot}clouds.png`,               img: null },
-        BULLET       : { src: `${spriteRoot}bullet.png`,               img: null },
         TILE         : { src: `${spriteRoot}tile.png`,                 img: null },
         ISLAND       : { src: `${spriteRoot}tilesheet_island.png`,     img: null }
     },

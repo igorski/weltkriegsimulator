@@ -20,16 +20,16 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { loader } from "zcanvas";
-import Assets     from "@/definitions/Assets";
+import { Loader } from "zcanvas";
+import Assets from "@/definitions/Assets";
 
 export default {
 
     /**
-     * @public
-     * @return {Promise}
+     * @param {Canvas} canvas
+     * @return {Promise<void>}
      */
-    prepare() {
+    prepare( canvas ) {
 
         // load all graphic Assets
 
@@ -38,9 +38,20 @@ export default {
             let pending = graphics.length;
             for ( let i = 0; i < pending; ++i ) {
                 const entry = graphics[ i ];
-                const { image } = await loader.loadImage( entry.src );
-                entry.img = image;
+                try {
+                    if ( entry.id ) {
+                        await canvas.loadResource( entry.id, entry.src );
+                    } else if ( entry.img !== undefined ) {
+                        const { image } = await Loader.loadImage( entry.src );
+                        entry.img = image;
+                    }
+                } catch ( e ) {
+                    reject( e );
+                }
             }
+            // cache pixel map for collision detection
+            canvas.collision.cache( Assets.GRAPHICS.SHIP.id );
+
             resolve();
         });
     }

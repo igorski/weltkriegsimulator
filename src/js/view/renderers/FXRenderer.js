@@ -20,9 +20,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { sprite } from "zcanvas";
-import Config     from "@/config/Config";
-import Assets     from "@/definitions/Assets";
+import { Sprite } from "zcanvas";
+import Assets from "@/definitions/Assets";
 
 /**
  * a renderer that renders different animations
@@ -32,7 +31,7 @@ import Assets     from "@/definitions/Assets";
  * @constructor
  * @param {RenderController} renderController
  */
-export default class FXRenderer extends sprite
+export default class FXRenderer extends Sprite
 {
     constructor( renderController ) {
         super({
@@ -43,7 +42,7 @@ export default class FXRenderer extends sprite
 
         const animationCompleteHandler = renderController.onFXComplete.bind( renderController, this );
 
-        this.setBitmap( Assets.GRAPHICS.FX.img );
+        this.setResource( Assets.GRAPHICS.FX.id );
         this.setSheet([
 
                 // Animation when Actor is switching layer
@@ -79,9 +78,9 @@ export default class FXRenderer extends sprite
 
     /**
      * @override
-     * @param {CanvasRenderingContext2D} aCanvasContext
+     * @param {IRenderer} renderer
      */
-    draw( aCanvasContext ) {
+    draw( renderer ) {
         // need to manually trigger update (zCanvas has been
         // initialized to use an external update handler, which is
         // the gameloop in Game. The FXRenderer is not part
@@ -89,7 +88,7 @@ export default class FXRenderer extends sprite
 
         this.update();
 
-        super.draw( aCanvasContext );
+        super.draw( renderer );
     }
 }
 

@@ -21,8 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ActorRenderer from "./ActorRenderer";
-import Bullet        from "@/model/actors/Bullet";
-import Assets        from "@/definitions/Assets";
+import Assets from "@/definitions/Assets";
 
 export default class BulletRenderer extends ActorRenderer
 {
@@ -35,7 +34,7 @@ export default class BulletRenderer extends ActorRenderer
      */
     constructor( bullet, renderController ) {
         super( bullet, renderController );
-        this.setBitmap( Assets.GRAPHICS.BULLET.img );
+        this.setResource( Assets.GRAPHICS.BULLET.id );
     }
 
 
@@ -43,12 +42,11 @@ export default class BulletRenderer extends ActorRenderer
 
     /**
      * @override
-     * @public
-     * @param {CanvasRenderingContext2D} aCanvasContext
+     * @param {IRenderer} renderer
      */
-    draw( aCanvasContext ) {
+    draw( renderer ) {
 
-        if ( !this._bitmapReady )
+        if ( !this._resourceId )
             return;
 
         // you could consider fillRect w/ fillStyle white but profiling shows
@@ -56,19 +54,14 @@ export default class BulletRenderer extends ActorRenderer
 
         switch ( this.actor.layer ) {
             default:
-                aCanvasContext.drawImage(
-                    this._bitmap,
-                    .5 + this._bounds.left << 0,
-                    .5 + this._bounds.top << 0
+                renderer.drawImage(
+                    this._resourceId, this._bounds.left, this._bounds.top
                 );
                 break;
 
             case 0:
-                aCanvasContext.drawImage(
-                    this._bitmap,
-                    .5 + this._bounds.left << 0,
-                    .5 + this._bounds.top  << 0,
-                    5, 5
+                renderer.drawImage(
+                    this._resourceId, this._bounds.left, this._bounds.top, 5, 5
                 );
                 break;
         }

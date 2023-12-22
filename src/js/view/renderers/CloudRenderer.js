@@ -20,11 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { sprite } from "zcanvas";
-import Config     from "@/config/Config";
-import Assets     from "@/definitions/Assets";
+import { Sprite } from "zcanvas";
+import Assets from "@/definitions/Assets";
 
-export default class CloudRenderer extends sprite
+export default class CloudRenderer extends Sprite
 {
     /**
      * a renderer that draws some pretty nice lookin' sky details
