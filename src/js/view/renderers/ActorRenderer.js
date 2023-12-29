@@ -137,8 +137,8 @@ export default class ActorRenderer extends Sprite
             hitBox.top,
             hitBox.right - hitBox.left,
             hitBox.bottom - hitBox.top,
-            "#FF0000",
-            "stroke"
+            "transparent",
+            { size: 1, color: "red" }
         );
     }
 }

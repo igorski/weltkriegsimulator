@@ -89,7 +89,8 @@ export default class BossRenderer extends ActorRenderer
             bounds.width,
             bounds.height, {
                 alpha: isHit ? 0.5 : undefined
-            }
+            },
+            this.getDrawProps()
         );
         /*
         if ( process.env.NODE_ENV === "development" ) {

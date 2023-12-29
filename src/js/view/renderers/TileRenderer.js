@@ -38,8 +38,7 @@ export default class TileRenderer extends Sprite
      * @param {number=} scale
      */
     constructor( zCanvas, y, speed, type, scale ) {
-
-        super({ x: 0, y });
+        super({ x: 0, y, width: 1, height: 1 });
 
         ++instance;
 
@@ -70,11 +69,11 @@ export default class TileRenderer extends Sprite
     draw( renderer ) {
         // there is no associated Actor for a tile, so we cheat and run the
         // update logic inside the draw method
-        this._bounds.top += this.speed;
+        this.setY( this.getY() + this.speed );
         
         // when moving out of the screen reset position to the top
-        if ( this._bounds.top > this.canvas.getHeight() ) {
-            this._bounds.top = -Math.round( this._bounds.height * ( 1 + Math.random() ));
+        if ( this.getY() > this.canvas.getHeight() ) {
+            this.setY( -Math.round( this.getHeight() * ( 1 + Math.random() )));
             positionOnRandomX( this );
         }
         super.draw( renderer );

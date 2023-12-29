@@ -139,7 +139,7 @@ function setupGame() {
     );
 
     for ( let i = 0; i < layers.length; ++i ) {
-        const layer = new Sprite();//{ width: 0, height: 0 });
+        const layer = new Sprite({ width: 1, height: 1 });
         zCanvas.addChild( layer );
         layers[ i ] = layer;
     }
