@@ -69,17 +69,16 @@ const RenderController = {
         ({ gameModel, audioModel } = models );
 
         zCanvas = new Canvas({
-            width       : IDEAL_WIDTH,
-            height      : IDEAL_WIDTH,
-            animate     : true,
-            smoothing   : false,
-            stretchToFit: true,
-            fps         : 60,
-            onUpdate    : gameModel.update
+            width                : IDEAL_WIDTH,
+            height               : IDEAL_WIDTH,
+            animate              : true,
+            smoothing            : false,
+            stretchToFit         : true,
+            fps                  : 60,
+            backgroundColor      : COLORS.TOP,
+            preventEventBubbling : true,
+            onUpdate             : gameModel.update
         });
-        zCanvas.preventEventBubbling( true );
-        zCanvas.setBackgroundColor( COLORS.TOP );
-
         return zCanvas;
     },
 
