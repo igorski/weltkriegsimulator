@@ -46,9 +46,6 @@ export default class BulletRenderer extends ActorRenderer
      */
     draw( renderer ) {
 
-        if ( !this._resourceId )
-            return;
-
         // you could consider fillRect w/ fillStyle white but profiling shows
         // that drawImage is orders of magnitude faster !!
 

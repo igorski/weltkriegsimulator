@@ -77,6 +77,7 @@ export default class BossRenderer extends ActorRenderer
         if ( isHit ) {
             this.lastEnergy = this.actor.energy;
         }
+        this.getTransforms().alpha = isHit ? 0.5 : 1;
 
         renderer.drawImageCropped(
             this._resourceId,
@@ -87,9 +88,7 @@ export default class BossRenderer extends ActorRenderer
             bounds.left,
             bounds.top,
             bounds.width,
-            bounds.height, {
-                alpha: isHit ? 0.5 : undefined
-            },
+            bounds.height,
             this.getDrawProps()
         );
         /*
