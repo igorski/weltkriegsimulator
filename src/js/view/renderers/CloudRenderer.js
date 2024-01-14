@@ -39,7 +39,7 @@ export default class CloudRenderer extends Sprite
 
         scale = ( typeof scale === "number" ) ? scale : 1;
 
-        super({ x, y, width: 300 * scale, height: 508 * scale, bitmap: Assets.GRAPHICS.SKY.img });
+        super({ x, y, width: 300 * scale, height: 508 * scale, resourceId: Assets.GRAPHICS.SKY.id });
 
         /* instance properties */
 
