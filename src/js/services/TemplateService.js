@@ -1,6 +1,16 @@
-const Handlebars = require( "handlebars/runtime" );
+import Handlebars from "handlebars";
 
-/* custom helpers */
+/* public API */
+
+/**
+ * Renders a template (raw Handlebars file as string) with
+ * optionally provided options as a HTML string
+ */
+export function renderTemplate( templateString, opts = {}) {
+    return Handlebars.compile( templateString )( opts );
+}
+
+/* custom helpers available to the templates */
 
 Handlebars.registerHelper( "toLowerCase", string => {
     if ( typeof string === "string" ) {
@@ -8,13 +18,14 @@ Handlebars.registerHelper( "toLowerCase", string => {
     }
     return "";
 });
+
 /**
  * use in template like:
  * {{loop 10}}
  */
 Handlebars.registerHelper( "loop", ( n, block ) => {
     let out = "";
-    for ( var i = 0; i < n; ++i ) {
+    for ( let i = 0; i < n; ++i ) {
         out += block.fn( i );
     }
     return out;
@@ -34,5 +45,3 @@ Handlebars.registerHelper( "eq",  ( v1, v2 ) => v1 === v2 );
 Handlebars.registerHelper( "and", ( v1, v2 ) => v1 && v2 );
 Handlebars.registerHelper( "or",  ( v1, v2 ) => v1 || v2 );
 Handlebars.registerHelper( "add", ( v1, v2 ) => v1 + v2 );
-
-module.exports = Handlebars;

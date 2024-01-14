@@ -24,7 +24,8 @@ import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
-import HTMLTemplate  from "Templates/how_to_play_screen.hbs";
+import { renderTemplate } from "@/services/TemplateService";
+import HTMLTemplate from "Templates/how_to_play_screen.hbs?raw";
 
 let models, handler, text, playButton, homeButton;
 let title, footer;
@@ -35,7 +36,7 @@ export default {
 
         models = modelRefs;
 
-        wrapper.innerHTML = HTMLTemplate();
+        wrapper.innerHTML = renderTemplate( HTMLTemplate );
 
         // grab references to HTML Elements
 

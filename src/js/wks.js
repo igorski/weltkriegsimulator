@@ -31,7 +31,8 @@ import gameModel        from "./model/Game";
 import settingsModel    from "./model/Settings";
 import highScoresModel  from "./model/HighScores";
 import AssetService     from "./services/AssetService";
-import StyleSheet       from "../assets/css/_root.scss";
+
+import "../assets/css/_root.scss"; // import root SASS stylesheet
 
 /* initialize application */
 

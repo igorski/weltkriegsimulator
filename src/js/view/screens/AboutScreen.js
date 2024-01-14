@@ -24,16 +24,16 @@ import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import EventHandler  from "@/util/EventHandler";
 import AnimationUtil from "@/util/AnimationUtil";
-import HTMLTemplate  from "Templates/about_screen.hbs";
+import { renderTemplate } from "@/services/TemplateService";
+import HTMLTemplate from "Templates/about_screen.hbs?raw";
 
 let models, handler, text, playButton, homeButton;
 let title, footer;
 
 export default {
-
     render( wrapper, modelRefs ) {
         models = modelRefs;
-        wrapper.innerHTML = HTMLTemplate({
+        wrapper.innerHTML = renderTemplate( HTMLTemplate, {
             resources: [
                 { name: "Explosion by Cuzco", href: "https://opengameart.org/content/explosion" },
                 { name: "Ship by Redshrike",  href: "https://opengameart.org/content/space-ship-building-bits-volume-1" },

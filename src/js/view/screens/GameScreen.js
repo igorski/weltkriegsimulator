@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import gsap, { Cubic, Elastic } from "gsap";
+import gsap from "gsap";
 import Pubsub          from "pubsub-js";
 import Config          from "@/config/Config";
 import Copy            from "@/definitions/Copy";
@@ -28,7 +28,8 @@ import Messages        from "@/definitions/Messages";
 import AnimationUtil   from "@/util/AnimationUtil";
 import EventHandler    from "@/util/EventHandler";
 import InputController from "@/controller/InputController";
-import HTMLTemplate    from "Templates/game_screen.hbs";
+import { renderTemplate } from "@/services/TemplateService";
+import HTMLTemplate from "Templates/game_screen.hbs?raw";
 
 let container, energyUI, scoreUI, messagePanel, messageTitleUI, messageBodyUI, dPad, dPadPosition, btnFire, btnLayer;
 let DPAD_OFFSET, DPAD_LEFT, DPAD_RIGHT, DPAD_TOP, DPAD_BOTTOM;
@@ -46,7 +47,7 @@ export default {
         player    = models.gameModel.player;
         container = wrapper;
 
-        wrapper.innerHTML = HTMLTemplate({
+        wrapper.innerHTML = renderTemplate( HTMLTemplate, {
             controls: addControls
         });
 

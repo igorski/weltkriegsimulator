@@ -27,7 +27,8 @@ import Assets        from "@/definitions/Assets";
 import Messages      from "@/definitions/Messages";
 import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
-import HTMLTemplate  from "Templates/title_screen.hbs";
+import { renderTemplate } from "@/services/TemplateService";
+import HTMLTemplate  from "Templates/title_screen.hbs?raw";
 
 let handler, startButton, highScoresButton, howToPlayButton, aboutButton;
 let title, menu, footer, buttons;
@@ -36,7 +37,7 @@ let audioModel;
 export default {
 
     render( wrapper, models ) {
-        wrapper.innerHTML = HTMLTemplate();
+        wrapper.innerHTML = renderTemplate( HTMLTemplate );
 
         ({ audioModel } = models );
 
