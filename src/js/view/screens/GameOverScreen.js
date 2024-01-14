@@ -24,7 +24,8 @@ import Pubsub        from "pubsub-js";
 import Messages      from "@/definitions/Messages";
 import AnimationUtil from "@/util/AnimationUtil";
 import EventHandler  from "@/util/EventHandler";
-import HTMLTemplate  from "Templates/game_over_screen.hbs";
+import { renderTemplate } from "@/services/TemplateService";
+import HTMLTemplate from "Templates/game_over_screen.hbs?raw";
 
 let models, handler, text, playButton, homeButton, nameInput, saveButton;
 let title, footer;
@@ -39,7 +40,7 @@ const GameOverScreen = {
         const score        = player.score;
         const hasHighScore = models.highScoresModel.isNewScore( score );
 
-        wrapper.innerHTML = HTMLTemplate({
+        wrapper.innerHTML = renderTemplate( HTMLTemplate, {
             highScore: hasHighScore,
             score
         });

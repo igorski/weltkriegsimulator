@@ -20,11 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { sprite } from "zcanvas";
-import Config     from "@/config/Config";
-import Assets     from "@/definitions/Assets";
+import { Sprite } from "zcanvas";
+import Assets from "@/definitions/Assets";
 
-export default class CloudRenderer extends sprite
+export default class CloudRenderer extends Sprite
 {
     /**
      * a renderer that draws some pretty nice lookin' sky details
@@ -36,7 +35,7 @@ export default class CloudRenderer extends sprite
      * @param {number=} speed
      * @param {number=} scale
      */
-    constructor( x, y, speed, scale ) {
+    constructor( gameModel, x, y, speed, scale ) {
 
         scale = ( typeof scale === "number" ) ? scale : 1;
 
@@ -49,20 +48,24 @@ export default class CloudRenderer extends sprite
          * @type {number}
          */
         this.speed = ( typeof speed === "number" ) ? speed : 1;
+
+        gameModel.scenery.push( this );
     }
 
     /* public methods */
 
-    draw( aCanvasContext ) {
-        // there is no associated Actor for a tile, run the update logic
-        // inside the draw method
+    /**
+     * @override
+     * @param {DOMHighResTimeStamp} timestamp 
+     * @param {number} framesSinceLastRender 
+     */
+    update( timestamp, framesSinceLastRender ) {
+        this._bounds.top += ( this.speed * framesSinceLastRender );
 
-        this._bounds.top += this.speed;
         // when moving out of the screen reset position to the top
         if ( this._bounds.top > this.canvas.getHeight() ) {
             this._bounds.top = -this._bounds.height;
             this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
         }
-        super.draw( aCanvasContext );
     }
 }

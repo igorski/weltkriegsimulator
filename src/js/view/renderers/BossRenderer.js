@@ -21,9 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ActorRenderer from "./ActorRenderer";
-import Config        from "@/config/Config";
-import Boss          from "@/model/actors/Boss";
-import Assets        from "@/definitions/Assets";
+import Boss from "@/model/actors/Boss";
+import Assets from "@/definitions/Assets";
 
 export default class BossRenderer extends ActorRenderer
 {
@@ -37,7 +36,7 @@ export default class BossRenderer extends ActorRenderer
     constructor( boss, renderController ) {
         super( boss, renderController );
 
-        this.setBitmap( Assets.GRAPHICS.BOSS.img );
+        this.setResource( Assets.GRAPHICS.BOSS.id );
         this.setSheet([
                 // Boss sprites (facing down)
                 { row: 0, col: 0, fpt: 1, amount: 1, w: 2, h: 1 },
@@ -58,9 +57,9 @@ export default class BossRenderer extends ActorRenderer
 
     /**
      * @override
-     * @param {CanvasRenderingContext2D} aCanvasContext
+     * @param {IRenderer} renderer
      */
-    draw( aCanvasContext ) {
+    draw( renderer ) {
 
         if ( !this.canvas ) {
             return;
@@ -77,25 +76,21 @@ export default class BossRenderer extends ActorRenderer
         // flash when hit
         if ( isHit ) {
             this.lastEnergy = this.actor.energy;
-            aCanvasContext.save();
-            aCanvasContext.globalAlpha = 0.5;
         }
+        this.getTransforms().alpha = isHit ? 0.5 : 1;
 
-        aCanvasContext.drawImage(
-            this._bitmap,
+        renderer.drawImageCropped(
+            this._resourceId,
             type.col * tileWidth,
             type.row * tileHeight,
             tileWidth  * type.w,
             tileHeight * type.h,
-            ( 0.5 + bounds.left )   << 0,
-            ( 0.5 + bounds.top )    << 0,
-            ( 0.5 + bounds.width  ) << 0,
-            ( 0.5 + bounds.height ) << 0
+            bounds.left,
+            bounds.top,
+            bounds.width,
+            bounds.height,
+            this.getDrawProps()
         );
-
-        if ( isHit ) {
-            aCanvasContext.restore();
-        }
         /*
         if ( process.env.NODE_ENV === "development" ) {
             this.debug( aCanvasContext );

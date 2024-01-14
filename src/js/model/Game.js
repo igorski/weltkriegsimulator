@@ -44,10 +44,10 @@ const DEG_TO_RAD = Math.PI / 180;
 // that can lead to garbage collection taking up execution time
 // be mindful of collisions when using functions within loops that consume these variables
 let player,
-    actors, actor,  // used by Game.update()
-    pointActor,     // used by getActorsUnderPoint()
-    pos, bullet,    // used by createBulletForActor()
-    tween;          // used by disposeBulletsInTween()
+    actors, actor, scenery,  // used by Game.update()
+    pointActor,              // used by getActorsUnderPoint()
+    pos, bullet,             // used by createBulletForActor()
+    tween;                   // used by disposeBulletsInTween()
 
 const pointActors    = [];   // used by getActorsUnderPoint()
 const bullets        = [];   // used by createBulletForActor()
@@ -66,6 +66,13 @@ const Game = {
      * @type {Array<Actor>}
      */
     actors: [],
+
+    /**
+     * Sprite classes that aren't game Actors, but
+     * are movable scenery (clouds, tiles, island, etc.)
+     * they are here as they visuals movement are synced to the game loop
+     */
+    scenery: [],
 
     /**
      * whether the game is currently active
@@ -325,15 +332,20 @@ const Game = {
      * update all Actors for the next iteration of the game cycle
      * this is in essence the game loop
      *
-     * @param {number} aTimestamp
+     * @param {DOMHighResTimeStamp} timestamp
+     * @param {number} framesSinceLastRender
      */
-    update( aTimestamp ) {
+    update( timestamp, framesSinceLastRender ) {
         player = Game.player;
         actors = Game.actors;
 
         const active      = Game.active;
         const worldRight  = Game.world.width;
         const worldBottom = Game.world.height;
+
+        for ( scenery of Game.scenery ) {
+            scenery.update( timestamp, framesSinceLastRender );
+        }
 
         let i = actors.length;
 
@@ -344,7 +356,7 @@ const Game = {
             if ( !actor ) {
                 continue;
             }
-            actor.update( aTimestamp );
+            actor.update( timestamp, framesSinceLastRender );
             actor.renderer?.update();
 
             // no collision detection if game is inactive

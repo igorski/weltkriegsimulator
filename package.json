@@ -1,40 +1,22 @@
 {
   "name": "weltkriegsimulator",
   "version": "1.0.0",
-  "description": "Weltkriegsimulator source code",
-  "private": true,
+  "description": "Weltkriegsimulator - vertical scrolling shoot 'em up",
+  "type": "module",
   "author": "Igor Zinken",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --host=0.0.0.0 --progress --mode development --config webpack.config.dev.js",
-    "build": "webpack --progress --mode production --config webpack.config.build.js"
+    "dev": "vite serve --force",
+    "build": "vite build"
   },
   "devDependencies": {
-    "@babel/core": "7.9.6",
-    "@babel/plugin-transform-runtime": "^7.9.6",
-    "@babel/preset-env": "7.9.6",
-    "axios": "^0.27.2",
-    "babel-loader": "8.2.5",
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^10.2.4",
-    "cross-env": "^7.0.3",
-    "css-loader": "^6.7.1",
-    "file-loader": "6.2.0",
-    "gsap": "^3.10.4",
-    "handlebars": "^4.7.7",
-    "html-webpack-plugin": "^5.5.0",
+    "axios": "^1.6.5",
+    "gsap": "^3.12.4",
+    "handlebars": "^4.7.8",
     "pubsub-js": "^1.9.4",
-    "sass": "^1.52.1",
-    "sass-loader": "^13.0.0",
-    "style-loader": "^3.3.1",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.9.0",
-    "webpack-merge": "^5.8.0",
-    "zcanvas": "^5.1.1"
-  },
-  "dependencies": {
-    "handlebars-loader": "^1.7.2"
+    "sass": "^1.69.7",
+    "vite": "^5.0.11",
+    "vite-plugin-static-copy": "^1.0.0",
+    "zcanvas": "^6.0.2"
   }
 }

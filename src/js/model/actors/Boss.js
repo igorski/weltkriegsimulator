@@ -94,9 +94,10 @@ class Boss extends Enemy {
 
     /**
      * @override
-     * @param {number} timestamp
+     * @param {DOMHighResTimeStamp} timestamp
+     * @param {number} framesSinceLastRender
      */
-    update( timestamp ) {
+    update( timestamp, framesSinceLastRender ) {
 
         // slowly move Boss into screen and then stop,
         // start swaying left right to target Player
@@ -105,7 +106,7 @@ class Boss extends Enemy {
             this.ySpeed = 0;
             this.startAttack();
         }
-        super.update( timestamp );
+        super.update( timestamp, framesSinceLastRender );
     }
 
     /* protected methods */

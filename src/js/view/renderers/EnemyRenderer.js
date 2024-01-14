@@ -21,9 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import ShipRenderer from "./ShipRenderer";
-import Config       from "@/config/Config";
-import Enemy        from "@/model/actors/Enemy";
-import Assets       from "@/definitions/Assets";
+import Enemy from "@/model/actors/Enemy";
 
 export default class EnemyRenderer extends ShipRenderer
 {

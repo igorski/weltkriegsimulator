@@ -20,35 +20,46 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { sprite }    from "zcanvas";
-import Config        from "@/config/Config";
+import { Sprite } from "zcanvas";
 import TileGenerator from "@/util/TileGenerator";
 
-export default class TileRenderer extends sprite
+let instance = 0;
+
+export default class TileRenderer extends Sprite
 {
     /**
      * a renderer that represents a tiled background on screen
      *
      * @constructor
+     * @param {GameModel} gameModel
+     * @param {Canvas} zCanvas instance
      * @param {number} y
      * @param {number} speed
      * @param {number} type
      * @param {number=} scale
      */
-    constructor( y, speed, type, scale ) {
+    constructor( gameModel, zCanvas, y, speed, type, scale ) {
+        super({ x: 0, y, width: 1, height: 1 });
 
-        super({ x: 0, y });
+        ++instance;
+
+        gameModel.scenery.push( this );
 
         /* instance properties */
 
         this.speed = speed;
+        
+        /* Bitmap pre-render */
 
-        /* initialization */
-
+        const resourceId = "tile_" + instance;
         const generateFn = type === TileRenderer.TYPE.ISLAND ? TileGenerator.createIslandTileMap : TileGenerator.createTileMap;
 
-        const cvs = generateFn( scale );
-        this.setBitmap( cvs, cvs.width, cvs.height );
+        zCanvas.loadResource( resourceId, generateFn( scale ))
+            .then( size => {
+                this.setResource( resourceId, size.width, size.height );
+                // cache pixel map for collision detection
+                zCanvas.collision.cache( resourceId );
+            });
     }
 
     /* public methods */
@@ -58,16 +69,21 @@ export default class TileRenderer extends sprite
         positionOnRandomX( this );
     }
 
-    draw( aCanvasContext ) {
-        // there is no associated Actor for a tile, run the update logic
-        // inside the draw method
-        this._bounds.top += this.speed;
+    /**
+     * @override
+     * @param {DOMHighResTimeStamp} timestamp 
+     * @param {number} framesSinceLastRender 
+     */
+    update( timestamp, framesSinceLastRender ) {
+        const speed = this.speed * framesSinceLastRender;
+
+        this.setY( this.getY() + speed );
+        
         // when moving out of the screen reset position to the top
-        if ( this._bounds.top > this.canvas.getHeight() ) {
-            this._bounds.top = -Math.round( this._bounds.height * ( 1 + Math.random() ));
+        if ( this.getY() > this.canvas.getHeight() ) {
+            this.setY( -Math.round( this.getHeight() * ( 1 + Math.random() )));
             positionOnRandomX( this );
         }
-        super.draw( aCanvasContext );
     }
 }
 

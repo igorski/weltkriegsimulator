@@ -31,7 +31,8 @@ import gameModel        from "./model/Game";
 import settingsModel    from "./model/Settings";
 import highScoresModel  from "./model/HighScores";
 import AssetService     from "./services/AssetService";
-import StyleSheet       from "../assets/css/_root.scss";
+
+import "../assets/css/_root.scss"; // import root SASS stylesheet
 
 /* initialize application */
 
@@ -46,20 +47,20 @@ const WKS = window.WKS = {
     pubSub : PubSub
 };
 
+// initialize models
+
+const models = {
+    audioModel,
+    gameModel,
+    settingsModel,
+    highScoresModel,
+};
+
 // start the application
 
 function init() {
 
     document.body.classList.remove( "loading" );
-
-    // initialize models
-
-    const models = {
-        audioModel,
-        gameModel,
-        settingsModel,
-        highScoresModel,
-    };
 
     settingsModel.init();
     highScoresModel.init();
@@ -72,7 +73,7 @@ function init() {
 
     gameController.init( models );
     inputController.init( models );
-    renderController.init( container, models );
+    renderController.start( container );
     screenController.init( container, models );
 
     if ( process.env.NODE_ENV === "development" ) {
@@ -84,4 +85,6 @@ function init() {
 
 // load the assets and launch
 
-AssetService.prepare().then( init );
+AssetService.prepare(
+    renderController.init( models )
+).then( init );

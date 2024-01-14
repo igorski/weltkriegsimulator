@@ -20,9 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Pubsub         from "pubsub-js";
-import { Cubic }      from "gsap";
-import Messages       from "@/definitions/Messages";
+import { Cubic } from "gsap";
 import { setDelayed } from "@/util/ActorUtil";
 
 const LAYER_SWITCH_PROPS = [ "layer", "offsetX", "offsetY", "width", "height" ];
@@ -159,19 +157,23 @@ class Actor {
     /* public methods */
 
     /**
-     * @param {number} timestamp
+     * @param {DOMHighResTimeStamp} timestamp
+     * @param {number} framesSinceLastRender
      */
-    update( timestamp ) {
+    update( timestamp, framesSinceLastRender ) {
+
+        const xSpeed = this.xSpeed * framesSinceLastRender;
+        const ySpeed = this.ySpeed * framesSinceLastRender;
 
         // update Actor position by its speed
 
         if ( this.layer === 0 ) {
-            this.x += ( this.xSpeed * 0.75 );
-            this.y += ( this.ySpeed * 0.75 );
+            this.x += ( xSpeed * 0.75 );
+            this.y += ( ySpeed * 0.75 );
         }
         else {
-            this.x += this.xSpeed;
-            this.y += this.ySpeed;
+            this.x += xSpeed;
+            this.y += ySpeed;
         }
 
         // recalculate the hit box bounds if this Actor is inside the viewport

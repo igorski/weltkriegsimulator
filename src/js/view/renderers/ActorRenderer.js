@@ -20,9 +20,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import { sprite } from "zcanvas";
+import { Sprite } from "zcanvas";
 
-export default class ActorRenderer extends sprite
+export default class ActorRenderer extends Sprite
 {
     /**
      * a renderer that represents the Actor actor on screen
@@ -73,6 +73,10 @@ export default class ActorRenderer extends sprite
 
     /* public methods */
 
+    /**
+     * Syncs Sprite bounding box with Actor
+     * prior to rendering
+     */
     update() {
 
         const actor  = this.actor;
@@ -99,9 +103,9 @@ export default class ActorRenderer extends sprite
 
     /**
      * @override
-     * @param {CanvasRenderingContext2D} aCanvasContext
+     * @param {IRenderer} renderer
      */
-    draw( aCanvasContext ) {
+    draw( renderer ) {
 
         // apply rumble when applicable
 
@@ -112,10 +116,10 @@ export default class ActorRenderer extends sprite
                 this._bounds.top  -= rumbleObject.y;
             }
         }
-        super.draw( aCanvasContext );
+        super.draw( renderer );
         /*
         if ( process.env.NODE_ENV === "development" ) {
-            this.debug( aCanvasContext );
+            this.debug( renderer );
         }
         */
     }
@@ -127,18 +131,18 @@ export default class ActorRenderer extends sprite
      * collidable bounding box around this Actor
      *
      * @protected
-     * @param {CanvasRenderingContext2D} aCanvasContext
+     * @param {IRenderer} renderer
      */
-    debug( aCanvasContext ) {
-        aCanvasContext.strokeStyle = "#FF0000";
-        aCanvasContext.lineWidth = 2;
-
+    debug( renderer ) {
         const hitBox = this.actor.hitBox;
 
-        aCanvasContext.strokeRect(
-            hitBox.left, hitBox.top,
-            hitBox.right  - hitBox.left,
-            hitBox.bottom - hitBox.top
+        renderer.drawRect(
+            hitBox.left,
+            hitBox.top,
+            hitBox.right - hitBox.left,
+            hitBox.bottom - hitBox.top,
+            "transparent",
+            { size: 1, color: "red" }
         );
     }
 }

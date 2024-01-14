@@ -75,17 +75,20 @@ class Enemy extends Ship {
 
     /**
      * @override
-     * @param {number} timestamp
+     * @param {DOMHighResTimeStamp} timestamp
+     * @param {number} framesSinceLastRender
      */
-    update( timestamp ) {
+    update( timestamp, framesSinceLastRender ) {
 
         // no special behaviour if Enemy is outside the viewport
 
         const insideViewport = this.y > -this.height;
 
         if ( !insideViewport ) {
-            return super.update( timestamp );
+            return super.update( timestamp, framesSinceLastRender );
         }
+
+        const ySpeed = this.ySpeed * framesSinceLastRender;
 
         // fire a shot in case the shoot interval has passed
 
@@ -95,12 +98,12 @@ class Enemy extends Ship {
         }
 
         if ( this.pattern === 0 ) {
-            return super.update( timestamp );
+            return super.update( timestamp, framesSinceLastRender );
         }
         if ( !this.trajectoryCalculated ) {
             this.calculateTrajectory();
         }
-        this.y += ( this.layer === 0 ) ? this.ySpeed * .75 : this.ySpeed;
+        this.y += ( this.layer === 0 ) ? ySpeed * .75 : ySpeed;
 
         // recalculate the hit box bounds
 
