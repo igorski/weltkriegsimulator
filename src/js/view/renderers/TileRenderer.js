@@ -31,16 +31,19 @@ export default class TileRenderer extends Sprite
      * a renderer that represents a tiled background on screen
      *
      * @constructor
-     * @param {Canvas} renderer
+     * @param {GameModel} gameModel
+     * @param {Canvas} zCanvas instance
      * @param {number} y
      * @param {number} speed
      * @param {number} type
      * @param {number=} scale
      */
-    constructor( zCanvas, y, speed, type, scale ) {
+    constructor( gameModel, zCanvas, y, speed, type, scale ) {
         super({ x: 0, y, width: 1, height: 1 });
 
         ++instance;
+
+        gameModel.scenery.push( this );
 
         /* instance properties */
 
@@ -66,17 +69,21 @@ export default class TileRenderer extends Sprite
         positionOnRandomX( this );
     }
 
-    draw( renderer ) {
-        // there is no associated Actor for a tile, so we cheat and run the
-        // update logic inside the draw method
-        this.setY( this.getY() + this.speed );
+    /**
+     * @override
+     * @param {DOMHighResTimeStamp} timestamp 
+     * @param {number} framesSinceLastRender 
+     */
+    update( timestamp, framesSinceLastRender ) {
+        const speed = this.speed * framesSinceLastRender;
+
+        this.setY( this.getY() + speed );
         
         // when moving out of the screen reset position to the top
         if ( this.getY() > this.canvas.getHeight() ) {
             this.setY( -Math.round( this.getHeight() * ( 1 + Math.random() )));
             positionOnRandomX( this );
         }
-        super.draw( renderer );
     }
 }
 

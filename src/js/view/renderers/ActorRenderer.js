@@ -73,6 +73,10 @@ export default class ActorRenderer extends Sprite
 
     /* public methods */
 
+    /**
+     * Syncs Sprite bounding box with Actor
+     * prior to rendering
+     */
     update() {
 
         const actor  = this.actor;

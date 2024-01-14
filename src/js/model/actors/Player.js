@@ -100,11 +100,11 @@ class Player extends Ship {
 
     /**
      * @override
-     * @public
-     * @param {number} aTimestamp
+     * @param {DOMHighResTimeStamp} timestamp
+     * @param {number} framesSinceLastRender
      */
-    update( aTimestamp ) {
-        super.update( aTimestamp );
+    update( timestamp, framesSinceLastRender ) {
+        super.update( timestamp, framesSinceLastRender );
 
         // keep Player within world bounds
 

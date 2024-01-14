@@ -151,20 +151,20 @@ function setupGame() {
     TOP_ACTOR_LAYER         = layers[ 3 ];
     TOP_DECORATION_LAYER    = layers[ 4 ];
 
-    COLLIDABLE_TILE = new TileRenderer( zCanvas, -200, 1.5, TileRenderer.TYPE.STONE );
+    COLLIDABLE_TILE = new TileRenderer( gameModel, zCanvas, -200, 1.5, TileRenderer.TYPE.STONE );
 
     // add some default renderers for scenery
 
     // ground layer is out of player bounds, these sprites are just visual candy
     waterRenderer = new WaterRenderer( zCanvas );
     GROUND_LAYER.addChild( waterRenderer ); // eternally animating water sprite
-    GROUND_LAYER.addChild( new TileRenderer( zCanvas, -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
-    GROUND_LAYER.addChild( new TileRenderer( zCanvas, -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
-    GROUND_LAYER.addChild( new TileRenderer( zCanvas, 0, 1, TileRenderer.TYPE.STONE, .5 ) );
+    GROUND_LAYER.addChild( new TileRenderer( gameModel, zCanvas, -500, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( gameModel, zCanvas, -200, 0.75, TileRenderer.TYPE.ISLAND, .5 ));
+    GROUND_LAYER.addChild( new TileRenderer( gameModel, zCanvas, 0, 1, TileRenderer.TYPE.STONE, .5 ) );
 
-    BOTTOM_DECORATION_LAYER.addChild( new CloudRenderer( 0, 0, .5 ) );
+    BOTTOM_DECORATION_LAYER.addChild( new CloudRenderer( gameModel, 0, 0, .5 ) );
     TOP_ACTOR_LAYER.addChild( COLLIDABLE_TILE );
-    TOP_DECORATION_LAYER.addChild( new CloudRenderer( zCanvas.getWidth() - 100, -100, 1 ) );
+    TOP_DECORATION_LAYER.addChild( new CloudRenderer( gameModel, zCanvas.getWidth() - 100, -100, 1 ) );
 
     // create Pool of top level renderers
 

@@ -35,7 +35,7 @@ export default class CloudRenderer extends Sprite
      * @param {number=} speed
      * @param {number=} scale
      */
-    constructor( x, y, speed, scale ) {
+    constructor( gameModel, x, y, speed, scale ) {
 
         scale = ( typeof scale === "number" ) ? scale : 1;
 
@@ -48,20 +48,24 @@ export default class CloudRenderer extends Sprite
          * @type {number}
          */
         this.speed = ( typeof speed === "number" ) ? speed : 1;
+
+        gameModel.scenery.push( this );
     }
 
     /* public methods */
 
-    draw( aCanvasContext ) {
-        // there is no associated Actor for a tile, run the update logic
-        // inside the draw method
+    /**
+     * @override
+     * @param {DOMHighResTimeStamp} timestamp 
+     * @param {number} framesSinceLastRender 
+     */
+    update( timestamp, framesSinceLastRender ) {
+        this._bounds.top += ( this.speed * framesSinceLastRender );
 
-        this._bounds.top += this.speed;
         // when moving out of the screen reset position to the top
         if ( this._bounds.top > this.canvas.getHeight() ) {
             this._bounds.top = -this._bounds.height;
             this._bounds.left = Math.round( Math.random() * this.canvas.getWidth() );
         }
-        super.draw( aCanvasContext );
     }
 }
