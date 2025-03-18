@@ -10,7 +10,7 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "axios": "^1.6.5",
+    "axios": "^1.8.2",
     "gsap": "^3.12.4",
     "handlebars": "^4.7.8",
     "pubsub-js": "^1.9.4",
